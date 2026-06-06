@@ -1,0 +1,414 @@
+function sync(screen_id, client_last_revision = null):
+    """
+    SYNC endpoint: ekran pyta "czy coś się zmieniło?"
+    
+    Parameters:
+        screen_id: ID ekranu
+        client_last_revision: ostatnia revision którą ekran miał (opcjonalne, do różnicowego)
+    
+    Returns:
+        {
+            "status": "ok" | "degraded",
+            "mode": "cached" | "updated" | "fallback",
+            "manifest": {...} | null,
+            "fallback": {...} | null,
+            "revision": int,
+            "timestamp": ISO8601
+        }
+    """
+
+    start_time = NOW()
+    query_timeout = 3000  # ms
+    
+    try:
+        # === PHASE 1: WALIDACJA ===
+        
+        # 1. Pobierz ekran (timeout: 500ms)
+        screen = DB.getScreen(screen_id, timeout=500)
+
+        if screen == null:
+            DB.insertLog(screen_id, "ERROR", "Screen not found: " + screen_id)
+            return ERROR("unknown screen", 404)
+
+
+        # === PHASE 2: PRZYGOTUJ FALLBACK I STATE ===
+        
+        # 2. Sprawdź fallback (zawsze dostępny jako plan B, timeout: 500ms)
+        fallback = DB.getFallbackFile(screen_id, timeout=500)
+        
+        if fallback == null:
+            DB.insertLog(screen_id, "WARN", "No fallback asset configured")
+        
+
+        # 3. Pobierz ostatni saved state ekranu (dla diagnostyki, timeout: 500ms)
+        screen_state = DB.getScreenState(screen_id, timeout=500)
+        
+        if screen_state == null:
+            screen_state = {
+                "last_sync": null,
+                "current_playlist_id": null,
+                "current_index": 0
+            }
+
+
+        # === PHASE 3: CHECK REVISION ===
+        
+        # 4. Sprawdź aktualną revision serwera (timeout: 500ms)
+        server_revision = DB.getLatestRevisionForScreen(screen_id, timeout=500)
+
+        
+        # 5. Jeśli client przesłał swoją revision i zgadza się z serwerem
+        if client_last_revision != null and client_last_revision == server_revision:
+
+            # Update heartbeat
+            DB.updateLastSeen(screen_id)
+            
+            DB.insertLog(screen_id, "INFO", "SYNC: no changes (revision " + server_revision + ")")
+
+            return RESPONSE({
+                "status": "ok",
+                "mode": "no_change",
+                "manifest": null,  # nie przesyłaj manifestu jeśli się nie zmienił
+                "fallback": fallback,
+                "revision": server_revision,
+                "timestamp": NOW(),
+                "http_status": 304  # NOT MODIFIED
+            })
+
+
+        # === PHASE 4: MANIFEST ===
+        
+        # 6. Sprawdź czy mamy cache (timeout: 500ms)
+        cache = DB.getCacheManifest(screen_id, timeout=500)
+
+        
+        # 7. Jeśli cache jest AKTUALNY (revision się zgadza)
+        if cache != null and cache.revision == server_revision:
+
+            DB.updateLastSeen(screen_id)
+            
+            DB.insertLog(screen_id, "INFO", "SYNC: served from cache (revision " + server_revision + ")")
+
+            return RESPONSE({
+                "status": "ok",
+                "mode": "cached",
+                "manifest": cache.manifest,
+                "fallback": fallback,
+                "revision": server_revision,
+                "timestamp": NOW(),
+                "cached_at": cache.created_at
+            })
+
+
+        # === PHASE 5: REGENERUJ MANIFEST ===
+        
+        # 8. Cache nieaktualny lub nie istnieje → rebuild
+        # (timeout dla całej operacji: 2000ms)
+        manifest = build_manifest(screen_id, timeout=2000)
+
+        if manifest == null:
+            throw ERROR("Failed to build manifest")
+
+        
+        # 9. Zapisz do cache (timeout: 500ms)
+        cache_result = DB.saveCacheManifest(
+            screen_id,
+            manifest.revision,
+            manifest.data,
+            timeout=500
+        )
+
+        if cache_result == false:
+            DB.insertLog(screen_id, "WARN", "Failed to save manifest to cache, but still returning it")
+        
+
+        DB.updateLastSeen(screen_id)
+        
+        DB.insertLog(screen_id, "INFO", "SYNC: regenerated manifest (revision " + manifest.revision + ")")
+
+        return RESPONSE({
+            "status": "ok",
+            "mode": "updated",
+            "manifest": manifest.data,
+            "fallback": fallback,
+            "revision": manifest.revision,
+            "timestamp": NOW(),
+            "build_time_ms": (NOW() - start_time)
+        })
+
+
+    # === ERROR HANDLING ===
+    
+    catch (TimeoutError as e):
+        
+        DB.insertLog(screen_id, "ERROR", "SYNC timeout: " + e.message)
+        
+        # Pobranie fallback w degraded mode (nie ma limitu czasu)
+        fallback_degraded = DB.getFallbackFile(screen_id)
+        
+        return RESPONSE({
+            "status": "degraded",
+            "mode": "fallback",
+            "reason": "timeout",
+            "manifest": null,
+            "fallback": fallback_degraded,
+            "revision": null,
+            "timestamp": NOW()
+        })
+
+
+    catch (DBConnectionError as e):
+        
+        DB.insertLog(screen_id, "ERROR", "SYNC db connection error: " + e.message)
+        
+        return RESPONSE({
+            "status": "degraded",
+            "mode": "fallback",
+            "reason": "db_error",
+            "manifest": null,
+            "fallback": null,  # nie mamy dostępu do bazy
+            "revision": null,
+            "timestamp": NOW()
+        })
+
+
+    catch (Exception as e):
+        
+        DB.insertLog(screen_id, "ERROR", "SYNC exception: " + e.message + " " + e.stacktrace)
+        
+        return RESPONSE({
+            "status": "degraded",
+            "mode": "fallback",
+            "reason": "unknown_error",
+            "manifest": null,
+            "fallback": null,
+            "revision": null,
+            "timestamp": NOW()
+        })
+
+
+function build_manifest(screen_id, timeout = 2000):
+    """
+    Buduje manifest playlisty dla danego ekranu.
+    
+    Returns:
+        {
+            "revision": int (hash of all relevant revisions),
+            "data": [
+                {
+                    "playlist_id": int,
+                    "playlist_name": string,
+                    "priority": int,
+                    "items": [
+                        {
+                            "position": int,
+                            "file_id": int,
+                            "filename": string,
+                            "path": string (URL do pobrania),
+                            "type": string (mime_type, np. "video/mp4"),
+                            "duration": int (sekundy),
+                            "size": int (bajty),
+                            "checksum": string (SHA256 hex, do weryfikacji)
+                        },
+                        ...
+                    ]
+                },
+                ...
+            ]
+        }
+    """
+
+    start_time = NOW()
+    result_data = []
+    revisions_to_hash = []
+
+    try:
+        # Pobierz playlisty przypisane do ekranu (sorted by priority)
+        # (timeout: 1000ms)
+        playlists = DB.getPlaylistsForScreen(
+            screen_id,
+            now=NOW(),
+            timeout=1000
+        )
+
+        if playlists == empty:
+            DB.insertLog(screen_id, "WARN", "No playlists assigned to screen")
+            return {
+                "revision": 0,
+                "data": []
+            }
+
+
+        # Dla każdej playlisty (sorted by priority DESC)
+        for playlist in playlists (order by priority DESC):
+
+            revisions_to_hash.append(playlist.revision)
+
+            playlist_data = {
+                "playlist_id": playlist.id,
+                "playlist_name": playlist.name,
+                "priority": playlist.priority,
+                "items": []
+            }
+
+            
+            # Pobierz items z tej playlisty
+            # (timeout: 1000ms per playlist)
+            items = DB.getPlaylistItems(
+                playlist.id,
+                timeout=1000
+            )
+
+            if items == empty:
+                DB.insertLog(screen_id, "WARN", "Playlist " + playlist.id + " has no items")
+                result_data.append(playlist_data)
+                continue
+
+
+            # Dla każdego item w playliście (sorted by position)
+            for item in items (order by position ASC):
+
+                # Pobierz file
+                # (timeout: 500ms per file, ale cached)
+                file = DB.getFile(item.file_id, timeout=500)
+
+                if file == null:
+                    DB.insertLog(screen_id, "WARN", "File not found: " + item.file_id)
+                    continue
+
+
+                # Dodaj do resultado
+                item_data = {
+                    "position": item.position,
+                    "file_id": file.id,
+                    "filename": file.filename,
+                    "path": file.path,  # HTTPS URL do CDN lub serwera
+                    "type": file.mime_type,  # np. "video/mp4", "image/jpeg"
+                    "duration": item.duration,  # sekundy (ile ma być wyświetlane)
+                    "size": file.size,  # bajty
+                    "checksum": file.checksum  # SHA256 hex (do weryfikacji po pobraniu)
+                }
+
+                playlist_data["items"].append(item_data)
+
+
+            result_data.append(playlist_data)
+
+
+        # Oblicz revision hash (suma wszystkich revisions)
+        # (w praktyce: najwyższy ze wszystkich revision values)
+        manifest_revision = GREATEST(revisions_to_hash)
+
+        build_time = NOW() - start_time
+
+        if build_time > timeout:
+            DB.insertLog(screen_id, "WARN", "Manifest build took " + build_time + "ms (timeout was " + timeout + "ms)")
+        else:
+            DB.insertLog(screen_id, "DEBUG", "Manifest built in " + build_time + "ms")
+
+        return {
+            "revision": manifest_revision,
+            "data": result_data
+        }
+
+
+    catch (TimeoutError as e):
+        DB.insertLog(screen_id, "ERROR", "Manifest build timeout: " + e.message)
+        return null
+
+    catch (Exception as e):
+        DB.insertLog(screen_id, "ERROR", "Manifest build error: " + e.message)
+        return null
+
+
+function heartbeat(screen_id):
+    """
+    Ekran wysyła sygnał życia (update last_seen).
+    
+    Returns:
+        {"status": "ok", "timestamp": NOW()}
+    """
+
+    try:
+        DB.updateLastSeen(screen_id)
+        DB.insertLog(screen_id, "DEBUG", "Heartbeat received")
+        
+        return RESPONSE({
+            "status": "ok",
+            "timestamp": NOW()
+        })
+
+    catch (Exception as e):
+        DB.insertLog(screen_id, "ERROR", "Heartbeat error: " + e.message)
+        return RESPONSE({"status": "error"}, 500)
+
+
+function update_screen_state(screen_id, current_playlist_id, current_index):
+    """
+    Ekran zapisuje swoją aktualną pozycję (do wznowienia po restarcie).
+    
+    Parameters:
+        screen_id: ID ekranu
+        current_playlist_id: ID playlisty którą teraz odtwarza
+        current_index: Index w playliście (który element)
+    
+    Returns:
+        {"status": "ok"}
+    """
+
+    try:
+        DB.updateScreenState(
+            screen_id,
+            last_sync=NOW(),
+            current_playlist_id=current_playlist_id,
+            current_index=current_index
+        )
+        
+        DB.insertLog(screen_id, "DEBUG", "Screen state updated: playlist=" + current_playlist_id + " index=" + current_index)
+
+        return RESPONSE({
+            "status": "ok",
+            "timestamp": NOW()
+        })
+
+    catch (Exception as e):
+        DB.insertLog(screen_id, "ERROR", "Update screen state error: " + e.message)
+        return RESPONSE({"status": "error"}, 500)
+
+
+function post_playback_event(screen_id, event):
+    """
+    Ekran raportuje zdarzenie (play, error, completed, seeking, etc.).
+    
+    Parameters:
+        event: {
+            "type": "play" | "error" | "completed" | "seeking",
+            "file_id": int (opcjonalne),
+            "message": string (opcjonalne),
+            "timestamp": ISO8601
+        }
+    
+    Returns:
+        {"status": "ok"}
+    """
+
+    try:
+        log_level = "INFO"
+        if event.type == "error":
+            log_level = "ERROR"
+
+        DB.insertLog(
+            screen_id,
+            log_level,
+            "EVENT: " + event.type + " file=" + event.file_id + " msg=" + event.message
+        )
+
+        return RESPONSE({
+            "status": "ok",
+            "timestamp": NOW()
+        })
+
+    catch (Exception as e):
+        DB.insertLog(screen_id, "ERROR", "Post event error: " + e.message)
+        return RESPONSE({"status": "error"}, 500)
+

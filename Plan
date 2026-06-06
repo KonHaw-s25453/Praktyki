@@ -1,0 +1,104 @@
+📺 FLOW PROGRAMU (realny runtime)
+🟢 START (uruchomienie ekranu)
+
+Ekran odpala player.
+
+1. INIT
+sprawdza, czy ma lokalny cache
+sprawdza, czy ma fallback asset
+
+👉 wybiera:
+
+cache → jeśli istnieje
+fallback → jeśli nie ma nic
+2. PLAY (odtwarzanie)
+
+Ekran:
+
+bierze listę plików (cache albo z sync)
+zaczyna odtwarzać po kolei
+
+Czyli:
+
+file1 → file2 → file3 → ...
+3. END OF PLAYLIST
+
+Gdy dochodzi do końca:
+
+👉 przechodzi do SYNC
+
+4. SYNC (pytanie do serwera)
+
+Ekran mówi:
+
+„czy coś się zmieniło?”
+
+GET /screen/12/sync
+🟢 Jeśli serwer odpowiada
+OK (nowa lista)
+ekran dostaje nową playlistę
+zapisuje ją do cache
+wraca do PLAY
+NO CHANGE
+ekran kontynuuje starą playlistę
+wraca do PLAY
+🔴 Jeśli serwer NIE odpowiada
+
+(np. timeout / brak internetu)
+
+→ przechodzi do FALLBACK
+
+5. FALLBACK (tryb awaryjny)
+
+Ekran:
+
+gra lokalny loop (logo / video / komunikat)
+university_loop.mp4
+
+i próbuje sync ponownie co jakiś czas
+
+6. RETRY LOOP
+
+Co X sekund:
+
+próba SYNC ponownie
+
+Jeśli się uda → wraca do PLAY
+
+🧠 CAŁY SYSTEM W JEDNYM DIAGRAMIE
+START
+  ↓
+INIT
+  ↓
+PLAY (cache)
+  ↓
+END OF PLAYLIST
+  ↓
+SYNC ────────────────┐
+  ↓                  │
+OK → update cache    │
+  ↓                  │
+PLAY                 │
+                     │
+NO INTERNET          │
+  ↓                  │
+FALLBACK             │
+  ↓                  │
+RETRY ───────────────┘
+🧩 Co jest najważniejsze (i najprostsze)
+Ekran ma tylko 3 tryby:
+🎬 PLAY (normalnie działa)
+🔄 SYNC (pytanie „co dalej?”)
+⚠️ FALLBACK (brak danych → gra lokalnie)
+⚡ Co Twoja baza robi w tym flow
+
+Baza NIE steruje ekranem.
+
+Ona tylko:
+
+mówi co ma być w PLAY
+mówi co się zmieniło w SYNC
+🔥 Najważniejsze zrozumienie
+
+system nie „zarządza ekranem na żywo”
+system tylko daje mu kolejną listę do odtwarzania
