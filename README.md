@@ -42,7 +42,6 @@ Sugestie / next steps:
 - Dodać migracje kolejnych zmian zamiast edytować istniejącej migracji.
 - Backup bazy przed uruchomieniem na produkcji.
 
-Jeśli chcesz, mogę: dodać seed, przygotować skrócony ER diagram albo wygenerować migrację w formacie frameworka (Flyway, Liquibase, Knex itp.).
 
 Cache ekranu i fallback
 - Dokumentacja projektu cache ekranu znajduje się w `docs/screen-cache.md`.
