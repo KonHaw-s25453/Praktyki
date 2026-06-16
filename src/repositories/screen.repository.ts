@@ -11,34 +11,51 @@ export class ScreenRepository extends Repository<ScreenEntity> {
   async findByApiKey(apiKey: string): Promise<ScreenEntity | null> {
     return this.findOne({
       where: { apiKey },
-      relations: ['screenPlaylists', 'screenPlaylists.playlist', 'state', 'fallbackFile'],
+      relations: {
+        screenPlaylists: {
+          playlist: true,
+        },
+        state: true,
+        fallbackFile: true,
+      },
     });
   }
 
   async findWithPlaylists(id: number): Promise<ScreenEntity | null> {
     return this.findOne({
       where: { id },
-      relations: [
-        'screenPlaylists',
-        'screenPlaylists.playlist',
-        'screenPlaylists.playlist.items',
-        'screenPlaylists.playlist.items.file',
-        'state',
-        'fallbackFile',
-      ],
+      relations: {
+        screenPlaylists: {
+          playlist: {
+            items: {
+              file: true,
+            },
+          },
+        },
+        state: true,
+        fallbackFile: true,
+      },
     });
   }
 
   async findByLocation(location: string): Promise<ScreenEntity[]> {
     return this.find({
       where: { location },
-      relations: ['screenPlaylists', 'state'],
+      relations: {
+        screenPlaylists: {
+          playlist: true,
+        },
+        state: true,
+      },
     });
   }
 
   async findAllWithState(): Promise<ScreenEntity[]> {
     return this.find({
-      relations: ['state', 'screenPlaylists'],
+      relations: {
+        state: true,
+        screenPlaylists: true,
+      },
     });
   }
 

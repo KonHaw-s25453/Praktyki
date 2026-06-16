@@ -1,31 +1,65 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { PlaylistEntity } from '@/entities';
+import { ScreenEntity } from '@/entities';
 
 @Injectable()
-export class PlaylistRepository extends Repository<PlaylistEntity> {
+export class ScreenRepository extends Repository<ScreenEntity> {
   constructor(private dataSource: DataSource) {
-    super(PlaylistEntity, dataSource.createEntityManager());
+    super(ScreenEntity, dataSource.createEntityManager());
   }
 
-  async findWithItems(id: number): Promise<PlaylistEntity | null> {
+  async findByApiKey(apiKey: string): Promise<ScreenEntity | null> {
+    return this.findOne({
+      where: { apiKey },
+      relations: {
+        screenPlaylists: {
+          playlist: true,
+        },
+        state: true,
+        fallbackFile: true,
+      },
+    });
+  }
+
+  async findWithPlaylists(id: number): Promise<ScreenEntity | null> {
     return this.findOne({
       where: { id },
-      relations: ['items', 'items.file'],
+      relations: {
+        screenPlaylists: {
+          playlist: {
+            items: {
+              file: true,
+            },
+          },
+        },
+        state: true,
+        fallbackFile: true,
+      },
     });
   }
 
-  async findAllWithItems(): Promise<PlaylistEntity[]> {
+  async findByLocation(location: string): Promise<ScreenEntity[]> {
     return this.find({
-      relations: ['items', 'items.file'],
+      where: { location },
+      relations: {
+        screenPlaylists: {
+          playlist: true,
+        },
+        state: true,
+      },
     });
   }
 
-  async findByName(name: string): Promise<PlaylistEntity | null> {
-    return this.findOne({ where: { name } });
+  async findAllWithState(): Promise<ScreenEntity[]> {
+    return this.find({
+      relations: {
+        state: true,
+        screenPlaylists: true,
+      },
+    });
   }
 
-  async findByRevision(revision: number): Promise<PlaylistEntity[]> {
-    return this.find({ where: { revision } });
+  async updateLastSeen(id: number): Promise<void> {
+    await this.update(id, { lastSeen: new Date() });
   }
 }

@@ -1,3 +1,4 @@
+-- @dialect mysql
 -- Queries for SYNC endpoint
 -- These queries are used by the server to respond to screen sync requests.
 -- Reference: /Plan describes the SYNC step where screens ask "czy coś się zmieniło?"

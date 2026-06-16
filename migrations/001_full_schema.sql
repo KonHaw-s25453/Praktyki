@@ -1,3 +1,4 @@
+-- @dialect mysql
 -- Consolidated migration for the signage project
 -- This single file contains the schema, cache/versioning support, screen_state, indexes,
 -- triggers and a stored procedure to generate per-screen cache manifests.

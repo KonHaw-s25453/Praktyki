@@ -8,23 +8,27 @@ export class PlaylistItemRepository extends Repository<PlaylistItemEntity> {
     super(PlaylistItemEntity, dataSource.createEntityManager());
   }
 
-  async findByPlaylistId(playlistId: number): Promise<PlaylistItemEntity[]> {
-    return this.find({
-      where: { playlistId },
-      relations: ['file'],
-      order: { position: 'ASC' },
-    });
-  }
+ async findByPlaylistId(playlistId: number): Promise<PlaylistItemEntity[]> {
+  return this.find({
+    where: { playlistId },
+    relations: {
+      file: true,
+    },
+    order: { position: 'ASC' },
+  });
+}
 
-  async findByPlaylistIdAndPosition(
-    playlistId: number,
-    position: number,
-  ): Promise<PlaylistItemEntity | null> {
-    return this.findOne({
-      where: { playlistId, position },
-      relations: ['file'],
-    });
-  }
+async findByPlaylistIdAndPosition(
+  playlistId: number,
+  position: number,
+): Promise<PlaylistItemEntity | null> {
+  return this.findOne({
+    where: { playlistId, position },
+    relations: {
+      file: true,
+    },
+  });
+}
 
   async findMaxPositionInPlaylist(playlistId: number): Promise<number> {
     const result = await this.findOne({
