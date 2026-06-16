@@ -110,6 +110,10 @@ export class SyncService {
     );
     return this.screenStateRepository.findByScreenId(screenId);
   }
+  
+  async touchScreen(screenId: number): Promise<void> {
+  await this.screenRepository.updateLastSeen(screenId);
+}
 
   /**
    * Record log from screen

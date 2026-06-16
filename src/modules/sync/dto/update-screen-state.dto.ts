@@ -4,7 +4,7 @@ export class UpdateScreenStateDto {
   @IsInt()
   @IsPositive()
   @IsOptional()
-  currentPlaylistId?: number;
+  currentPlaylistId: number;
 
   @IsInt()
   @IsNotEmpty()

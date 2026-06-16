@@ -69,10 +69,13 @@ export class SyncController {
    * Ekran wysyła heartbeat
    * POST /sync/:screenId/heartbeat
    */
+
   @Post(':screenId/heartbeat')
-  async heartbeat(@Param('screenId', ParseIntPipe) screenId: number): Promise<void> {
-    return this.syncService.updateScreenState(screenId, null, 0);
-  }
+async heartbeat(
+  @Param('screenId', ParseIntPipe) screenId: number,
+): Promise<void> {
+  await this.syncService.touchScreen(screenId)
+}
 
   /**
    * Sprawdź czy manifest się zmienił
