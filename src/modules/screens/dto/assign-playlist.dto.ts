@@ -4,6 +4,7 @@ import {
   IsInt,
   IsPositive,
   IsDateString,
+  IsNotEmpty,
 } from 'class-validator';
 
 export class AssignPlaylistDto {

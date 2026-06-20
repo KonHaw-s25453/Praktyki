@@ -1,65 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { ScreenEntity } from '@/entities';
+import { PlaylistEntity } from '@/entities'; // <-- Zmieniamy na PlaylistEntity
 
 @Injectable()
-export class ScreenRepository extends Repository<ScreenEntity> {
+export class PlaylistRepository extends Repository<PlaylistEntity> { // <-- Poprawna nazwa klasy!
   constructor(private dataSource: DataSource) {
-    super(ScreenEntity, dataSource.createEntityManager());
+    super(PlaylistEntity, dataSource.createEntityManager()); // <-- Przekazujemy PlaylistEntity
   }
 
-  async findByApiKey(apiKey: string): Promise<ScreenEntity | null> {
-    return this.findOne({
-      where: { apiKey },
-      relations: {
-        screenPlaylists: {
-          playlist: true,
-        },
-        state: true,
-        fallbackFile: true,
-      },
-    });
-  }
-
-  async findWithPlaylists(id: number): Promise<ScreenEntity | null> {
+  // Prosta metoda pomocnicza, która pobiera playlistę razem z jej plikami (itemami)
+  async findWithItems(id: number): Promise<PlaylistEntity | null> {
     return this.findOne({
       where: { id },
       relations: {
-        screenPlaylists: {
-          playlist: {
-            items: {
-              file: true,
-            },
-          },
+        items: {
+          file: true,
         },
-        state: true,
-        fallbackFile: true,
       },
     });
   }
 
-  async findByLocation(location: string): Promise<ScreenEntity[]> {
-    return this.find({
-      where: { location },
-      relations: {
-        screenPlaylists: {
-          playlist: true,
-        },
-        state: true,
-      },
-    });
-  }
-
-  async findAllWithState(): Promise<ScreenEntity[]> {
+  async findAllWithItems(): Promise<PlaylistEntity[]> {
     return this.find({
       relations: {
-        state: true,
-        screenPlaylists: true,
+        items: {
+          file: true,
+        },
       },
     });
-  }
-
-  async updateLastSeen(id: number): Promise<void> {
-    await this.update(id, { lastSeen: new Date() });
   }
 }

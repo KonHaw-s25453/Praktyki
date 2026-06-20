@@ -11,6 +11,12 @@ import {
 } from '@/repositories';
 import { CacheManifestEntity, ScreenStateEntity } from '@/entities';
 
+interface ManifestResponse {
+  revision: number;
+  manifest: Record<string, any>;
+  status: 'OK' | 'NOT_CHANGED';
+}
+
 @Injectable()
 export class SyncService {
   constructor(
@@ -30,19 +36,18 @@ export class SyncService {
   async getManifestForScreen(
     screenId: number,
     sinceRevision?: number,
-  ): Promise<{ revision: number; manifest: Record<string, any>; status: 'OK' | 'NOT_CHANGED' }> {
+  ): Promise<ManifestResponse> {
     const screen = await this.screenRepository.findWithPlaylists(screenId);
     if (!screen) {
       throw new NotFoundException(`Screen with ID ${screenId} not found`);
     }
 
     // Pobierz cached manifest
-    const cachedManifest = await this.cacheManifestRepository.findByScreenId(screenId);
+    let cachedManifest = await this.cacheManifestRepository.findByScreenId(screenId);
 
     if (!cachedManifest) {
-      // Jeśli cache nie istnieje, wygeneruj
-      await this.regenerateManifestForScreen(screenId);
-      return this.getManifestForScreen(screenId, sinceRevision);
+      // Bezpieczna regeneracja bez pętli rekurencyjnej
+      cachedManifest = await this.regenerateManifestForScreen(screenId);
     }
 
     // Jeśli client ma aktualną wersję, zwróć NOT_CHANGED
@@ -54,7 +59,7 @@ export class SyncService {
       };
     }
 
-    // Update last_seen
+    // Update last_seen przy rzeczywistym pobieraniu pełnego manifestu
     await this.screenRepository.updateLastSeen(screenId);
 
     return {
@@ -112,8 +117,8 @@ export class SyncService {
   }
   
   async touchScreen(screenId: number): Promise<void> {
-  await this.screenRepository.updateLastSeen(screenId);
-}
+    await this.screenRepository.updateLastSeen(screenId);
+  }
 
   /**
    * Record log from screen
