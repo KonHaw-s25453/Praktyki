@@ -10,7 +10,7 @@ import {
   ScreenLogEntity,
   CacheManifestEntity,
   ScreenStateEntity,
-} from '@/entities';
+} from '../entities';
 
 @Module({
   imports: [

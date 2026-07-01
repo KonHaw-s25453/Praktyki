@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { PlaylistEntity } from '@/entities'; // <-- Zmieniamy na PlaylistEntity
+import { PlaylistEntity } from '../entities'; // <-- Zmieniamy na PlaylistEntity
 
 @Injectable()
 export class PlaylistRepository extends Repository<PlaylistEntity> { // <-- Poprawna nazwa klasy!

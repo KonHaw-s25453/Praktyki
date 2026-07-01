@@ -7,9 +7,9 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { ScreenPlaylistEntity } from './screen-playlist.entity.js';
-import { ScreenLogEntity } from './screen-log.entity.js';
-import { ScreenStateEntity } from './screen-state.entity.js';
+import { ScreenPlaylistEntity } from './screen-playlist.entity';
+import { ScreenLogEntity } from './screen-log.entity';
+import { ScreenStateEntity } from './screen-state.entity';
 
 @Entity('screens')
 export class ScreenEntity {

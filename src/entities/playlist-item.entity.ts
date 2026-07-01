@@ -7,8 +7,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { PlaylistEntity } from './playlist.entity.js';
-import { FileEntity } from './file.entity.js';
+import { PlaylistEntity } from './playlist.entity';
+import { FileEntity } from './file.entity';
 
 @Entity('playlist_items')
 export class PlaylistItemEntity {

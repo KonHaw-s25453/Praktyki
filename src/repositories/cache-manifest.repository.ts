@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { CacheManifestEntity } from '@/entities';
+import { CacheManifestEntity } from '../entities';
 
 @Injectable()
 export class CacheManifestRepository extends Repository<CacheManifestEntity> {

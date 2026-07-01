@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { FileRepository } from '@/repositories';
-import { FileEntity } from '@/entities';
-import { CreateFileDto } from './dto/create-file.dto.js';
-import { UpdateFileDto } from './dto/update-file.dto.js';
+import { FileRepository } from '../../repositories';
+import { FileEntity } from '../../entities';
+import { CreateFileDto } from './dto/create-file.dto';
+import { UpdateFileDto } from './dto/update-file.dto';
 
 @Injectable()
 export class FilesService {

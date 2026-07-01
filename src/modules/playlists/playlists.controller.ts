@@ -8,12 +8,12 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { PlaylistsService } from './playlists.service.js';
-import { CreatePlaylistDto } from './dto/create-playlist.dto.js';
-import { UpdatePlaylistDto } from './dto/update-playlist.dto.js';
-import { AddItemToPlaylistDto } from './dto/add-item.dto.js';
-import { ReorderPlaylistItemsDto } from './dto/reorder-items.dto.js';
-import { PlaylistEntity, PlaylistItemEntity } from '@/entities';
+import { PlaylistsService } from './playlists.service';
+import { CreatePlaylistDto } from './dto/create-playlist.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { AddItemToPlaylistDto } from './dto/add-item.dto';
+import { ReorderPlaylistItemsDto } from './dto/reorder-items.dto';
+import { PlaylistEntity, PlaylistItemEntity } from '../../entities';
 
 @Controller('playlists')
 export class PlaylistsController {

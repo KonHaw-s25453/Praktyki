@@ -8,8 +8,8 @@ import {
   PlaylistRepository,
   PlaylistItemRepository,
   FileRepository,
-} from '@/repositories';
-import { CacheManifestEntity, ScreenStateEntity } from '@/entities';
+} from '../../repositories';
+import { CacheManifestEntity, ScreenStateEntity } from '../../entities';
 
 interface ManifestResponse {
   revision: number;

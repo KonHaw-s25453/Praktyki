@@ -6,7 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ScreenEntity } from './screen.entity.js';
+import { ScreenEntity } from './screen.entity';
 
 @Entity('screen_logs')
 export class ScreenLogEntity {

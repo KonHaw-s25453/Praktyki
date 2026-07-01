@@ -7,7 +7,7 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { ScreenEntity } from './screen.entity.js';
+import { ScreenEntity } from './screen.entity';
 
 @Entity('cache_manifests')
 @Index('uk_cache_manifests_screen_id', ['screenId'], { unique: true })

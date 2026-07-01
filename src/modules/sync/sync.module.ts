@@ -9,7 +9,7 @@ import {
   PlaylistEntity,
   PlaylistItemEntity,
   FileEntity,
-} from '@/entities';
+} from '../../entities';
 import {
   ScreenRepository,
   CacheManifestRepository,
@@ -19,9 +19,9 @@ import {
   PlaylistRepository,
   PlaylistItemRepository,
   FileRepository,
-} from '@/repositories';
-import { SyncService } from './sync.service.js';
-import { SyncController } from './sync.controller.js';
+} from '../../repositories';
+import { SyncService } from './sync.service';
+import { SyncController } from './sync.controller';
 
 @Module({
   imports: [

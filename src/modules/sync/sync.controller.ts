@@ -10,11 +10,11 @@ import {
   Request,
   BadRequestException,
 } from '@nestjs/common';
-import { SyncService } from './sync.service.js';
-import { GetManifestQueryDto } from './dto/get-manifest-query.dto.js';
-import { UpdateScreenStateDto } from './dto/update-screen-state.dto.js';
-import { RecordLogDto } from './dto/record-log.dto.js';
-// import { ScreenAuthGuard } from './guards/screen-auth.guard.js'; // Przykładowy guard auth
+import { SyncService } from './sync.service';
+import { GetManifestQueryDto } from './dto/get-manifest-query.dto';
+import { UpdateScreenStateDto } from './dto/update-screen-state.dto';
+import { RecordLogDto } from './dto/record-log.dto';
+// import { ScreenAuthGuard } from './guards/screen-auth.guard'; // Przykładowy guard auth
 
 @Controller('sync')
 // @UseGuards(ScreenAuthGuard) // Odkomentuj, aby zabezpieczyć cały kontroler przed nieautoryzowanym dostępem

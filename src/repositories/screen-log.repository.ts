@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { ScreenLogEntity } from '@/entities';
+import { ScreenLogEntity } from '../entities';
 
 @Injectable()
 export class ScreenLogRepository extends Repository<ScreenLogEntity> {

@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { ScreenRepository, ScreenPlaylistRepository, FileRepository } from '@/repositories';
-import { ScreenEntity, ScreenPlaylistEntity } from '@/entities';
-import { CreateScreenDto } from './dto/create-screen.dto.js';
-import { AssignPlaylistDto } from './dto/assign-playlist.dto.js';
+import { ScreenRepository, ScreenPlaylistRepository, FileRepository } from '../../repositories';
+import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
+import { CreateScreenDto } from './dto/create-screen.dto';
+import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -99,12 +99,11 @@ export class ScreensService {
     await this.screenPlaylistRepository.delete(assignment.id);
   }
 
+
   async updateAssignment(
     screenId: number,
     playlistId: number,
-    priority?: number,
-    activeFrom?: string,
-    activeTo?: string,
+    dto: { priority?: number; activeFrom?: string; activeTo?: string },
   ): Promise<ScreenPlaylistEntity> {
     const assignment = await this.screenPlaylistRepository.findByScreenAndPlaylist(
       screenId,
@@ -116,9 +115,9 @@ export class ScreensService {
     }
 
     const updates: any = {};
-    if (priority !== undefined) updates.priority = priority;
-    if (activeFrom !== undefined) updates.activeFrom = new Date(activeFrom);
-    if (activeTo !== undefined) updates.activeTo = new Date(activeTo);
+    if (dto.priority !== undefined) updates.priority = dto.priority;
+    if (dto.activeFrom !== undefined) updates.activeFrom = new Date(dto.activeFrom);
+    if (dto.activeTo !== undefined) updates.activeTo = new Date(dto.activeTo);
 
     await this.screenPlaylistRepository.update(assignment.id, updates);
 

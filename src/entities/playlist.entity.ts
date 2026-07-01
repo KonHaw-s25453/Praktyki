@@ -6,9 +6,9 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { PlaylistItemEntity } from './playlist-item.entity.js';
-import { ScreenPlaylistEntity } from './screen-playlist.entity.js';
-import { ScreenStateEntity } from './screen-state.entity.js';
+import { PlaylistItemEntity } from './playlist-item.entity';
+import { ScreenPlaylistEntity } from './screen-playlist.entity';
+import { ScreenStateEntity } from './screen-state.entity';
 
 @Entity('playlists')
 export class PlaylistEntity {

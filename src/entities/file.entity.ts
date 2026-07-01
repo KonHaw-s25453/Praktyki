@@ -7,7 +7,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { PlaylistItemEntity } from './playlist-item.entity.js';
+import { PlaylistItemEntity } from './playlist-item.entity';
 
 @Entity('files')
 export class FileEntity {

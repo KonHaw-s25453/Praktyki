@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PlaylistRepository, PlaylistItemRepository, FileRepository } from '@/repositories';
-import { PlaylistEntity, PlaylistItemEntity } from '@/entities';
-import { CreatePlaylistDto } from './dto/create-playlist.dto.js';
-import { UpdatePlaylistDto } from './dto/update-playlist.dto.js';
-import { AddItemToPlaylistDto } from './dto/add-item.dto.js';
-import { ReorderPlaylistItemsDto } from './dto/reorder-items.dto.js';
+import { PlaylistRepository, PlaylistItemRepository, FileRepository } from '../../repositories';
+import { PlaylistEntity, PlaylistItemEntity } from '../../entities';
+import { CreatePlaylistDto } from './dto/create-playlist.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { AddItemToPlaylistDto } from './dto/add-item.dto';
+import { ReorderPlaylistItemsDto } from './dto/reorder-items.dto';
 
 @Injectable()
 export class PlaylistsService {

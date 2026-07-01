@@ -8,10 +8,10 @@ import {
   ParseIntPipe,
   Put,
 } from '@nestjs/common';
-import { ScreensService } from './screens.service.js';
-import { CreateScreenDto } from './dto/create-screen.dto.js';
-import { AssignPlaylistDto } from './dto/assign-playlist.dto.js';
-import { ScreenEntity, ScreenPlaylistEntity } from '@/entities';
+import { ScreensService } from './screens.service';
+import { CreateScreenDto } from './dto/create-screen.dto';
+import { AssignPlaylistDto } from './dto/assign-playlist.dto';
+import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 
 @Controller('screens')
 export class ScreensController {
@@ -61,13 +61,7 @@ export class ScreensController {
     @Param('playlistId', ParseIntPipe) playlistId: number,
     @Body() updates: any,
   ): Promise<ScreenPlaylistEntity> {
-    return this.screensService.updateAssignment(
-      id,
-      playlistId,
-      updates.priority,
-      updates.activeFrom,
-      updates.activeTo,
-    );
+    return this.screensService.updateAssignment(id, playlistId, updates);
   }
 
   @Post(':id/api-key')

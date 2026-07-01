@@ -7,8 +7,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ScreenEntity } from './screen.entity.js';
-import { PlaylistEntity } from './playlist.entity.js';
+import { ScreenEntity } from './screen.entity';
+import { PlaylistEntity } from './playlist.entity';
 
 @Entity('screen_playlists')
 export class ScreenPlaylistEntity {

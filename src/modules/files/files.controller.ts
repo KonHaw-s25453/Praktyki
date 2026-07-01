@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe } from '@nestjs/common';
-import { FilesService } from './files.service.js';
-import { CreateFileDto } from './dto/create-file.dto.js';
-import { UpdateFileDto } from './dto/update-file.dto.js';
-import { FileEntity } from '@/entities';
+import { FilesService } from './files.service';
+import { CreateFileDto } from './dto/create-file.dto';
+import { UpdateFileDto } from './dto/update-file.dto';
+import { FileEntity } from '../../entities';
 
 @Controller('files')
 export class FilesController {

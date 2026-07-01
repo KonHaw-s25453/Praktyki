@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module.js';
-import { FilesModule } from './modules/files/files.module.js';
-import { PlaylistsModule } from './modules/playlists/playlists.module.js';
-import { ScreensModule } from './modules/screens/screens.module.js';
-import { SyncModule } from './modules/sync/sync.module.js';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { DatabaseModule } from './database/database.module';
+import { FilesModule } from './modules/files/files.module';
+import { PlaylistsModule } from './modules/playlists/playlists.module';
+import { ScreensModule } from './modules/screens/screens.module';
+import { SyncModule } from './modules/sync/sync.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
