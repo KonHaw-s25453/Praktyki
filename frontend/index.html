@@ -1,21 +1,13 @@
 <!doctype html>
-<html lang="pl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Frontend punkt startowy</title>
-</head>
-<body>
-  <h3>Punkt startowy frontend — minimalny</h3>
-  <div>
-    <button id="btn-api-key">GET (API key)</button>
-    <button id="btn-jwt">GET (JWT)</button>
-    <button id="btn-axios-jwt">GET (axios + JWT)</button>
-  </div>
-  <pre id="out" style="white-space:pre-wrap;border:1px solid #ddd;padding:8px;margin-top:8px;max-height:300px;overflow:auto"></pre>
-
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="./api-client.js"></script>
-  <script src="./app.js"></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

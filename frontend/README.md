@@ -1,36 +1,32 @@
-Minimalny frontend do testowania API (CORS, API key, JWT)
+# React + TypeScript + Vite
 
-Pliki:
-- `index.html` — proste UI z przyciskami
-- `api-client.js` — mały wrapper `fetch` z obsługą `x-api-key` i `Authorization: Bearer <token>`
-- `app.js` — przykłady użycia wrappera + jedno wywołanie `axios` dla porównania
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-Uruchomienie lokalne (PowerShell):
+Currently, two official plugins are available:
 
-1) Najprostsze (Node http-server):
-```powershell
-# zainstaluj za pierwszym razem
-npx http-server .\frontend -p 5173
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
-Otwórz `http://localhost:5173` w przeglądarce.
 
-2) Albo Python (jeśli masz):
-```powershell
-python -m http.server 5173 --bind 127.0.0.1
-```
-
-Jeśli backend (Nest) działa na `http://localhost:3000`, to z przeglądarki frontend będzie wysyłać żądania do tego adresu.
-Domyślnie przykład trafia w istniejący backendowy `GET /` z `src/app.controller.ts`.
-
-CORS:
-- Jeśli backend nie zezwala na CORS, dodaj w `src/main.ts` przed `await app.listen(port);`:
-```ts
-app.enableCors({ origin: 'http://localhost:5173', credentials: true });
-```
-- Jeżeli używasz niestandardowych nagłówków (`x-api-key`) upewnij się, że serwer pozwala na nie w `Access-Control-Allow-Headers` (Nest `enableCors` to zazwyczaj załatwia).
-
-Testy:
-- W `app.js` zmień `MY_API_KEY` i `YOUR_JWT_TOKEN` na rzeczywiste wartości i kliknij odpowiedni przycisk.
-- `api-client.js` obsługuje też `post(path, body, options)` jeśli chcesz rozbudować frontend.
-
-Chcesz, żebym dodał automatyczne serwowanie frontendu z poziomu NestJS (statyczne pliki)? Mogę to zrobić szybko jeśli chcesz.
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
