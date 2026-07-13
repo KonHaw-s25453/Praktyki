@@ -1,8 +1,22 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  ParseIntPipe,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileEntity } from '../../entities';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import type { Express } from 'express';
 
 @Controller('files')
 export class FilesController {
@@ -12,6 +26,26 @@ export class FilesController {
   create(@Body() createFileDto: CreateFileDto): Promise<FileEntity> {
     return this.filesService.create(createFileDto);
   }
+
+  @Post('upload')
+@UseInterceptors(FileInterceptor('file'))
+@ApiConsumes('multipart/form-data')
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      file: {
+        type: 'string',
+        format: 'binary',
+      },
+    },
+  },
+})
+uploadFile(
+ @UploadedFile() file: Express.Multer.File,
+): Promise<FileEntity> {
+  return this.filesService.upload(file);
+}
 
   @Get()
   findAll(): Promise<FileEntity[]> {
@@ -50,4 +84,8 @@ export class FilesController {
   delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.filesService.delete(id);
   }
+
+
+
+
 }

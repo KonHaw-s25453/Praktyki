@@ -18,7 +18,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest", "multer", "express"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "backend/dist"]

@@ -1,10 +1,7 @@
+import UploadPage from "./pages/UploadPage.tsx";
+
 function App() {
-  return (
-    <div>
-      <h1>CMS ekranów</h1>
-      <p>Frontend działa!</p>
-    </div>
-  )
+    return <UploadPage />;
 }
 
-export default App
+export default App;

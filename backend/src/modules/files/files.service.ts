@@ -83,4 +83,17 @@ export class FilesService {
   async getAllImages(): Promise<FileEntity[]> {
     return this.fileRepository.findAllImages();
   }
+  async upload(file: Express.Multer.File): Promise<FileEntity> {
+  const fileEntity = this.fileRepository.create({
+    filename: file.filename,
+    originalName: file.originalname,
+    path: file.path,
+    mimeType: file.mimetype,
+    size: file.size,
+    checksum: '',
+    duration: 0,
+  });
+
+  return this.fileRepository.save(fileEntity);
+}
 }
