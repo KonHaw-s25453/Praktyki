@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
 *CmsApi.FilesApi* | [**filesControllerGetAllImages**](docs/FilesApi.md#filesControllerGetAllImages) | **GET** /files/images | 
 *CmsApi.FilesApi* | [**filesControllerGetAllVideos**](docs/FilesApi.md#filesControllerGetAllVideos) | **GET** /files/videos | 
 *CmsApi.FilesApi* | [**filesControllerUpdate**](docs/FilesApi.md#filesControllerUpdate) | **PUT** /files/{id} | 
+*CmsApi.FilesApi* | [**filesControllerUploadFile**](docs/FilesApi.md#filesControllerUploadFile) | **POST** /files/upload | 
 *CmsApi.PlaylistsApi* | [**playlistsControllerAddItem**](docs/PlaylistsApi.md#playlistsControllerAddItem) | **POST** /playlists/{id}/items | 
 *CmsApi.PlaylistsApi* | [**playlistsControllerCreate**](docs/PlaylistsApi.md#playlistsControllerCreate) | **POST** /playlists | 
 *CmsApi.PlaylistsApi* | [**playlistsControllerDelete**](docs/PlaylistsApi.md#playlistsControllerDelete) | **DELETE** /playlists/{id} | 

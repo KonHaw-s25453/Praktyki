@@ -341,5 +341,44 @@ export default class FilesApi {
       );
     }
 
+    /**
+     * Callback function to receive the result of the filesControllerUploadFile operation.
+     * @callback module:api/FilesApi~filesControllerUploadFileCallback
+     * @param {String} error Error message, if any.
+     * @param {Object} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {File} [file] 
+     * @param {module:api/FilesApi~filesControllerUploadFileCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
+     */
+    filesControllerUploadFile(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+        'file': opts['file']
+      };
+
+      let authNames = [];
+      let contentTypes = ['multipart/form-data'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+      return this.apiClient.callApi(
+        '/files/upload', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
 
 }

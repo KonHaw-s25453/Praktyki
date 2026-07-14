@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { uploadFile } from "../api/files";
 
 export default function FileUpload() {
     const [file, setFile] = useState<File | null>(null);
+    const [message, setMessage] = useState("");
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         const selectedFile = event.target.files?.[0];
@@ -11,20 +13,28 @@ export default function FileUpload() {
         }
     }
 
-    function handleUpload() {
+    async function handleUpload() {
         if (!file) {
             alert("Nie wybrano pliku");
             return;
         }
 
-        alert(`Wybrano: ${file.name}`);
+        try {
+            await uploadFile(file);
+
+            setMessage(`Wysłano: ${file.name}`);
+
+        } catch (error) {
+            console.error(error);
+            setMessage("Błąd podczas wysyłania pliku");
+        }
     }
 
     return (
         <div>
             <h2>Upload pliku</h2>
 
-            <input 
+            <input
                 type="file"
                 onChange={handleFileChange}
             />
@@ -32,6 +42,8 @@ export default function FileUpload() {
             <button onClick={handleUpload}>
                 Wyślij
             </button>
+
+            <p>{message}</p>
         </div>
     );
 }

@@ -1,6 +1,5 @@
 .babelrc
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 docs/AddItemToPlaylistDto.md
@@ -30,14 +29,3 @@ src/model/CreatePlaylistDto.js
 src/model/CreateScreenDto.js
 src/model/UpdateFileDto.js
 src/model/UpdatePlaylistDto.js
-test/api/AppApi.spec.js
-test/api/FilesApi.spec.js
-test/api/PlaylistsApi.spec.js
-test/api/ScreensApi.spec.js
-test/api/SyncApi.spec.js
-test/model/AddItemToPlaylistDto.spec.js
-test/model/CreateFileDto.spec.js
-test/model/CreatePlaylistDto.spec.js
-test/model/CreateScreenDto.spec.js
-test/model/UpdateFileDto.spec.js
-test/model/UpdatePlaylistDto.spec.js

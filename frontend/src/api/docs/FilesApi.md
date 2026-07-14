@@ -12,6 +12,7 @@ Method | HTTP request | Description
 [**filesControllerGetAllImages**](FilesApi.md#filesControllerGetAllImages) | **GET** /files/images | 
 [**filesControllerGetAllVideos**](FilesApi.md#filesControllerGetAllVideos) | **GET** /files/videos | 
 [**filesControllerUpdate**](FilesApi.md#filesControllerUpdate) | **PUT** /files/{id} | 
+[**filesControllerUploadFile**](FilesApi.md#filesControllerUploadFile) | **POST** /files/upload | 
 
 
 
@@ -347,4 +348,49 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: Not defined
+
+
+## filesControllerUploadFile
+
+> Object filesControllerUploadFile(opts)
+
+
+
+### Example
+
+```javascript
+import CmsApi from 'cms_api';
+
+let apiInstance = new CmsApi.FilesApi();
+let opts = {
+  'file': "/path/to/file" // File | 
+};
+apiInstance.filesControllerUploadFile(opts, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **file** | **File**|  | [optional] 
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: multipart/form-data
+- **Accept**: application/json
 

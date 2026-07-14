@@ -1,1 +1,1051 @@
-{"openapi":"3.0.0","paths":{"/":{"get":{"operationId":"AppController_getHello","parameters":[],"responses":{"200":{"description":""}},"tags":["App"]}},"/files":{"post":{"operationId":"FilesController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateFileDto"}}}},"responses":{"201":{"description":""}},"tags":["Files"]},"get":{"operationId":"FilesController_findAll","parameters":[],"responses":{"200":{"description":""}},"tags":["Files"]}},"/files/videos":{"get":{"operationId":"FilesController_getAllVideos","parameters":[],"responses":{"200":{"description":""}},"tags":["Files"]}},"/files/images":{"get":{"operationId":"FilesController_getAllImages","parameters":[],"responses":{"200":{"description":""}},"tags":["Files"]}},"/files/{id}":{"get":{"operationId":"FilesController_findById","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Files"]},"put":{"operationId":"FilesController_update","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateFileDto"}}}},"responses":{"200":{"description":""}},"tags":["Files"]},"delete":{"operationId":"FilesController_delete","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Files"]}},"/files/{id}/used":{"get":{"operationId":"FilesController_checkIfUsed","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Files"]}},"/playlists":{"post":{"operationId":"PlaylistsController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreatePlaylistDto"}}}},"responses":{"201":{"description":""}},"tags":["Playlists"]},"get":{"operationId":"PlaylistsController_findAll","parameters":[],"responses":{"200":{"description":""}},"tags":["Playlists"]}},"/playlists/{id}":{"get":{"operationId":"PlaylistsController_findById","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Playlists"]},"put":{"operationId":"PlaylistsController_update","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdatePlaylistDto"}}}},"responses":{"200":{"description":""}},"tags":["Playlists"]},"delete":{"operationId":"PlaylistsController_delete","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Playlists"]}},"/playlists/{id}/revision":{"get":{"operationId":"PlaylistsController_getRevision","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Playlists"]}},"/playlists/{id}/items":{"post":{"operationId":"PlaylistsController_addItem","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AddItemToPlaylistDto"}}}},"responses":{"201":{"description":""}},"tags":["Playlists"]}},"/playlists/{id}/items/{itemId}":{"delete":{"operationId":"PlaylistsController_removeItem","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}},{"name":"itemId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Playlists"]}},"/playlists/{id}/reorder":{"put":{"operationId":"PlaylistsController_reorderItems","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReorderPlaylistItemsDto"}}}},"responses":{"200":{"description":""}},"tags":["Playlists"]}},"/screens":{"post":{"operationId":"ScreensController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateScreenDto"}}}},"responses":{"201":{"description":""}},"tags":["Screens"]},"get":{"operationId":"ScreensController_findAll","parameters":[],"responses":{"200":{"description":""}},"tags":["Screens"]}},"/screens/{id}":{"get":{"operationId":"ScreensController_findById","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Screens"]},"delete":{"operationId":"ScreensController_delete","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Screens"]}},"/screens/{id}/playlists":{"post":{"operationId":"ScreensController_assignPlaylist","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AssignPlaylistDto"}}}},"responses":{"201":{"description":""}},"tags":["Screens"]}},"/screens/{id}/playlists/{playlistId}":{"delete":{"operationId":"ScreensController_removePlaylist","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}},{"name":"playlistId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Screens"]},"put":{"operationId":"ScreensController_updateAssignment","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}},{"name":"playlistId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Screens"]}},"/screens/{id}/api-key":{"post":{"operationId":"ScreensController_generateNewApiKey","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"201":{"description":""}},"tags":["Screens"]}},"/screens/{id}/heartbeat":{"post":{"operationId":"ScreensController_heartbeat","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"201":{"description":""}},"tags":["Screens"]}},"/screens/location/{location}":{"get":{"operationId":"ScreensController_getByLocation","parameters":[{"name":"location","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["Screens"]}},"/sync/manifest":{"get":{"operationId":"SyncController_getManifest","parameters":[],"responses":{"200":{"description":""}},"tags":["Sync"]}},"/sync/{screenId}/state":{"post":{"operationId":"SyncController_updateScreenState","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateScreenStateDto"}}}},"responses":{"201":{"description":""}},"tags":["Sync"]}},"/sync/{screenId}/logs":{"post":{"operationId":"SyncController_recordLog","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RecordLogDto"}}}},"responses":{"201":{"description":""}},"tags":["Sync"]},"get":{"operationId":"SyncController_getLogs","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Sync"]}},"/sync/{screenId}/heartbeat":{"post":{"operationId":"SyncController_heartbeat","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"201":{"description":""}},"tags":["Sync"]}},"/sync/{screenId}/check":{"get":{"operationId":"SyncController_checkManifestChanged","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}},{"name":"currentRevision","required":true,"in":"query","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Sync"]}},"/sync/{screenId}/fallback":{"get":{"operationId":"SyncController_getFallback","parameters":[{"name":"screenId","required":true,"in":"path","schema":{"type":"number"}}],"responses":{"200":{"description":""}},"tags":["Sync"]}}},"info":{"title":"CMS API","description":"API dla ekranów","version":"1.0","contact":{}},"tags":[],"servers":[],"components":{"schemas":{"CreateFileDto":{"type":"object","properties":{"filename":{"type":"string"},"originalName":{"type":"string"},"path":{"type":"string"},"mimeType":{"type":"string"},"size":{"type":"number"},"checksum":{"type":"string"},"duration":{"type":"number"}},"required":["filename","originalName","path","mimeType","size","checksum","duration"]},"UpdateFileDto":{"type":"object","properties":{"filename":{"type":"string"},"originalName":{"type":"string"},"path":{"type":"string"},"mimeType":{"type":"string"},"size":{"type":"number"},"checksum":{"type":"string"},"duration":{"type":"number"}},"required":["filename","originalName","path","mimeType","size","checksum","duration"]},"CreatePlaylistDto":{"type":"object","properties":{"name":{"type":"string"},"description":{"type":"string"}},"required":["name","description"]},"UpdatePlaylistDto":{"type":"object","properties":{"name":{"type":"string"},"description":{"type":"string"}},"required":["name","description"]},"AddItemToPlaylistDto":{"type":"object","properties":{"fileId":{"type":"number"},"position":{"type":"number"},"duration":{"type":"number"}},"required":["fileId","position","duration"]},"ReorderPlaylistItemsDto":{"type":"object","properties":{}},"CreateScreenDto":{"type":"object","properties":{"name":{"type":"string"},"location":{"type":"string"},"fallbackFileId":{"type":"number"}},"required":["name","location","fallbackFileId"]},"AssignPlaylistDto":{"type":"object","properties":{}},"UpdateScreenStateDto":{"type":"object","properties":{}},"RecordLogDto":{"type":"object","properties":{}}}}}
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/files": {
+      "post": {
+        "operationId": "FilesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      },
+      "get": {
+        "operationId": "FilesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "operationId": "FilesController_uploadFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/files/videos": {
+      "get": {
+        "operationId": "FilesController_getAllVideos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/files/images": {
+      "get": {
+        "operationId": "FilesController_getAllImages",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/files/{id}": {
+      "get": {
+        "operationId": "FilesController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      },
+      "put": {
+        "operationId": "FilesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      },
+      "delete": {
+        "operationId": "FilesController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/files/{id}/used": {
+      "get": {
+        "operationId": "FilesController_checkIfUsed",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
+    "/playlists": {
+      "post": {
+        "operationId": "PlaylistsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      },
+      "get": {
+        "operationId": "PlaylistsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{id}": {
+      "get": {
+        "operationId": "PlaylistsController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      },
+      "put": {
+        "operationId": "PlaylistsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      },
+      "delete": {
+        "operationId": "PlaylistsController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{id}/revision": {
+      "get": {
+        "operationId": "PlaylistsController_getRevision",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{id}/items": {
+      "post": {
+        "operationId": "PlaylistsController_addItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddItemToPlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{id}/items/{itemId}": {
+      "delete": {
+        "operationId": "PlaylistsController_removeItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{id}/reorder": {
+      "put": {
+        "operationId": "PlaylistsController_reorderItems",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderPlaylistItemsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/screens": {
+      "post": {
+        "operationId": "ScreensController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateScreenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      },
+      "get": {
+        "operationId": "ScreensController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/{id}": {
+      "get": {
+        "operationId": "ScreensController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      },
+      "delete": {
+        "operationId": "ScreensController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/{id}/playlists": {
+      "post": {
+        "operationId": "ScreensController_assignPlaylist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPlaylistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/{id}/playlists/{playlistId}": {
+      "delete": {
+        "operationId": "ScreensController_removePlaylist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "playlistId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      },
+      "put": {
+        "operationId": "ScreensController_updateAssignment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "playlistId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/{id}/api-key": {
+      "post": {
+        "operationId": "ScreensController_generateNewApiKey",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/{id}/heartbeat": {
+      "post": {
+        "operationId": "ScreensController_heartbeat",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/screens/location/{location}": {
+      "get": {
+        "operationId": "ScreensController_getByLocation",
+        "parameters": [
+          {
+            "name": "location",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
+      }
+    },
+    "/sync/manifest": {
+      "get": {
+        "operationId": "SyncController_getManifest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    },
+    "/sync/{screenId}/state": {
+      "post": {
+        "operationId": "SyncController_updateScreenState",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScreenStateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    },
+    "/sync/{screenId}/logs": {
+      "post": {
+        "operationId": "SyncController_recordLog",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      },
+      "get": {
+        "operationId": "SyncController_getLogs",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    },
+    "/sync/{screenId}/heartbeat": {
+      "post": {
+        "operationId": "SyncController_heartbeat",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    },
+    "/sync/{screenId}/check": {
+      "get": {
+        "operationId": "SyncController_checkManifestChanged",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "currentRevision",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    },
+    "/sync/{screenId}/fallback": {
+      "get": {
+        "operationId": "SyncController_getFallback",
+        "parameters": [
+          {
+            "name": "screenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sync"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "CMS API",
+    "description": "API dla ekranów",
+    "version": "1.0",
+    "contact": {
+
+    }
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateFileDto": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "size",
+          "checksum",
+          "duration"
+        ]
+      },
+      "FileEntity": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "UpdateFileDto": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "size",
+          "checksum",
+          "duration"
+        ]
+      },
+      "CreatePlaylistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "UpdatePlaylistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "AddItemToPlaylistDto": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "number"
+          },
+          "position": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "fileId",
+          "position",
+          "duration"
+        ]
+      },
+      "ReorderPlaylistItemsDto": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "CreateScreenDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "fallbackFileId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "location",
+          "fallbackFileId"
+        ]
+      },
+      "AssignPlaylistDto": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "UpdateScreenStateDto": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "RecordLogDto": {
+        "type": "object",
+        "properties": {
+
+        }
+      }
+    }
+  }
+}

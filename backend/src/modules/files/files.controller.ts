@@ -15,12 +15,14 @@ import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileEntity } from '../../entities';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiConsumes, ApiBody,ApiResponse } from '@nestjs/swagger';
 import type { Express } from 'express';
 
 @Controller('files')
 export class FilesController {
   constructor(private filesService: FilesService) {}
+
+
 
   @Post()
   create(@Body() createFileDto: CreateFileDto): Promise<FileEntity> {
@@ -29,6 +31,10 @@ export class FilesController {
 
   @Post('upload')
 @UseInterceptors(FileInterceptor('file'))
+@ApiResponse({
+  status: 201,
+  type: FileEntity,
+})
 @ApiConsumes('multipart/form-data')
 @ApiBody({
   schema: {
