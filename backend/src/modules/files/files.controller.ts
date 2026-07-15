@@ -53,30 +53,55 @@ uploadFile(
   return this.filesService.upload(file);
 }
 
-  @Get()
-  findAll(): Promise<FileEntity[]> {
-    return this.filesService.findAll();
-  }
+@Get()
+@ApiResponse({
+  status: 200,
+  description: 'Lista wszystkich plików',
+  type: [FileEntity],
+})
+findAll(): Promise<FileEntity[]> {
+  return this.filesService.findAll();
+}
 
-  @Get('videos')
-  getAllVideos(): Promise<FileEntity[]> {
-    return this.filesService.getAllVideos();
-  }
+@Get('videos')
+@ApiResponse({
+  status: 200,
+  description: 'Lista plików wideo',
+  type: [FileEntity],
+})
+getAllVideos(): Promise<FileEntity[]> {
+  return this.filesService.getAllVideos();
+}
 
-  @Get('images')
-  getAllImages(): Promise<FileEntity[]> {
-    return this.filesService.getAllImages();
-  }
+@Get('images')
+@ApiResponse({
+  status: 200,
+  description: 'Lista obrazów',
+  type: [FileEntity],
+})
+getAllImages(): Promise<FileEntity[]> {
+  return this.filesService.getAllImages();
+}
 
-  @Get(':id')
-  findById(@Param('id', ParseIntPipe) id: number): Promise<FileEntity> {
-    return this.filesService.findById(id);
-  }
+@Get(':id')
+@ApiResponse({
+  status: 200,
+  description: 'Pojedynczy plik',
+  type: FileEntity,
+})
+findById(@Param('id', ParseIntPipe) id: number): Promise<FileEntity> {
+  return this.filesService.findById(id);
+}
 
-  @Get(':id/used')
-  checkIfUsed(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
-    return this.filesService.checkIfFileIsUsed(id);
-  }
+@Get(':id/used')
+@ApiResponse({
+  status: 200,
+  description: 'Czy plik jest używany',
+  type: Boolean,
+})
+checkIfUsed(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
+  return this.filesService.checkIfFileIsUsed(id);
+}
 
   @Put(':id')
   update(

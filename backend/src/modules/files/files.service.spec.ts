@@ -194,7 +194,7 @@ describe('FilesService', () => {
       };
       (mockFileRepository.createQueryBuilder as jest.Mock).mockReturnValue(mockQueryBuilder);
 
-      await service.delete(1);
+      
 
       expect(mockFileRepository.delete).toHaveBeenCalledWith(1);
     });

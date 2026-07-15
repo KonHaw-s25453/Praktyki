@@ -3,6 +3,8 @@ import { FileRepository } from '../../repositories';
 import { FileEntity } from '../../entities';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class FilesService {
@@ -27,7 +29,7 @@ export class FilesService {
       .getOne();
 
     if (!file) {
-      throw new NotFoundException(`File with ID ${id} not found`);
+      throw new NotFoundException(`Plik o ID ${id} nie został znaleziony`);
     }
 
     return file;
@@ -45,7 +47,7 @@ export class FilesService {
       .getOne();
 
     if (!file) {
-      throw new NotFoundException(`File with ID ${id} not found`);
+      throw new NotFoundException('Plik o ID ${id} nie został znaleziony');
     }
 
     return file.playlistItems && file.playlistItems.length > 0;
@@ -61,16 +63,24 @@ export class FilesService {
   async delete(id: number): Promise<void> {
     const file = await this.findById(id);
 
-    // Sprawdzić czy plik jest używany
     const isUsed = await this.checkIfFileIsUsed(id);
+
     if (isUsed) {
-      throw new ConflictException(
-        `File is used in ${file.playlistItems.length} playlist(s). Remove from playlists first.`,
-      );
+        throw new ConflictException(
+            `Plik należy do ${file.playlistItems.length} playlist(y). Usuń go najpierw z playlisty.`,
+        );
     }
 
-    await this.fileRepository.delete(id);
-  }
+    try {
+        await unlink(join(process.cwd(), file.path));
+    } catch (error) {
+        console.warn(`Nie udało się usunąć pliku fizycznego: ${file.path}`);
+    }
+
+    await this.fileRepository.remove(file);
+}
+
+
 
   async getFilesByMimeType(mimeType: string): Promise<FileEntity[]> {
     return this.fileRepository.findByMimeType(mimeType);

@@ -179,8 +179,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [Object];
       return this.apiClient.callApi(
         '/files', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
