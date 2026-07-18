@@ -14,7 +14,10 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { AddItemToPlaylistDto } from './dto/add-item.dto';
 import { ReorderPlaylistItemsDto } from './dto/reorder-items.dto';
 import { PlaylistEntity, PlaylistItemEntity } from '../../entities';
+import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 
+
+@ApiTags('playlists')
 @Controller('playlists')
 export class PlaylistsController {
   constructor(private playlistsService: PlaylistsService) {}
@@ -24,6 +27,9 @@ export class PlaylistsController {
     return this.playlistsService.create(createPlaylistDto);
   }
 
+  @ApiOkResponse({
+    type: [PlaylistEntity],
+  })
   @Get()
   findAll(): Promise<PlaylistEntity[]> {
     return this.playlistsService.findAll();
@@ -76,3 +82,5 @@ export class PlaylistsController {
     return this.playlistsService.reorderItems(id, reorderDto);
   }
 }
+
+

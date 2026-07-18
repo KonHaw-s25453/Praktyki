@@ -36,7 +36,7 @@ class ApiClient {
         /**
          * The base URL against which to resolve every API call's (relative) path.
          * @type {String}
-         * @default http://localhost
+         * @default http://localhost:3000
          */
         this.basePath = basePath.replace(/\/+$/, '');
 

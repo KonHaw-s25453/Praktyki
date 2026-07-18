@@ -15,6 +15,7 @@
 import ApiClient from "../ApiClient";
 import AddItemToPlaylistDto from '../model/AddItemToPlaylistDto';
 import CreatePlaylistDto from '../model/CreatePlaylistDto';
+import PlaylistEntity from '../model/PlaylistEntity';
 import UpdatePlaylistDto from '../model/UpdatePlaylistDto';
 
 /**
@@ -164,12 +165,13 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerFindAll operation.
      * @callback module:api/PlaylistsApi~playlistsControllerFindAllCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/PlaylistEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/PlaylistsApi~playlistsControllerFindAllCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/PlaylistEntity>}
      */
     playlistsControllerFindAll(callback) {
       let postBody = null;
@@ -185,8 +187,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [PlaylistEntity];
       return this.apiClient.callApi(
         '/playlists', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,

@@ -17,6 +17,8 @@ import AddItemToPlaylistDto from './model/AddItemToPlaylistDto';
 import CreateFileDto from './model/CreateFileDto';
 import CreatePlaylistDto from './model/CreatePlaylistDto';
 import CreateScreenDto from './model/CreateScreenDto';
+import FileEntity from './model/FileEntity';
+import PlaylistEntity from './model/PlaylistEntity';
 import UpdateFileDto from './model/UpdateFileDto';
 import UpdatePlaylistDto from './model/UpdatePlaylistDto';
 import AppApi from './api/AppApi';
@@ -87,6 +89,18 @@ export {
      * @property {module:model/CreateScreenDto}
      */
     CreateScreenDto,
+
+    /**
+     * The FileEntity model constructor.
+     * @property {module:model/FileEntity}
+     */
+    FileEntity,
+
+    /**
+     * The PlaylistEntity model constructor.
+     * @property {module:model/PlaylistEntity}
+     */
+    PlaylistEntity,
 
     /**
      * The UpdateFileDto model constructor.

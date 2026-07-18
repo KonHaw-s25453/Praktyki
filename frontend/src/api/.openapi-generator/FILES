@@ -7,7 +7,9 @@ docs/AppApi.md
 docs/CreateFileDto.md
 docs/CreatePlaylistDto.md
 docs/CreateScreenDto.md
+docs/FileEntity.md
 docs/FilesApi.md
+docs/PlaylistEntity.md
 docs/PlaylistsApi.md
 docs/ScreensApi.md
 docs/SyncApi.md
@@ -27,5 +29,9 @@ src/model/AddItemToPlaylistDto.js
 src/model/CreateFileDto.js
 src/model/CreatePlaylistDto.js
 src/model/CreateScreenDto.js
+src/model/FileEntity.js
+src/model/PlaylistEntity.js
 src/model/UpdateFileDto.js
 src/model/UpdatePlaylistDto.js
+test/model/FileEntity.spec.js
+test/model/PlaylistEntity.spec.js

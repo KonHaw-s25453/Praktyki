@@ -9,32 +9,43 @@ import {
 import { PlaylistItemEntity } from './playlist-item.entity';
 import { ScreenPlaylistEntity } from './screen-playlist.entity';
 import { ScreenStateEntity } from './screen-state.entity';
+import { ApiProperty } from '@nestjs/swagger';
+
 
 @Entity('playlists')
 export class PlaylistEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @ApiProperty({ nullable: true })
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
+  @ApiProperty()
   @Column({ type: 'int', default: 1 })
   revision: number;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 
+  
   @OneToMany(() => PlaylistItemEntity, (item: any) => item.playlist, { cascade: true })
   items: PlaylistItemEntity[];
-
+  
+ 
   @OneToMany(() => ScreenPlaylistEntity, (sp: any) => sp.playlist, { cascade: true })
   screenPlaylists: ScreenPlaylistEntity[];
+
 
   @OneToMany(() => ScreenStateEntity, (state: any) => state.currentPlaylist)
   screenStates: ScreenStateEntity[];

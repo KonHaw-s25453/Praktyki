@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 ## filesControllerCheckIfUsed
 
-> filesControllerCheckIfUsed(id)
+> Boolean filesControllerCheckIfUsed(id)
 
 
 
@@ -33,7 +33,7 @@ apiInstance.filesControllerCheckIfUsed(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -47,7 +47,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**Boolean**
 
 ### Authorization
 
@@ -56,7 +56,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerCreate
@@ -147,7 +147,7 @@ No authorization required
 
 ## filesControllerFindAll
 
-> filesControllerFindAll()
+> [FileEntity] filesControllerFindAll()
 
 
 
@@ -161,7 +161,7 @@ apiInstance.filesControllerFindAll((error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -172,7 +172,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-null (empty response body)
+[**[FileEntity]**](FileEntity.md)
 
 ### Authorization
 
@@ -181,12 +181,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerFindById
 
-> filesControllerFindById(id)
+> FileEntity filesControllerFindById(id)
 
 
 
@@ -201,7 +201,7 @@ apiInstance.filesControllerFindById(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -215,7 +215,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**FileEntity**](FileEntity.md)
 
 ### Authorization
 
@@ -224,12 +224,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerGetAllImages
 
-> filesControllerGetAllImages()
+> [FileEntity] filesControllerGetAllImages()
 
 
 
@@ -243,7 +243,7 @@ apiInstance.filesControllerGetAllImages((error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -254,7 +254,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-null (empty response body)
+[**[FileEntity]**](FileEntity.md)
 
 ### Authorization
 
@@ -263,12 +263,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerGetAllVideos
 
-> filesControllerGetAllVideos()
+> [FileEntity] filesControllerGetAllVideos()
 
 
 
@@ -282,7 +282,7 @@ apiInstance.filesControllerGetAllVideos((error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -293,7 +293,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-null (empty response body)
+[**[FileEntity]**](FileEntity.md)
 
 ### Authorization
 
@@ -302,7 +302,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerUpdate
@@ -352,7 +352,7 @@ No authorization required
 
 ## filesControllerUploadFile
 
-> Object filesControllerUploadFile(opts)
+> FileEntity filesControllerUploadFile(opts)
 
 
 
@@ -383,7 +383,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Object**
+[**FileEntity**](FileEntity.md)
 
 ### Authorization
 

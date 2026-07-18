@@ -14,6 +14,7 @@
 
 import ApiClient from "../ApiClient";
 import CreateFileDto from '../model/CreateFileDto';
+import FileEntity from '../model/FileEntity';
 import UpdateFileDto from '../model/UpdateFileDto';
 
 /**
@@ -39,13 +40,14 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerCheckIfUsed operation.
      * @callback module:api/FilesApi~filesControllerCheckIfUsedCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Boolean} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/FilesApi~filesControllerCheckIfUsedCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Boolean}
      */
     filesControllerCheckIfUsed(id, callback) {
       let postBody = null;
@@ -66,8 +68,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = 'Boolean';
       return this.apiClient.callApi(
         '/files/{id}/used', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -158,12 +160,13 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerFindAll operation.
      * @callback module:api/FilesApi~filesControllerFindAllCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/FileEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/FilesApi~filesControllerFindAllCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/FileEntity>}
      */
     filesControllerFindAll(callback) {
       let postBody = null;
@@ -180,7 +183,7 @@ export default class FilesApi {
       let authNames = [];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [Object];
+      let returnType = [FileEntity];
       return this.apiClient.callApi(
         '/files', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -192,13 +195,14 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerFindById operation.
      * @callback module:api/FilesApi~filesControllerFindByIdCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/FileEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/FilesApi~filesControllerFindByIdCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/FileEntity}
      */
     filesControllerFindById(id, callback) {
       let postBody = null;
@@ -219,8 +223,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = FileEntity;
       return this.apiClient.callApi(
         '/files/{id}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -232,12 +236,13 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerGetAllImages operation.
      * @callback module:api/FilesApi~filesControllerGetAllImagesCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/FileEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/FilesApi~filesControllerGetAllImagesCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/FileEntity>}
      */
     filesControllerGetAllImages(callback) {
       let postBody = null;
@@ -253,8 +258,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [FileEntity];
       return this.apiClient.callApi(
         '/files/images', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -266,12 +271,13 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerGetAllVideos operation.
      * @callback module:api/FilesApi~filesControllerGetAllVideosCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/FileEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/FilesApi~filesControllerGetAllVideosCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/FileEntity>}
      */
     filesControllerGetAllVideos(callback) {
       let postBody = null;
@@ -287,8 +293,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [FileEntity];
       return this.apiClient.callApi(
         '/files/videos', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -345,7 +351,7 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerUploadFile operation.
      * @callback module:api/FilesApi~filesControllerUploadFileCallback
      * @param {String} error Error message, if any.
-     * @param {Object} data The data returned by the service call.
+     * @param {module:model/FileEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -353,7 +359,7 @@ export default class FilesApi {
      * @param {Object} opts Optional parameters
      * @param {File} [file] 
      * @param {module:api/FilesApi~filesControllerUploadFileCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Object}
+     * data is of type: {@link module:model/FileEntity}
      */
     filesControllerUploadFile(opts, callback) {
       opts = opts || {};
@@ -372,7 +378,7 @@ export default class FilesApi {
       let authNames = [];
       let contentTypes = ['multipart/form-data'];
       let accepts = ['application/json'];
-      let returnType = Object;
+      let returnType = FileEntity;
       return this.apiClient.callApi(
         '/files/upload', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,

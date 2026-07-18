@@ -43,7 +43,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Lista wszystkich plików",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -94,7 +104,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Lista plików wideo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -108,7 +128,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Lista obrazów",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -131,7 +161,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Pojedynczy plik",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -206,7 +243,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Czy plik jest używany",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -234,7 +278,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       },
       "get": {
@@ -242,11 +286,21 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaylistEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -269,7 +323,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       },
       "put": {
@@ -300,7 +354,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       },
       "delete": {
@@ -321,7 +375,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -344,7 +398,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -377,7 +431,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -408,7 +462,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -441,7 +495,7 @@
           }
         },
         "tags": [
-          "Playlists"
+          "playlists"
         ]
       }
     },
@@ -916,8 +970,62 @@
       "FileEntity": {
         "type": "object",
         "properties": {
-
-        }
+          "id": {
+            "type": "number"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "object"
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playlistItems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "screenAsFallback": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "duration",
+          "size",
+          "checksum",
+          "createdAt",
+          "updatedAt",
+          "playlistItems",
+          "screenAsFallback"
+        ]
       },
       "UpdateFileDto": {
         "type": "object",
@@ -967,6 +1075,40 @@
         "required": [
           "name",
           "description"
+        ]
+      },
+      "PlaylistEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "object",
+            "nullable": true
+          },
+          "revision": {
+            "type": "number"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "revision",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "UpdatePlaylistDto": {

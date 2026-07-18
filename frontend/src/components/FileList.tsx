@@ -1,5 +1,7 @@
+import type { FileDto } from "../types/FileDto";
+
 interface FileListProps {
-    files: any[];
+    files: FileDto[];
     onDelete: (id: number) => void;
 }
 

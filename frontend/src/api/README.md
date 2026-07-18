@@ -164,6 +164,8 @@ Class | Method | HTTP request | Description
  - [CmsApi.CreateFileDto](docs/CreateFileDto.md)
  - [CmsApi.CreatePlaylistDto](docs/CreatePlaylistDto.md)
  - [CmsApi.CreateScreenDto](docs/CreateScreenDto.md)
+ - [CmsApi.FileEntity](docs/FileEntity.md)
+ - [CmsApi.PlaylistEntity](docs/PlaylistEntity.md)
  - [CmsApi.UpdateFileDto](docs/UpdateFileDto.md)
  - [CmsApi.UpdatePlaylistDto](docs/UpdatePlaylistDto.md)
 
