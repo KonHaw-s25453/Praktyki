@@ -13,6 +13,7 @@
 
 
 import ApiClient from "../ApiClient";
+import RecordLogDto from '../model/RecordLogDto';
 
 /**
 * Sync service.
@@ -243,18 +244,18 @@ export default class SyncApi {
 
     /**
      * @param {Number} screenId 
-     * @param {Object.<String, Object>} body 
+     * @param {module:model/RecordLogDto} recordLogDto 
      * @param {module:api/SyncApi~syncControllerRecordLogCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    syncControllerRecordLog(screenId, body, callback) {
-      let postBody = body;
+    syncControllerRecordLog(screenId, recordLogDto, callback) {
+      let postBody = recordLogDto;
       // verify the required parameter 'screenId' is set
       if (screenId === undefined || screenId === null) {
         throw new Error("Missing the required parameter 'screenId' when calling syncControllerRecordLog");
       }
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling syncControllerRecordLog");
+      // verify the required parameter 'recordLogDto' is set
+      if (recordLogDto === undefined || recordLogDto === null) {
+        throw new Error("Missing the required parameter 'recordLogDto' when calling syncControllerRecordLog");
       }
 
       let pathParams = {

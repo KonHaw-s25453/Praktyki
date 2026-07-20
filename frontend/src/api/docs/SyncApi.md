@@ -1,6 +1,6 @@
 # CmsApi.SyncApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -229,7 +229,7 @@ No authorization required
 
 ## syncControllerRecordLog
 
-> syncControllerRecordLog(screenId, body)
+> syncControllerRecordLog(screenId, recordLogDto)
 
 
 
@@ -240,8 +240,8 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
 let screenId = 3.4; // Number | 
-let body = {key: null}; // Object | 
-apiInstance.syncControllerRecordLog(screenId, body, (error, data, response) => {
+let recordLogDto = new CmsApi.RecordLogDto(); // RecordLogDto | 
+apiInstance.syncControllerRecordLog(screenId, recordLogDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -256,7 +256,7 @@ apiInstance.syncControllerRecordLog(screenId, body, (error, data, response) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **screenId** | **Number**|  | 
- **body** | **Object**|  | 
+ **recordLogDto** | [**RecordLogDto**](RecordLogDto.md)|  | 
 
 ### Return type
 

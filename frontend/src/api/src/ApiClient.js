@@ -594,7 +594,7 @@ class ApiClient {
     hostSettings() {
         return [
             {
-              'url': "",
+              'url': "http://localhost:3000",
               'description': "No description provided",
             }
       ];

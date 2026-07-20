@@ -1,6 +1,6 @@
 # CmsApi.PlaylistsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 ## playlistsControllerAddItem
 
-> playlistsControllerAddItem(id, addItemToPlaylistDto)
+> PlaylistItemEntity playlistsControllerAddItem(id, addItemToPlaylistDto)
 
 
 
@@ -34,7 +34,7 @@ apiInstance.playlistsControllerAddItem(id, addItemToPlaylistDto, (error, data, r
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -49,7 +49,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**PlaylistItemEntity**](PlaylistItemEntity.md)
 
 ### Authorization
 
@@ -58,12 +58,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## playlistsControllerCreate
 
-> playlistsControllerCreate(createPlaylistDto)
+> PlaylistEntity playlistsControllerCreate(createPlaylistDto)
 
 
 
@@ -78,7 +78,7 @@ apiInstance.playlistsControllerCreate(createPlaylistDto, (error, data, response)
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -92,7 +92,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**PlaylistEntity**](PlaylistEntity.md)
 
 ### Authorization
 
@@ -101,7 +101,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## playlistsControllerDelete
@@ -188,7 +188,7 @@ No authorization required
 
 ## playlistsControllerFindById
 
-> playlistsControllerFindById(id)
+> PlaylistEntity playlistsControllerFindById(id)
 
 
 
@@ -203,7 +203,7 @@ apiInstance.playlistsControllerFindById(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -217,7 +217,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**PlaylistEntity**](PlaylistEntity.md)
 
 ### Authorization
 
@@ -226,12 +226,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## playlistsControllerGetRevision
 
-> playlistsControllerGetRevision(id)
+> Number playlistsControllerGetRevision(id)
 
 
 
@@ -246,7 +246,7 @@ apiInstance.playlistsControllerGetRevision(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -260,7 +260,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**Number**
 
 ### Authorization
 
@@ -269,7 +269,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## playlistsControllerRemoveItem
@@ -319,7 +319,7 @@ No authorization required
 
 ## playlistsControllerReorderItems
 
-> playlistsControllerReorderItems(id, body)
+> playlistsControllerReorderItems(id, reorderPlaylistItemsDto)
 
 
 
@@ -330,8 +330,8 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.PlaylistsApi();
 let id = 3.4; // Number | 
-let body = {key: null}; // Object | 
-apiInstance.playlistsControllerReorderItems(id, body, (error, data, response) => {
+let reorderPlaylistItemsDto = new CmsApi.ReorderPlaylistItemsDto(); // ReorderPlaylistItemsDto | 
+apiInstance.playlistsControllerReorderItems(id, reorderPlaylistItemsDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -346,7 +346,7 @@ apiInstance.playlistsControllerReorderItems(id, body, (error, data, response) =>
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Number**|  | 
- **body** | **Object**|  | 
+ **reorderPlaylistItemsDto** | [**ReorderPlaylistItemsDto**](ReorderPlaylistItemsDto.md)|  | 
 
 ### Return type
 
@@ -364,7 +364,7 @@ No authorization required
 
 ## playlistsControllerUpdate
 
-> playlistsControllerUpdate(id, updatePlaylistDto)
+> PlaylistEntity playlistsControllerUpdate(id, updatePlaylistDto)
 
 
 
@@ -380,7 +380,7 @@ apiInstance.playlistsControllerUpdate(id, updatePlaylistDto, (error, data, respo
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -395,7 +395,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**PlaylistEntity**](PlaylistEntity.md)
 
 ### Authorization
 
@@ -404,5 +404,5 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 

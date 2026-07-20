@@ -3,11 +3,13 @@ import type { PlaylistDto } from "../types/PlaylistDto";
 interface PlaylistListProps {
     playlists: PlaylistDto[];
     onDelete: (id: number) => void;
+    onEdit: (id: number) => void;
 }
 
 export default function PlaylistList({
     playlists,
     onDelete,
+    onEdit,
 }: PlaylistListProps) {
     return (
         <ul>
@@ -17,6 +19,9 @@ export default function PlaylistList({
 
                     <button onClick={() => onDelete(playlist.id)}>
                         Usuń
+                    </button>
+                    <button onClick={() => onEdit(playlist.id)}>
+                        Edytuj
                     </button>
                 </li>
             ))}

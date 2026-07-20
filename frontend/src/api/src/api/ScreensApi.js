@@ -13,6 +13,7 @@
 
 
 import ApiClient from "../ApiClient";
+import AssignPlaylistDto from '../model/AssignPlaylistDto';
 import CreateScreenDto from '../model/CreateScreenDto';
 
 /**
@@ -44,18 +45,18 @@ export default class ScreensApi {
 
     /**
      * @param {Number} id 
-     * @param {Object.<String, Object>} body 
+     * @param {module:model/AssignPlaylistDto} assignPlaylistDto 
      * @param {module:api/ScreensApi~screensControllerAssignPlaylistCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    screensControllerAssignPlaylist(id, body, callback) {
-      let postBody = body;
+    screensControllerAssignPlaylist(id, assignPlaylistDto, callback) {
+      let postBody = assignPlaylistDto;
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
         throw new Error("Missing the required parameter 'id' when calling screensControllerAssignPlaylist");
       }
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling screensControllerAssignPlaylist");
+      // verify the required parameter 'assignPlaylistDto' is set
+      if (assignPlaylistDto === undefined || assignPlaylistDto === null) {
+        throw new Error("Missing the required parameter 'assignPlaylistDto' when calling screensControllerAssignPlaylist");
       }
 
       let pathParams = {

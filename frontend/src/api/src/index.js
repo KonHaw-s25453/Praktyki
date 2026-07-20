@@ -14,11 +14,15 @@
 
 import ApiClient from './ApiClient';
 import AddItemToPlaylistDto from './model/AddItemToPlaylistDto';
+import AssignPlaylistDto from './model/AssignPlaylistDto';
 import CreateFileDto from './model/CreateFileDto';
 import CreatePlaylistDto from './model/CreatePlaylistDto';
 import CreateScreenDto from './model/CreateScreenDto';
 import FileEntity from './model/FileEntity';
 import PlaylistEntity from './model/PlaylistEntity';
+import PlaylistItemEntity from './model/PlaylistItemEntity';
+import RecordLogDto from './model/RecordLogDto';
+import ReorderPlaylistItemsDto from './model/ReorderPlaylistItemsDto';
 import UpdateFileDto from './model/UpdateFileDto';
 import UpdatePlaylistDto from './model/UpdatePlaylistDto';
 import AppApi from './api/AppApi';
@@ -73,6 +77,12 @@ export {
     AddItemToPlaylistDto,
 
     /**
+     * The AssignPlaylistDto model constructor.
+     * @property {module:model/AssignPlaylistDto}
+     */
+    AssignPlaylistDto,
+
+    /**
      * The CreateFileDto model constructor.
      * @property {module:model/CreateFileDto}
      */
@@ -101,6 +111,24 @@ export {
      * @property {module:model/PlaylistEntity}
      */
     PlaylistEntity,
+
+    /**
+     * The PlaylistItemEntity model constructor.
+     * @property {module:model/PlaylistItemEntity}
+     */
+    PlaylistItemEntity,
+
+    /**
+     * The RecordLogDto model constructor.
+     * @property {module:model/RecordLogDto}
+     */
+    RecordLogDto,
+
+    /**
+     * The ReorderPlaylistItemsDto model constructor.
+     * @property {module:model/ReorderPlaylistItemsDto}
+     */
+    ReorderPlaylistItemsDto,
 
     /**
      * The UpdateFileDto model constructor.

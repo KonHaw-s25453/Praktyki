@@ -22,6 +22,10 @@ import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 export class PlaylistsController {
   constructor(private playlistsService: PlaylistsService) {}
 
+  @ApiOkResponse({
+    type: PlaylistEntity,
+  })
+
   @Post()
   create(@Body() createPlaylistDto: CreatePlaylistDto): Promise<PlaylistEntity> {
     return this.playlistsService.create(createPlaylistDto);
@@ -30,20 +34,33 @@ export class PlaylistsController {
   @ApiOkResponse({
     type: [PlaylistEntity],
   })
+
   @Get()
   findAll(): Promise<PlaylistEntity[]> {
     return this.playlistsService.findAll();
   }
+
+    @ApiOkResponse({
+    type: PlaylistEntity,
+  })
 
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number): Promise<PlaylistEntity> {
     return this.playlistsService.findById(id);
   }
 
+    @ApiOkResponse({
+    type: Number,
+  })
+
   @Get(':id/revision')
   getRevision(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.playlistsService.getPlaylistRevision(id);
   }
+
+    @ApiOkResponse({
+    type: PlaylistEntity,
+  })
 
   @Put(':id')
   update(
@@ -57,6 +74,11 @@ export class PlaylistsController {
   delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.playlistsService.delete(id);
   }
+
+  
+@ApiOkResponse({
+  type: PlaylistItemEntity,
+})
 
   @Post(':id/items')
   addItem(

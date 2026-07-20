@@ -10,10 +10,13 @@ import type { PlaylistEntity } from "../api/src/model/PlaylistEntity";
 
 const filesApi = new PlaylistsApi();
 
+type PlaylistsPageProps = {
+    onEdit: (playlistId: number) => void;
+};
 
-export default function PlaylistsPage() {
+export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
 
-    const [files, setPlaylists] = useState<PlaylistEntity[]>([]);
+    const [playlists, setPlaylists] = useState<PlaylistEntity[]>([]);
     const [loading, setLoading] = useState(true);
 
 
@@ -38,6 +41,7 @@ export default function PlaylistsPage() {
         }
     );
 };
+
 
 
 useEffect(() => {
@@ -88,9 +92,10 @@ useEffect(() => {
             </h1>
 
             <PlaylistList
-                playlists={files}
-                onDelete={deletePlaylist}
-            />
+    playlists={playlists}
+    onDelete={deletePlaylist}
+    onEdit={onEdit}
+/>  
 
         </div>
     );

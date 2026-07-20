@@ -41,20 +41,22 @@ export class PlaylistItemEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+  type: () => PlaylistEntity,
+})
   @ManyToOne(() => PlaylistEntity, playlist => playlist.items, {
-    onDelete: 'CASCADE',
+  onDelete: 'CASCADE',
   })
-  @ApiProperty()
   @JoinColumn({ name: 'playlist_id' })
   playlist: PlaylistEntity;
 
-  @ApiProperty()
+  @ApiProperty({
+  type: () => FileEntity,
+})
   @ManyToOne(() => FileEntity, file => file.playlistItems, {
-    onDelete: 'CASCADE',
+  onDelete: 'CASCADE',
   })
-
-  @ApiProperty()
   @JoinColumn({ name: 'file_id' })
   file: FileEntity;
 }
+

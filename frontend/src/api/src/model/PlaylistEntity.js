@@ -12,6 +12,7 @@
  */
 
 import ApiClient from '../ApiClient';
+import PlaylistItemEntity from './PlaylistItemEntity';
 
 /**
  * The PlaylistEntity model module.
@@ -28,10 +29,13 @@ class PlaylistEntity {
      * @param revision {Number} 
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
+     * @param items {Array.<module:model/PlaylistItemEntity>} 
+     * @param screenPlaylists {Array.<Object>} 
+     * @param screenStates {Array.<Object>} 
      */
-    constructor(id, name, description, revision, createdAt, updatedAt) { 
+    constructor(id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
         
-        PlaylistEntity.initialize(this, id, name, description, revision, createdAt, updatedAt);
+        PlaylistEntity.initialize(this, id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates);
     }
 
     /**
@@ -39,13 +43,16 @@ class PlaylistEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, name, description, revision, createdAt, updatedAt) { 
+    static initialize(obj, id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
         obj['id'] = id;
         obj['name'] = name;
         obj['description'] = description;
         obj['revision'] = revision;
         obj['createdAt'] = createdAt;
         obj['updatedAt'] = updatedAt;
+        obj['items'] = items;
+        obj['screenPlaylists'] = screenPlaylists;
+        obj['screenStates'] = screenStates;
     }
 
     /**
@@ -77,6 +84,15 @@ class PlaylistEntity {
             if (data.hasOwnProperty('updatedAt')) {
                 obj['updatedAt'] = ApiClient.convertToType(data['updatedAt'], 'Date');
             }
+            if (data.hasOwnProperty('items')) {
+                obj['items'] = ApiClient.convertToType(data['items'], [PlaylistItemEntity]);
+            }
+            if (data.hasOwnProperty('screenPlaylists')) {
+                obj['screenPlaylists'] = ApiClient.convertToType(data['screenPlaylists'], [Object]);
+            }
+            if (data.hasOwnProperty('screenStates')) {
+                obj['screenStates'] = ApiClient.convertToType(data['screenStates'], [Object]);
+            }
         }
         return obj;
     }
@@ -97,6 +113,24 @@ class PlaylistEntity {
         if (data['name'] && !(typeof data['name'] === 'string' || data['name'] instanceof String)) {
             throw new Error("Expected the field `name` to be a primitive type in the JSON string but got " + data['name']);
         }
+        if (data['items']) { // data not null
+            // ensure the json data is an array
+            if (!Array.isArray(data['items'])) {
+                throw new Error("Expected the field `items` to be an array in the JSON data but got " + data['items']);
+            }
+            // validate the optional field `items` (array)
+            for (const item of data['items']) {
+                PlaylistItemEntity.validateJSON(item);
+            };
+        }
+        // ensure the json data is an array
+        if (!Array.isArray(data['screenPlaylists'])) {
+            throw new Error("Expected the field `screenPlaylists` to be an array in the JSON data but got " + data['screenPlaylists']);
+        }
+        // ensure the json data is an array
+        if (!Array.isArray(data['screenStates'])) {
+            throw new Error("Expected the field `screenStates` to be an array in the JSON data but got " + data['screenStates']);
+        }
 
         return true;
     }
@@ -104,7 +138,7 @@ class PlaylistEntity {
 
 }
 
-PlaylistEntity.RequiredProperties = ["id", "name", "description", "revision", "createdAt", "updatedAt"];
+PlaylistEntity.RequiredProperties = ["id", "name", "description", "revision", "createdAt", "updatedAt", "items", "screenPlaylists", "screenStates"];
 
 /**
  * @member {Number} id
@@ -135,6 +169,21 @@ PlaylistEntity.prototype['createdAt'] = undefined;
  * @member {Date} updatedAt
  */
 PlaylistEntity.prototype['updatedAt'] = undefined;
+
+/**
+ * @member {Array.<module:model/PlaylistItemEntity>} items
+ */
+PlaylistEntity.prototype['items'] = undefined;
+
+/**
+ * @member {Array.<Object>} screenPlaylists
+ */
+PlaylistEntity.prototype['screenPlaylists'] = undefined;
+
+/**
+ * @member {Array.<Object>} screenStates
+ */
+PlaylistEntity.prototype['screenStates'] = undefined;
 
 
 

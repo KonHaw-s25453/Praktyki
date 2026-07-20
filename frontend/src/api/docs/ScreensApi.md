@@ -1,6 +1,6 @@
 # CmsApi.ScreensApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -19,7 +19,7 @@ Method | HTTP request | Description
 
 ## screensControllerAssignPlaylist
 
-> screensControllerAssignPlaylist(id, body)
+> screensControllerAssignPlaylist(id, assignPlaylistDto)
 
 
 
@@ -30,8 +30,8 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.ScreensApi();
 let id = 3.4; // Number | 
-let body = {key: null}; // Object | 
-apiInstance.screensControllerAssignPlaylist(id, body, (error, data, response) => {
+let assignPlaylistDto = new CmsApi.AssignPlaylistDto(); // AssignPlaylistDto | 
+apiInstance.screensControllerAssignPlaylist(id, assignPlaylistDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -46,7 +46,7 @@ apiInstance.screensControllerAssignPlaylist(id, body, (error, data, response) =>
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Number**|  | 
- **body** | **Object**|  | 
+ **assignPlaylistDto** | [**AssignPlaylistDto**](AssignPlaylistDto.md)|  | 
 
 ### Return type
 

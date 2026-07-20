@@ -38,15 +38,21 @@ export class PlaylistEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  
+  @ApiProperty({
+  type: () => [PlaylistItemEntity],
+  })
   @OneToMany(() => PlaylistItemEntity, (item: any) => item.playlist, { cascade: true })
   items: PlaylistItemEntity[];
   
- 
+  @ApiProperty({
+  type: () => [ScreenPlaylistEntity],
+  })
   @OneToMany(() => ScreenPlaylistEntity, (sp: any) => sp.playlist, { cascade: true })
   screenPlaylists: ScreenPlaylistEntity[];
 
-
+  @ApiProperty({
+  type: () => [ScreenStateEntity],
+  })
   @OneToMany(() => ScreenStateEntity, (state: any) => state.currentPlaylist)
   screenStates: ScreenStateEntity[];
 }

@@ -273,8 +273,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -319,7 +326,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -350,7 +364,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -394,7 +415,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -426,8 +454,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistItemEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -929,7 +964,11 @@
     }
   },
   "tags": [],
-  "servers": [],
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
   "components": {
     "schemas": {
       "CreateFileDto": {
@@ -1077,6 +1116,18 @@
           "description"
         ]
       },
+      "ScreenPlaylistEntity": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "ScreenStateEntity": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
       "PlaylistEntity": {
         "type": "object",
         "properties": {
@@ -1100,6 +1151,24 @@
           "updatedAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaylistItemEntity"
+            }
+          },
+          "screenPlaylists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenPlaylistEntity"
+            }
+          },
+          "screenStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenStateEntity"
+            }
           }
         },
         "required": [
@@ -1108,7 +1177,55 @@
           "description",
           "revision",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "items",
+          "screenPlaylists",
+          "screenStates"
+        ]
+      },
+      "PlaylistItemEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "playlistId": {
+            "type": "number"
+          },
+          "fileId": {
+            "type": "number"
+          },
+          "position": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playlist": {
+            "$ref": "#/components/schemas/PlaylistEntity"
+          },
+          "file": {
+            "$ref": "#/components/schemas/FileEntity"
+          }
+        },
+        "required": [
+          "id",
+          "playlistId",
+          "fileId",
+          "position",
+          "duration",
+          "createdAt",
+          "updatedAt",
+          "playlist",
+          "file"
         ]
       },
       "UpdatePlaylistDto": {
@@ -1148,8 +1265,17 @@
       "ReorderPlaylistItemsDto": {
         "type": "object",
         "properties": {
-
-        }
+          "itemIds": {
+            "example": [5, 2, 7],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "itemIds"
+        ]
       },
       "CreateScreenDto": {
         "type": "object",
@@ -1173,8 +1299,30 @@
       "AssignPlaylistDto": {
         "type": "object",
         "properties": {
-
-        }
+          "playlistId": {
+            "type": "number",
+            "example": 1,
+            "description": "ID playlisty przypisywanej do ekranu"
+          },
+          "priority": {
+            "type": "number",
+            "example": 10,
+            "description": "Priorytet przypisania"
+          },
+          "activeFrom": {
+            "type": "string",
+            "example": "2026-07-20T12:00:00Z",
+            "description": "Data rozpoczęcia aktywności playlisty"
+          },
+          "activeTo": {
+            "type": "string",
+            "example": "2026-08-20T12:00:00Z",
+            "description": "Data zakończenia aktywności playlisty"
+          }
+        },
+        "required": [
+          "playlistId"
+        ]
       },
       "UpdateScreenStateDto": {
         "type": "object",
@@ -1185,8 +1333,25 @@
       "RecordLogDto": {
         "type": "object",
         "properties": {
-
-        }
+          "message": {
+            "type": "string",
+            "example": "Playback started",
+            "description": "Treść komunikatu logu"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "INFO",
+              "ERROR",
+              "PLAYBACK"
+            ],
+            "example": "INFO",
+            "description": "Poziom logu"
+          }
+        },
+        "required": [
+          "message"
+        ]
       }
     }
   }

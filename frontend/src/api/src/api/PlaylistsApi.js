@@ -16,6 +16,8 @@ import ApiClient from "../ApiClient";
 import AddItemToPlaylistDto from '../model/AddItemToPlaylistDto';
 import CreatePlaylistDto from '../model/CreatePlaylistDto';
 import PlaylistEntity from '../model/PlaylistEntity';
+import PlaylistItemEntity from '../model/PlaylistItemEntity';
+import ReorderPlaylistItemsDto from '../model/ReorderPlaylistItemsDto';
 import UpdatePlaylistDto from '../model/UpdatePlaylistDto';
 
 /**
@@ -41,7 +43,7 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerAddItem operation.
      * @callback module:api/PlaylistsApi~playlistsControllerAddItemCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/PlaylistItemEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -49,6 +51,7 @@ export default class PlaylistsApi {
      * @param {Number} id 
      * @param {module:model/AddItemToPlaylistDto} addItemToPlaylistDto 
      * @param {module:api/PlaylistsApi~playlistsControllerAddItemCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/PlaylistItemEntity}
      */
     playlistsControllerAddItem(id, addItemToPlaylistDto, callback) {
       let postBody = addItemToPlaylistDto;
@@ -73,8 +76,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = PlaylistItemEntity;
       return this.apiClient.callApi(
         '/playlists/{id}/items', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -86,13 +89,14 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerCreate operation.
      * @callback module:api/PlaylistsApi~playlistsControllerCreateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/PlaylistEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:model/CreatePlaylistDto} createPlaylistDto 
      * @param {module:api/PlaylistsApi~playlistsControllerCreateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/PlaylistEntity}
      */
     playlistsControllerCreate(createPlaylistDto, callback) {
       let postBody = createPlaylistDto;
@@ -112,8 +116,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = PlaylistEntity;
       return this.apiClient.callApi(
         '/playlists', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -200,13 +204,14 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerFindById operation.
      * @callback module:api/PlaylistsApi~playlistsControllerFindByIdCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/PlaylistEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/PlaylistsApi~playlistsControllerFindByIdCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/PlaylistEntity}
      */
     playlistsControllerFindById(id, callback) {
       let postBody = null;
@@ -227,8 +232,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = PlaylistEntity;
       return this.apiClient.callApi(
         '/playlists/{id}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -240,13 +245,14 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerGetRevision operation.
      * @callback module:api/PlaylistsApi~playlistsControllerGetRevisionCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Number} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/PlaylistsApi~playlistsControllerGetRevisionCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Number}
      */
     playlistsControllerGetRevision(id, callback) {
       let postBody = null;
@@ -267,8 +273,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = 'Number';
       return this.apiClient.callApi(
         '/playlists/{id}/revision', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -332,18 +338,18 @@ export default class PlaylistsApi {
 
     /**
      * @param {Number} id 
-     * @param {Object.<String, Object>} body 
+     * @param {module:model/ReorderPlaylistItemsDto} reorderPlaylistItemsDto 
      * @param {module:api/PlaylistsApi~playlistsControllerReorderItemsCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    playlistsControllerReorderItems(id, body, callback) {
-      let postBody = body;
+    playlistsControllerReorderItems(id, reorderPlaylistItemsDto, callback) {
+      let postBody = reorderPlaylistItemsDto;
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
         throw new Error("Missing the required parameter 'id' when calling playlistsControllerReorderItems");
       }
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling playlistsControllerReorderItems");
+      // verify the required parameter 'reorderPlaylistItemsDto' is set
+      if (reorderPlaylistItemsDto === undefined || reorderPlaylistItemsDto === null) {
+        throw new Error("Missing the required parameter 'reorderPlaylistItemsDto' when calling playlistsControllerReorderItems");
       }
 
       let pathParams = {
@@ -371,7 +377,7 @@ export default class PlaylistsApi {
      * Callback function to receive the result of the playlistsControllerUpdate operation.
      * @callback module:api/PlaylistsApi~playlistsControllerUpdateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/PlaylistEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -379,6 +385,7 @@ export default class PlaylistsApi {
      * @param {Number} id 
      * @param {module:model/UpdatePlaylistDto} updatePlaylistDto 
      * @param {module:api/PlaylistsApi~playlistsControllerUpdateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/PlaylistEntity}
      */
     playlistsControllerUpdate(id, updatePlaylistDto, callback) {
       let postBody = updatePlaylistDto;
@@ -403,8 +410,8 @@ export default class PlaylistsApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = PlaylistEntity;
       return this.apiClient.callApi(
         '/playlists/{id}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,

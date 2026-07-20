@@ -116,7 +116,7 @@ api.appControllerGetHello(callback);
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -161,11 +161,15 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [CmsApi.AddItemToPlaylistDto](docs/AddItemToPlaylistDto.md)
+ - [CmsApi.AssignPlaylistDto](docs/AssignPlaylistDto.md)
  - [CmsApi.CreateFileDto](docs/CreateFileDto.md)
  - [CmsApi.CreatePlaylistDto](docs/CreatePlaylistDto.md)
  - [CmsApi.CreateScreenDto](docs/CreateScreenDto.md)
  - [CmsApi.FileEntity](docs/FileEntity.md)
  - [CmsApi.PlaylistEntity](docs/PlaylistEntity.md)
+ - [CmsApi.PlaylistItemEntity](docs/PlaylistItemEntity.md)
+ - [CmsApi.RecordLogDto](docs/RecordLogDto.md)
+ - [CmsApi.ReorderPlaylistItemsDto](docs/ReorderPlaylistItemsDto.md)
  - [CmsApi.UpdateFileDto](docs/UpdateFileDto.md)
  - [CmsApi.UpdatePlaylistDto](docs/UpdatePlaylistDto.md)
 

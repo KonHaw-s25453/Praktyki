@@ -20,10 +20,11 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('CMS API')
-    .setDescription('API dla ekranów')
-    .setVersion('1.0')
-    .build();
+  .setTitle('CMS API')
+  .setDescription('API dla ekranów')
+  .setVersion('1.0')
+  .addServer('http://localhost:3000')
+  .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
