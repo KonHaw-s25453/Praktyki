@@ -23,15 +23,18 @@ export class PlaylistsService {
     return this.playlistRepository.findAllWithItems();
   }
 
-  async findById(id: number): Promise<PlaylistEntity> {
+async findById(id: number): Promise<PlaylistEntity> {
+
     const playlist = await this.playlistRepository.findWithItems(id);
 
     if (!playlist) {
-      throw new NotFoundException(`Playlist with ID ${id} not found`);
+        throw new NotFoundException(
+            `Playlist ${id} not found`
+        );
     }
 
     return playlist;
-  }
+}
 
   async update(id: number, updatePlaylistDto: UpdatePlaylistDto): Promise<PlaylistEntity> {
     await this.findById(id); // sprawdzić czy istnieje
@@ -71,8 +74,8 @@ export class PlaylistsService {
     }
 
     const item = this.playlistItemRepository.create({
-      playlistId,
-      fileId: addItemDto.fileId,
+      playlist,
+      file:file,
       position: addItemDto.position,
       duration: addItemDto.duration,
     });
@@ -83,11 +86,15 @@ export class PlaylistsService {
   async removeItemFromPlaylist(playlistId: number, itemId: number): Promise<void> {
     await this.findById(playlistId);
 
-    const item = await this.playlistItemRepository.findOne({
-      where: { id: itemId, playlistId },
-    });
-
-    if (!item) {
+   const item = await this.playlistItemRepository.findOne({
+  where: {
+    id: itemId,
+  },
+  relations: {
+    playlist: true,
+  },
+});
+    if (!item || item.playlist.id !== playlistId) {
       throw new NotFoundException(`Item with ID ${itemId} not found in this playlist`);
     }
 

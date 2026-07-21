@@ -5,8 +5,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Number** |  | 
-**playlistId** | **Number** |  | 
-**fileId** | **Number** |  | 
 **position** | **Number** |  | 
 **duration** | **Number** |  | 
 **createdAt** | **Date** |  | 

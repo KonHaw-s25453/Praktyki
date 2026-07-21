@@ -41,6 +41,3 @@ src/model/RecordLogDto.js
 src/model/ReorderPlaylistItemsDto.js
 src/model/UpdateFileDto.js
 src/model/UpdatePlaylistDto.js
-test/model/AssignPlaylistDto.spec.js
-test/model/RecordLogDto.spec.js
-test/model/ReorderPlaylistItemsDto.spec.js

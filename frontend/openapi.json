@@ -1189,12 +1189,6 @@
           "id": {
             "type": "number"
           },
-          "playlistId": {
-            "type": "number"
-          },
-          "fileId": {
-            "type": "number"
-          },
           "position": {
             "type": "number"
           },
@@ -1218,8 +1212,6 @@
         },
         "required": [
           "id",
-          "playlistId",
-          "fileId",
           "position",
           "duration",
           "createdAt",

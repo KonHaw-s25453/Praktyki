@@ -41,18 +41,18 @@ export class PlaylistEntity {
   @ApiProperty({
   type: () => [PlaylistItemEntity],
   })
-  @OneToMany(() => PlaylistItemEntity, (item: any) => item.playlist, { cascade: true })
+  @OneToMany(() => PlaylistItemEntity, item => item.playlist, { cascade: true })
   items: PlaylistItemEntity[];
   
   @ApiProperty({
   type: () => [ScreenPlaylistEntity],
   })
-  @OneToMany(() => ScreenPlaylistEntity, (sp: any) => sp.playlist, { cascade: true })
+  @OneToMany(() => ScreenPlaylistEntity, sp => sp.playlist, { cascade: true })
   screenPlaylists: ScreenPlaylistEntity[];
 
   @ApiProperty({
   type: () => [ScreenStateEntity],
   })
-  @OneToMany(() => ScreenStateEntity, (state: any) => state.currentPlaylist)
+  @OneToMany(() => ScreenStateEntity, state => state.currentPlaylist)
   screenStates: ScreenStateEntity[];
 }

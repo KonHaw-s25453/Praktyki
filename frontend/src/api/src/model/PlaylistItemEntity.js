@@ -25,8 +25,6 @@ class PlaylistItemEntity {
      * Constructs a new <code>PlaylistItemEntity</code>.
      * @alias module:model/PlaylistItemEntity
      * @param id {Number} 
-     * @param playlistId {Number} 
-     * @param fileId {Number} 
      * @param position {Number} 
      * @param duration {Number} 
      * @param createdAt {Date} 
@@ -34,9 +32,9 @@ class PlaylistItemEntity {
      * @param playlist {module:model/PlaylistEntity} 
      * @param file {module:model/FileEntity} 
      */
-    constructor(id, playlistId, fileId, position, duration, createdAt, updatedAt, playlist, file) { 
+    constructor(id, position, duration, createdAt, updatedAt, playlist, file) { 
         
-        PlaylistItemEntity.initialize(this, id, playlistId, fileId, position, duration, createdAt, updatedAt, playlist, file);
+        PlaylistItemEntity.initialize(this, id, position, duration, createdAt, updatedAt, playlist, file);
     }
 
     /**
@@ -44,10 +42,8 @@ class PlaylistItemEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, playlistId, fileId, position, duration, createdAt, updatedAt, playlist, file) { 
+    static initialize(obj, id, position, duration, createdAt, updatedAt, playlist, file) { 
         obj['id'] = id;
-        obj['playlistId'] = playlistId;
-        obj['fileId'] = fileId;
         obj['position'] = position;
         obj['duration'] = duration;
         obj['createdAt'] = createdAt;
@@ -69,12 +65,6 @@ class PlaylistItemEntity {
 
             if (data.hasOwnProperty('id')) {
                 obj['id'] = ApiClient.convertToType(data['id'], 'Number');
-            }
-            if (data.hasOwnProperty('playlistId')) {
-                obj['playlistId'] = ApiClient.convertToType(data['playlistId'], 'Number');
-            }
-            if (data.hasOwnProperty('fileId')) {
-                obj['fileId'] = ApiClient.convertToType(data['fileId'], 'Number');
             }
             if (data.hasOwnProperty('position')) {
                 obj['position'] = ApiClient.convertToType(data['position'], 'Number');
@@ -125,22 +115,12 @@ class PlaylistItemEntity {
 
 }
 
-PlaylistItemEntity.RequiredProperties = ["id", "playlistId", "fileId", "position", "duration", "createdAt", "updatedAt", "playlist", "file"];
+PlaylistItemEntity.RequiredProperties = ["id", "position", "duration", "createdAt", "updatedAt", "playlist", "file"];
 
 /**
  * @member {Number} id
  */
 PlaylistItemEntity.prototype['id'] = undefined;
-
-/**
- * @member {Number} playlistId
- */
-PlaylistItemEntity.prototype['playlistId'] = undefined;
-
-/**
- * @member {Number} fileId
- */
-PlaylistItemEntity.prototype['fileId'] = undefined;
 
 /**
  * @member {Number} position

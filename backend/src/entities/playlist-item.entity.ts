@@ -19,14 +19,6 @@ export class PlaylistItemEntity {
 
   @ApiProperty()
   @Column({ type: 'int' })
-  playlistId: number;
-
-  @ApiProperty()
-  @Column({ type: 'int' })
-  fileId: number;
-
-  @ApiProperty()
-  @Column({ type: 'int' })
   position: number;
 
   @ApiProperty()
