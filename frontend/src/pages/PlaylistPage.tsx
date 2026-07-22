@@ -52,6 +52,9 @@ useEffect(() => {
 
     const deletePlaylist = (id: number) => {
 
+        if (!confirm("Usunąć playlistę?")) { 
+            return; }
+
         filesApi.playlistsControllerDelete(
             id,
             (error) => {

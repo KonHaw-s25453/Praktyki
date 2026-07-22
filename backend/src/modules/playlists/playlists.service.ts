@@ -119,7 +119,7 @@ async findById(id: number): Promise<PlaylistEntity> {
         throw new BadRequestException(`Item with ID ${itemId} not found`);
       }
 
-      await this.playlistItemRepository.update(itemId, { position });
+      await this.playlistItemRepository.update(itemId, { position: position + 1 });
     }
   }
 

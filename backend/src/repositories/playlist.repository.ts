@@ -9,24 +9,35 @@ export class PlaylistRepository extends Repository<PlaylistEntity> { // <-- Popr
   }
 
   // Prosta metoda pomocnicza, która pobiera playlistę razem z jej plikami (itemami)
-  async findWithItems(id: number): Promise<PlaylistEntity | null> {
-    return this.findOne({
-      where: { id },
-      relations: {
-        items: {
-          file: true,
-        },
+ async findWithItems(id: number): Promise<PlaylistEntity | null> {
+  return this.findOne({
+    where: { id },
+    relations: {
+      items: {
+        file: true,
       },
-    });
-  }
+    },
+    order: {
+      items: {
+        position: "ASC",
+      },
+    },
+  });
+}
 
-  async findAllWithItems(): Promise<PlaylistEntity[]> {
-    return this.find({
-      relations: {
-        items: {
-          file: true,
-        },
+
+async findAllWithItems(): Promise<PlaylistEntity[]> {
+  return this.find({
+    relations: {
+      items: {
+        file: true,
       },
-    });
-  }
+    },
+    order: {
+      items: {
+        position: "ASC",
+      },
+    },
+  });
+}
 }

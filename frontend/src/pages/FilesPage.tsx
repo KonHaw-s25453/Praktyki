@@ -46,6 +46,10 @@ useEffect(() => {
 
 
     const deleteFile = (id: number) => {
+           
+        if (!confirm("Czy jesteś pewien że chcesz trwale usunąć ten plik?")) {
+        return;
+    }
 
         filesApi.filesControllerDelete(
             id,

@@ -6,6 +6,7 @@ import UpdatePlaylistDto from "../api/src/model/UpdatePlaylistDto";
 import AddItemToPlaylistDto from "../api/src/model/AddItemToPlaylistDto";
 import FilesApi from "../api/src/api/FilesApi";
 import type { FileEntity } from "../api/src/model/FileEntity";
+import type { PlaylistItemEntity } from "../api/src/model/PlaylistItemEntity";
 
 type PlaylistEditPageProps = {
     playlistId: number | null;
@@ -87,6 +88,121 @@ export default function PlaylistEditPage({
         return <p>Nie znaleziono playlisty.</p>;
     }
 
+    const availableFiles = files.filter(file =>
+    !playlist.items?.some(
+        item => item.file?.id === file.id
+    )
+);
+
+const reorderItems = (items: PlaylistItemEntity[]) => {
+
+    const dto = {
+        itemIds: items.map(item => item.id!)
+    };
+
+
+    playlistsApi.playlistsControllerReorderItems(
+        playlist.id!,
+        dto,
+        (error) => {
+
+            if (error) {
+                console.error(
+                    "Błąd zmiany kolejności:",
+                    error
+                );
+                return;
+            }
+
+
+            playlistsApi.playlistsControllerFindById(
+                playlist.id!,
+                (error, data) => {
+                    if (!error && data) {
+                        setPlaylist(data);
+                    }
+                }
+            );
+
+        }
+    );
+};
+
+
+const moveItem = (index: number, direction: number) => {
+
+    const items = [...(playlist.items ?? [])];
+
+    const newIndex = index + direction;
+
+    if (
+        newIndex < 0 ||
+        newIndex >= items.length
+    ) {
+        return;
+    }
+
+
+    [
+        items[index],
+        items[newIndex]
+    ] = [
+        items[newIndex],
+        items[index]
+    ];
+
+
+    const updatedItems = items.map((item, index) => ({
+        ...item,
+        position: index + 1
+    }));
+
+
+    setPlaylist({
+        ...playlist,
+        items: updatedItems
+    });
+
+
+    reorderItems(updatedItems);
+};
+
+    const removeItem = (itemId: number) => {
+
+        if (!confirm("Usunąć element z playlisty?")) {
+        return;
+    }
+
+    playlistsApi.playlistsControllerRemoveItem(
+        playlist.id!,
+        itemId,
+        (error) => {
+
+            if (error) {
+                console.error(
+                    "Błąd usuwania:",
+                    error
+                );
+                return;
+            }
+
+            playlistsApi.playlistsControllerFindById(
+                playlist.id!,
+                (error, data) => {
+
+                    if (!error && data) {
+                        setPlaylist(data);
+                    }
+
+                }
+            );
+
+        }
+    );
+};
+
+
+
     const addFileToPlaylist = (fileId: number) => {
 
     console.log("FILE ID:", fileId);
@@ -110,6 +226,8 @@ export default function PlaylistEditPage({
     console.log("ITEMS:", playlist.items);
     console.log("POSITION:", position);
     console.log("DTO:", dto);
+
+
 
     playlistsApi.playlistsControllerAddItem(
         playlist.id!,
@@ -146,6 +264,7 @@ export default function PlaylistEditPage({
     );
     }
 
+    
     const savePlaylist = () => {
 
     if (!playlist) {
@@ -155,7 +274,11 @@ export default function PlaylistEditPage({
     const dto = new UpdatePlaylistDto(
     playlist.name,
     playlist.description ?? ""
+
+    
 );
+
+
 
 playlistsApi.playlistsControllerUpdate(
     playlist.id!,
@@ -169,7 +292,11 @@ playlistsApi.playlistsControllerUpdate(
 
         setPlaylist(data);
     }
+    
 );
+
+
+
 
 };
     return (
@@ -208,11 +335,65 @@ playlistsApi.playlistsControllerUpdate(
 </button>
 
 <h3>
+    Aktualna zawartość playlisty
+</h3>
+
+{playlist.items?.length === 0 && (
+    <p>
+        Playlista jest pusta.
+    </p>
+)}
+
+{[...(playlist.items ?? [])]
+    .sort((a, b) => a.position - b.position)
+    .map((item, index) => (
+    <div key={item.id}>
+
+        <b>
+            {item.position}.
+        </b>
+
+        {" "}
+
+        {item.file?.originalName ?? "Brak pliku"}
+
+        {" ("}
+    {item.duration}s
+        {")"}
+
+    <button
+    onClick={() => moveItem(index, -1)}
+>
+↑
+</button>
+
+<button
+    onClick={() => moveItem(index, 1)}
+>
+↓
+</button>
+
+    <button
+        onClick={() => removeItem(item.id!)}
+    >
+        Usuń
+    </button>
+    </div>
+))}
+
+<h3>
     Dodaj plik
 </h3>
 
 
-{files.map(file => (
+{availableFiles.length === 0 && (
+    <p>
+        Wszystkie pliki są już w playliście.
+    </p>
+)}
+
+
+{availableFiles.map(file => (
 
     <div key={file.id}>
 
