@@ -12,6 +12,7 @@ import { ScreensService } from './screens.service';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
+import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
 
 @Controller('screens')
 export class ScreensController {
@@ -59,7 +60,7 @@ export class ScreensController {
   updateAssignment(
     @Param('id', ParseIntPipe) id: number,
     @Param('playlistId', ParseIntPipe) playlistId: number,
-    @Body() updates: any,
+    @Body() updates: UpdateScreenPlaylistDto,
   ): Promise<ScreenPlaylistEntity> {
     return this.screensService.updateAssignment(id, playlistId, updates);
   }

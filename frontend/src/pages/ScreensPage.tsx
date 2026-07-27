@@ -99,7 +99,19 @@ export default function ScreensPage({
                         {" "}
                         {screen.location}
                     </p>
+                    {screen.screenPlaylists.length > 0 && (
+                    <div>
+                        <h4>Playlisty:</h4>
 
+                             {screen.screenPlaylists.map(item => (
+                                <p key={item.id}>
+                                Playlist ID: {item.playlistId}
+                                <br />
+                                Priorytet: {item.priority}
+                                </p>
+                                ))}
+                    </div>
+)}
 
                     <button
                         onClick={() =>

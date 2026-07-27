@@ -3,6 +3,7 @@ import { ScreenRepository, ScreenPlaylistRepository, FileRepository } from '../.
 import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
+import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -100,19 +101,19 @@ export class ScreensService {
   }
 
 
-  async updateAssignment(
-    screenId: number,
-    playlistId: number,
-    dto: { priority?: number; activeFrom?: string; activeTo?: string },
-  ): Promise<ScreenPlaylistEntity> {
-    const assignment = await this.screenPlaylistRepository.findByScreenAndPlaylist(
-      screenId,
-      playlistId,
-    );
+async updateAssignment(
+  screenId: number,
+  playlistId: number,
+  dto: UpdateScreenPlaylistDto = {},
+): Promise<ScreenPlaylistEntity> {
+  const assignment = await this.screenPlaylistRepository.findByScreenAndPlaylist(
+    screenId,
+    playlistId,
+  );
 
-    if (!assignment) {
-      throw new NotFoundException('Playlist is not assigned to this screen');
-    }
+  if (!assignment) {
+    throw new NotFoundException('Playlist is not assigned to this screen');
+  }
 
     const updates: any = {};
     if (dto.priority !== undefined) updates.priority = dto.priority;

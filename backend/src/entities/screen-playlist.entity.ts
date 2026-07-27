@@ -15,11 +15,17 @@ export class ScreenPlaylistEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int' })
-  screenId: number;
+  @Column({
+  name: 'screen_id',
+  type: 'int',
+})
+screenId: number;
 
-  @Column({ type: 'int' })
-  playlistId: number;
+@Column({
+  name: 'playlist_id',
+  type: 'int',
+})
+playlistId: number;
 
   @Column({ type: 'int', default: 1 })
   priority: number;
