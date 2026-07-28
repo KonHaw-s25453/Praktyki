@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "typeorm": "typeorm",
-    "typeorm:cli": "typeorm-ts-node-esm"
+    "typeorm:cli": "typeorm-ts-node-commonjs"
   },
   "repository": {
     "type": "git",

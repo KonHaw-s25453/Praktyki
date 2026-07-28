@@ -7,14 +7,18 @@ export class CreateScreenDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   location?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'ID obrazu lub filmu używanego jako ekran awaryjny',
+    example: 1,
+  })
   @IsInt()
-  @IsOptional()
   @IsPositive()
-  fallbackFileId?: number;
+  fallbackFileId: number;
 }

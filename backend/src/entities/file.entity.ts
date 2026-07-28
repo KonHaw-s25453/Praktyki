@@ -8,7 +8,8 @@ import {
   OneToOne,
 } from 'typeorm';
 import { PlaylistItemEntity } from './playlist-item.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ScreenEntity } from './screen.entity';
 @Entity('files')
 export class FileEntity {
   @ApiProperty()
@@ -55,7 +56,10 @@ export class FileEntity {
   @OneToMany(() => PlaylistItemEntity, (item: any) => item.file)
   playlistItems: PlaylistItemEntity[];
 
-  @ApiProperty()
-  @OneToOne('ScreenEntity', (screen: any) => screen.fallbackFile)
-  screenAsFallback: any;
-}
+  @ApiHideProperty()
+  @OneToOne(
+  () => ScreenEntity,
+  screen => screen.fallbackFile,
+  )
+  screenAsFallback: ScreenEntity | null;
+  }

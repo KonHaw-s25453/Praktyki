@@ -23,8 +23,11 @@ import PlaylistEntity from './model/PlaylistEntity';
 import PlaylistItemEntity from './model/PlaylistItemEntity';
 import RecordLogDto from './model/RecordLogDto';
 import ReorderPlaylistItemsDto from './model/ReorderPlaylistItemsDto';
+import ScreenEntity from './model/ScreenEntity';
+import ScreenPlaylistEntity from './model/ScreenPlaylistEntity';
 import UpdateFileDto from './model/UpdateFileDto';
 import UpdatePlaylistDto from './model/UpdatePlaylistDto';
+import UpdateScreenPlaylistDto from './model/UpdateScreenPlaylistDto';
 import AppApi from './api/AppApi';
 import FilesApi from './api/FilesApi';
 import PlaylistsApi from './api/PlaylistsApi';
@@ -131,6 +134,18 @@ export {
     ReorderPlaylistItemsDto,
 
     /**
+     * The ScreenEntity model constructor.
+     * @property {module:model/ScreenEntity}
+     */
+    ScreenEntity,
+
+    /**
+     * The ScreenPlaylistEntity model constructor.
+     * @property {module:model/ScreenPlaylistEntity}
+     */
+    ScreenPlaylistEntity,
+
+    /**
      * The UpdateFileDto model constructor.
      * @property {module:model/UpdateFileDto}
      */
@@ -141,6 +156,12 @@ export {
      * @property {module:model/UpdatePlaylistDto}
      */
     UpdatePlaylistDto,
+
+    /**
+     * The UpdateScreenPlaylistDto model constructor.
+     * @property {module:model/UpdateScreenPlaylistDto}
+     */
+    UpdateScreenPlaylistDto,
 
     /**
     * The AppApi service constructor.

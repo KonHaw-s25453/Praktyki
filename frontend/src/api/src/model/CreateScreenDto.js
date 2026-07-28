@@ -23,12 +23,11 @@ class CreateScreenDto {
      * Constructs a new <code>CreateScreenDto</code>.
      * @alias module:model/CreateScreenDto
      * @param name {String} 
-     * @param location {String} 
-     * @param fallbackFileId {Number} 
+     * @param fallbackFileId {Number} ID obrazu lub filmu używanego jako ekran awaryjny
      */
-    constructor(name, location, fallbackFileId) { 
+    constructor(name, fallbackFileId) { 
         
-        CreateScreenDto.initialize(this, name, location, fallbackFileId);
+        CreateScreenDto.initialize(this, name, fallbackFileId);
     }
 
     /**
@@ -36,9 +35,8 @@ class CreateScreenDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, location, fallbackFileId) { 
+    static initialize(obj, name, fallbackFileId) { 
         obj['name'] = name;
-        obj['location'] = location;
         obj['fallbackFileId'] = fallbackFileId;
     }
 
@@ -93,7 +91,7 @@ class CreateScreenDto {
 
 }
 
-CreateScreenDto.RequiredProperties = ["name", "location", "fallbackFileId"];
+CreateScreenDto.RequiredProperties = ["name", "fallbackFileId"];
 
 /**
  * @member {String} name
@@ -106,6 +104,7 @@ CreateScreenDto.prototype['name'] = undefined;
 CreateScreenDto.prototype['location'] = undefined;
 
 /**
+ * ID obrazu lub filmu używanego jako ekran awaryjny
  * @member {Number} fallbackFileId
  */
 CreateScreenDto.prototype['fallbackFileId'] = undefined;

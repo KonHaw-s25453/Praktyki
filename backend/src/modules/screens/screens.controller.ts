@@ -13,6 +13,8 @@ import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
+import { ApiOkResponse } from '@nestjs/swagger';
+
 
 @Controller('screens')
 export class ScreensController {
@@ -24,11 +26,17 @@ export class ScreensController {
   }
 
   @Get()
+  @ApiOkResponse({
+    type: [ScreenEntity],
+})
   findAll(): Promise<ScreenEntity[]> {
     return this.screensService.findAll();
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    type: ScreenEntity,
+})
   findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ScreenEntity> {

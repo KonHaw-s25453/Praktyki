@@ -150,7 +150,7 @@ No authorization required
 
 ## screensControllerFindAll
 
-> screensControllerFindAll()
+> [ScreenEntity] screensControllerFindAll()
 
 
 
@@ -164,7 +164,7 @@ apiInstance.screensControllerFindAll((error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -175,7 +175,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-null (empty response body)
+[**[ScreenEntity]**](ScreenEntity.md)
 
 ### Authorization
 
@@ -184,12 +184,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerFindById
 
-> screensControllerFindById(id)
+> ScreenEntity screensControllerFindById(id)
 
 
 
@@ -204,7 +204,7 @@ apiInstance.screensControllerFindById(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -218,7 +218,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScreenEntity**](ScreenEntity.md)
 
 ### Authorization
 
@@ -227,7 +227,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerGenerateNewApiKey
@@ -406,7 +406,7 @@ No authorization required
 
 ## screensControllerUpdateAssignment
 
-> screensControllerUpdateAssignment(id, playlistId)
+> screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto)
 
 
 
@@ -418,7 +418,8 @@ import CmsApi from 'cms_api';
 let apiInstance = new CmsApi.ScreensApi();
 let id = 3.4; // Number | 
 let playlistId = 3.4; // Number | 
-apiInstance.screensControllerUpdateAssignment(id, playlistId, (error, data, response) => {
+let updateScreenPlaylistDto = new CmsApi.UpdateScreenPlaylistDto(); // UpdateScreenPlaylistDto | 
+apiInstance.screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -434,6 +435,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Number**|  | 
  **playlistId** | **Number**|  | 
+ **updateScreenPlaylistDto** | [**UpdateScreenPlaylistDto**](UpdateScreenPlaylistDto.md)|  | 
 
 ### Return type
 
@@ -445,6 +447,6 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: Not defined
 

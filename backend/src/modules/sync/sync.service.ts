@@ -207,13 +207,14 @@ export class SyncService {
       screenId: screen.id,
       timestamp: new Date().toISOString(),
       playlists: playlists.sort((a, b) => a.priority - b.priority),
-      fallback: screen.fallbackFile
-        ? {
-            id: screen.fallbackFile.id,
-            filename: screen.fallbackFile.filename,
-            path: screen.fallbackFile.path,
-          }
-        : null,
+      fallback: {
+  id: screen.fallbackFile.id,
+  filename: screen.fallbackFile.filename,
+  path: screen.fallbackFile.path,
+  mimeType: screen.fallbackFile.mimeType,
+  size: screen.fallbackFile.size,
+  checksum: screen.fallbackFile.checksum,
+      },
     };
   }
 

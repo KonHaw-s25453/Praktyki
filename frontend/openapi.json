@@ -562,7 +562,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScreenEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -585,7 +595,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -697,6 +714,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScreenPlaylistDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -1046,9 +1073,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "screenAsFallback": {
-            "type": "object"
           }
         },
         "required": [
@@ -1062,8 +1086,7 @@
           "checksum",
           "createdAt",
           "updatedAt",
-          "playlistItems",
-          "screenAsFallback"
+          "playlistItems"
         ]
       },
       "UpdateFileDto": {
@@ -1119,8 +1142,56 @@
       "ScreenPlaylistEntity": {
         "type": "object",
         "properties": {
-
-        }
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the screen-playlist association"
+          },
+          "screenId": {
+            "type": "number",
+            "description": "Identifier for the associated screen"
+          },
+          "playlistId": {
+            "type": "number",
+            "description": "Identifier for the associated playlist"
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority of the screen-playlist association"
+          },
+          "activeFrom": {
+            "type": "object",
+            "nullable": true,
+            "description": "Start date and time when the playlist becomes active on the screen"
+          },
+          "activeTo": {
+            "type": "object",
+            "nullable": true,
+            "description": "End date and time when the playlist is no longer active on the screen"
+          },
+          "revision": {
+            "type": "number",
+            "description": "Revision number for the screen-playlist association"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "screenId",
+          "playlistId",
+          "priority",
+          "activeFrom",
+          "activeTo",
+          "revision",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "ScreenStateEntity": {
         "type": "object",
@@ -1279,13 +1350,79 @@
             "type": "string"
           },
           "fallbackFileId": {
-            "type": "number"
+            "type": "number",
+            "description": "ID obrazu lub filmu używanego jako ekran awaryjny",
+            "example": 1
           }
         },
         "required": [
           "name",
-          "location",
           "fallbackFileId"
+        ]
+      },
+      "ScreenLogEntity": {
+        "type": "object",
+        "properties": {
+
+        }
+      },
+      "ScreenEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "object",
+            "nullable": true
+          },
+          "apiKey": {
+            "type": "object",
+            "nullable": true
+          },
+          "fallbackFileId": {
+            "type": "number",
+            "description": "ID pliku fallback"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "screenPlaylists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenPlaylistEntity"
+            }
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenLogEntity"
+            }
+          },
+          "state": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScreenStateEntity"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "location",
+          "apiKey",
+          "fallbackFileId",
+          "createdAt",
+          "screenPlaylists",
+          "logs",
+          "state"
         ]
       },
       "AssignPlaylistDto": {
@@ -1315,6 +1452,20 @@
         "required": [
           "playlistId"
         ]
+      },
+      "UpdateScreenPlaylistDto": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "number"
+          },
+          "activeFrom": {
+            "type": "string"
+          },
+          "activeTo": {
+            "type": "string"
+          }
+        }
       },
       "UpdateScreenStateDto": {
         "type": "object",

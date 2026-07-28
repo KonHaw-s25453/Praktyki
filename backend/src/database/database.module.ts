@@ -33,7 +33,7 @@ import {
           CacheManifestEntity,
           ScreenStateEntity,
         ],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: false,
         logging: configService.get('NODE_ENV') === 'development',
       }),
       inject: [ConfigService],

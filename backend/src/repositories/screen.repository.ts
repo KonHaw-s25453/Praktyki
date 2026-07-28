@@ -22,21 +22,21 @@ export class ScreenRepository extends Repository<ScreenEntity> {
   }
 
   async findWithPlaylists(id: number): Promise<ScreenEntity | null> {
-    return this.findOne({
-      where: { id },
-      relations: {
-        screenPlaylists: {
-          playlist: {
-            items: {
-              file: true,
-            },
+  return this.findOne({
+    where: { id },
+    relations: {
+      screenPlaylists: {
+        playlist: {
+          items: {
+            file: true,
           },
         },
-        state: true,
-        fallbackFile: true,
       },
-    });
-  }
+      state: true,
+      fallbackFile: true,
+    },
+  });
+}
 
   async findByLocation(location: string): Promise<ScreenEntity[]> {
     return this.find({
@@ -46,18 +46,26 @@ export class ScreenRepository extends Repository<ScreenEntity> {
           playlist: true,
         },
         state: true,
+        fallbackFile: true,
       },
     });
   }
 
-  async findAllWithState(): Promise<ScreenEntity[]> {
+ async findAllWithState(): Promise<ScreenEntity[]> {
     return this.find({
       relations: {
         state: true,
-        screenPlaylists: true,
+        fallbackFile: true,
+        screenPlaylists: {
+    playlist: {
+        items: {
+            file: true,
+        },
+    },
+},
       },
     });
-  }
+}
 
   async updateLastSeen(id: number): Promise<void> {
     await this.update(id, { lastSeen: new Date() });

@@ -15,6 +15,8 @@
 import ApiClient from "../ApiClient";
 import AssignPlaylistDto from '../model/AssignPlaylistDto';
 import CreateScreenDto from '../model/CreateScreenDto';
+import ScreenEntity from '../model/ScreenEntity';
+import UpdateScreenPlaylistDto from '../model/UpdateScreenPlaylistDto';
 
 /**
 * Screens service.
@@ -163,12 +165,13 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerFindAll operation.
      * @callback module:api/ScreensApi~screensControllerFindAllCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/ScreenEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/ScreensApi~screensControllerFindAllCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/ScreenEntity>}
      */
     screensControllerFindAll(callback) {
       let postBody = null;
@@ -184,8 +187,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [ScreenEntity];
       return this.apiClient.callApi(
         '/screens', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -197,13 +200,14 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerFindById operation.
      * @callback module:api/ScreensApi~screensControllerFindByIdCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/ScreenEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/ScreensApi~screensControllerFindByIdCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ScreenEntity}
      */
     screensControllerFindById(id, callback) {
       let postBody = null;
@@ -224,8 +228,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = ScreenEntity;
       return this.apiClient.callApi(
         '/screens/{id}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -410,10 +414,11 @@ export default class ScreensApi {
     /**
      * @param {Number} id 
      * @param {Number} playlistId 
+     * @param {module:model/UpdateScreenPlaylistDto} updateScreenPlaylistDto 
      * @param {module:api/ScreensApi~screensControllerUpdateAssignmentCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    screensControllerUpdateAssignment(id, playlistId, callback) {
-      let postBody = null;
+    screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto, callback) {
+      let postBody = updateScreenPlaylistDto;
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
         throw new Error("Missing the required parameter 'id' when calling screensControllerUpdateAssignment");
@@ -421,6 +426,10 @@ export default class ScreensApi {
       // verify the required parameter 'playlistId' is set
       if (playlistId === undefined || playlistId === null) {
         throw new Error("Missing the required parameter 'playlistId' when calling screensControllerUpdateAssignment");
+      }
+      // verify the required parameter 'updateScreenPlaylistDto' is set
+      if (updateScreenPlaylistDto === undefined || updateScreenPlaylistDto === null) {
+        throw new Error("Missing the required parameter 'updateScreenPlaylistDto' when calling screensControllerUpdateAssignment");
       }
 
       let pathParams = {
@@ -435,7 +444,7 @@ export default class ScreensApi {
       };
 
       let authNames = [];
-      let contentTypes = [];
+      let contentTypes = ['application/json'];
       let accepts = [];
       let returnType = null;
       return this.apiClient.callApi(

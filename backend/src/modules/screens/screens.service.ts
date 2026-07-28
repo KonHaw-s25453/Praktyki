@@ -15,33 +15,61 @@ export class ScreensService {
   ) {}
 
   async create(createScreenDto: CreateScreenDto): Promise<ScreenEntity> {
-    const apiKey = this.generateApiKey();
+  const fallbackFile = await this.fileRepository.findOne({
+    where: {
+      id: createScreenDto.fallbackFileId,
+    },
+  });
 
-    const screen = this.screenRepository.create({
-      ...createScreenDto,
-      apiKey,
-    });
-
-    return this.screenRepository.save(screen);
+  if (!fallbackFile) {
+    throw new NotFoundException(
+      `Fallback file with ID ${createScreenDto.fallbackFileId} not found`,
+    );
   }
+
+  if (
+    !fallbackFile.mimeType.startsWith('image/') &&
+    !fallbackFile.mimeType.startsWith('video/')
+  ) {
+    throw new ConflictException(
+      'Fallback file must be an image or video',
+    );
+  }
+
+  const apiKey = this.generateApiKey();
+
+  const screen = this.screenRepository.create({
+    name: createScreenDto.name,
+    location: createScreenDto.location,
+    fallbackFileId: fallbackFile.id,
+    apiKey,
+  });
+
+  return this.screenRepository.save(screen);
+}
 
   async findAll(): Promise<ScreenEntity[]> {
     return this.screenRepository.findAllWithState();
   }
 
-  async findById(id: number, withPlaylists = false): Promise<ScreenEntity> {
-    const screen = withPlaylists
-      ? await this.screenRepository.findWithPlaylists(id)
-      : await this.screenRepository.findOne({
-          where: { id },
-        });
+async findById(id: number, withPlaylists = false): Promise<ScreenEntity> {
+  const screen = withPlaylists
+    ? await this.screenRepository.findWithPlaylists(id)
+    : await this.screenRepository.findOne({
+        where: { id },
+        relations: {
+          fallbackFile: true,
+          state: true,
+        },
+      });
 
-    if (!screen) {
-      throw new NotFoundException(`Screen with ID ${id} not found`);
-    }
-
-    return screen;
+  if (!screen) {
+    throw new NotFoundException(`Screen with ID ${id} not found`);
   }
+
+  return screen;
+}
+
 
   async findByApiKey(apiKey: string): Promise<ScreenEntity> {
     const screen = await this.screenRepository.findByApiKey(apiKey);

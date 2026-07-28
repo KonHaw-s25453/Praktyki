@@ -13,6 +13,7 @@
 
 import ApiClient from '../ApiClient';
 import PlaylistItemEntity from './PlaylistItemEntity';
+import ScreenPlaylistEntity from './ScreenPlaylistEntity';
 
 /**
  * The PlaylistEntity model module.
@@ -30,7 +31,7 @@ class PlaylistEntity {
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param items {Array.<module:model/PlaylistItemEntity>} 
-     * @param screenPlaylists {Array.<Object>} 
+     * @param screenPlaylists {Array.<module:model/ScreenPlaylistEntity>} 
      * @param screenStates {Array.<Object>} 
      */
     constructor(id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
@@ -88,7 +89,7 @@ class PlaylistEntity {
                 obj['items'] = ApiClient.convertToType(data['items'], [PlaylistItemEntity]);
             }
             if (data.hasOwnProperty('screenPlaylists')) {
-                obj['screenPlaylists'] = ApiClient.convertToType(data['screenPlaylists'], [Object]);
+                obj['screenPlaylists'] = ApiClient.convertToType(data['screenPlaylists'], [ScreenPlaylistEntity]);
             }
             if (data.hasOwnProperty('screenStates')) {
                 obj['screenStates'] = ApiClient.convertToType(data['screenStates'], [Object]);
@@ -123,9 +124,15 @@ class PlaylistEntity {
                 PlaylistItemEntity.validateJSON(item);
             };
         }
-        // ensure the json data is an array
-        if (!Array.isArray(data['screenPlaylists'])) {
-            throw new Error("Expected the field `screenPlaylists` to be an array in the JSON data but got " + data['screenPlaylists']);
+        if (data['screenPlaylists']) { // data not null
+            // ensure the json data is an array
+            if (!Array.isArray(data['screenPlaylists'])) {
+                throw new Error("Expected the field `screenPlaylists` to be an array in the JSON data but got " + data['screenPlaylists']);
+            }
+            // validate the optional field `screenPlaylists` (array)
+            for (const item of data['screenPlaylists']) {
+                ScreenPlaylistEntity.validateJSON(item);
+            };
         }
         // ensure the json data is an array
         if (!Array.isArray(data['screenStates'])) {
@@ -176,7 +183,7 @@ PlaylistEntity.prototype['updatedAt'] = undefined;
 PlaylistEntity.prototype['items'] = undefined;
 
 /**
- * @member {Array.<Object>} screenPlaylists
+ * @member {Array.<module:model/ScreenPlaylistEntity>} screenPlaylists
  */
 PlaylistEntity.prototype['screenPlaylists'] = undefined;
 

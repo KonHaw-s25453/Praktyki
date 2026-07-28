@@ -1,4 +1,4 @@
-# CmsApi.PlaylistEntity
+# CmsApi.ScreenEntity
 
 ## Properties
 
@@ -6,12 +6,12 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Number** |  | 
 **name** | **String** |  | 
-**description** | **Object** |  | 
-**revision** | **Number** |  | 
+**location** | **Object** |  | 
+**apiKey** | **Object** |  | 
+**fallbackFileId** | **Number** | ID pliku fallback | 
 **createdAt** | **Date** |  | 
-**updatedAt** | **Date** |  | 
-**items** | [**[PlaylistItemEntity]**](PlaylistItemEntity.md) |  | 
 **screenPlaylists** | [**[ScreenPlaylistEntity]**](ScreenPlaylistEntity.md) |  | 
-**screenStates** | **[Object]** |  | 
+**logs** | **[Object]** |  | 
+**state** | **Object** |  | 
 
 

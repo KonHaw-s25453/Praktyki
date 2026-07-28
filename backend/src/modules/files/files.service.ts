@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { FileRepository } from '../../repositories';
+import { ScreenRepository } from '../../repositories';
 import { FileEntity } from '../../entities';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
@@ -8,8 +9,8 @@ import { join } from 'path';
 
 @Injectable()
 export class FilesService {
-  constructor(private fileRepository: FileRepository) {}
-
+  constructor(private fileRepository: FileRepository, private screenRepository: ScreenRepository,) {}
+  
   async create(createFileDto: CreateFileDto): Promise<FileEntity> {
     const file = this.fileRepository.create(createFileDto);
     return this.fileRepository.save(file);
@@ -38,6 +39,17 @@ export class FilesService {
   async findByChecksum(checksum: string): Promise<FileEntity | null> {
     return this.fileRepository.findByChecksum(checksum);
   }
+
+  async checkIfFileIsFallback(fileId: number): Promise<boolean> {
+  const screen = await this.screenRepository.findOne({
+    where: {
+      fallbackFileId: fileId,
+    },
+  });
+
+  return !!screen;
+}
+
 
   async checkIfFileIsUsed(id: number): Promise<boolean> {
     const file = await this.fileRepository
@@ -70,6 +82,12 @@ export class FilesService {
             `Plik należy do ${file.playlistItems.length} playlist(y). Usuń go najpierw z playlisty.`,
         );
     }
+
+    if (await this.checkIfFileIsFallback(id)) {
+  throw new ConflictException(
+    'File is used as screen fallback',
+  );
+}
 
     try {
         await unlink(join(process.cwd(), file.path));
@@ -106,4 +124,7 @@ export class FilesService {
 
   return this.fileRepository.save(fileEntity);
 }
+
+
+
 }

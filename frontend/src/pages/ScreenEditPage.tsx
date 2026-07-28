@@ -17,7 +17,8 @@ const playlistsApi = new PlaylistsApi();
 
 export default function ScreenEditPage({
     screenId,
-}: ScreenEditPageProps) {
+}: ScreenEditPageProps) 
+{
 const [assignment, setAssignment] = useState<any>(null);
 const [playlists, setPlaylists] = useState<PlaylistEntity[]>([]);
 const [loading, setLoading] = useState(true);
@@ -28,41 +29,41 @@ const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null
 
 useEffect(() => {
 
-    if (screenId === null) {
+    if (!screenId) {
         setLoading(false);
         return;
     }
 
-
     screensApi.screensControllerFindById(
-        screenId!,
+        screenId,
         (error, data) => {
 
-            console.log(
-                "SCREEN ASSIGNMENT:",
-                data
-            );
+            console.log("SCREEN DATA:", data);
 
+            if (!error && data) {
 
-          if (!error) {
-    setAssignment(data);
+                const assignment = data.screenPlaylists?.[0];
 
-    setSelectedPlaylistId(data.playlistId);
+                setAssignment(assignment ?? null);
 
-    setPriority(data.priority ?? 10);
+                if (assignment) {
+                    setSelectedPlaylistId(assignment.playlistId);
 
-    setActiveFrom(
-        data.activeFrom
-        ? data.activeFrom.substring(0, 10)
-        : ""
-    );
+                    setPriority(assignment.priority ?? 10);
 
-    setActiveTo(
-        data.activeTo
-        ? data.activeTo.substring(0, 10)
-        : ""
-    );
-}
+                    setActiveFrom(
+                        assignment.activeFrom
+                            ? assignment.activeFrom.substring(0, 10)
+                            : ""
+                    );
+
+                    setActiveTo(
+                        assignment.activeTo
+                            ? assignment.activeTo.substring(0, 10)
+                            : ""
+                    );
+                }
+            }
 
             setLoading(false);
         }
@@ -139,7 +140,7 @@ return (
         )}
 
 
-        {!loading && assignment && (
+        {!loading && (assignment ? (
             <>
                 <h2>
                     Przypisana playlista
@@ -156,7 +157,9 @@ return (
                 value={selectedPlaylistId ?? ""}
                 onChange={(e) =>
                 setSelectedPlaylistId(
-                Number(e.target.value)
+                e.target.value === ""
+                ? null
+                : Number(e.target.value)
                         )
                     }
                 >
@@ -180,7 +183,11 @@ return (
                 </select>
 
             </>
-        )}
+        ) : (
+            <p>
+                Brak przypisanej playlisty.
+            </p>
+        ))}
 
 <h2>
     Priorytet

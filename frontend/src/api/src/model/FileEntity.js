@@ -33,11 +33,10 @@ class FileEntity {
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param playlistItems {Array.<String>} 
-     * @param screenAsFallback {Object} 
      */
-    constructor(id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems, screenAsFallback) { 
+    constructor(id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems) { 
         
-        FileEntity.initialize(this, id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems, screenAsFallback);
+        FileEntity.initialize(this, id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems);
     }
 
     /**
@@ -45,7 +44,7 @@ class FileEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems, screenAsFallback) { 
+    static initialize(obj, id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems) { 
         obj['id'] = id;
         obj['filename'] = filename;
         obj['originalName'] = originalName;
@@ -57,7 +56,6 @@ class FileEntity {
         obj['createdAt'] = createdAt;
         obj['updatedAt'] = updatedAt;
         obj['playlistItems'] = playlistItems;
-        obj['screenAsFallback'] = screenAsFallback;
     }
 
     /**
@@ -104,9 +102,6 @@ class FileEntity {
             if (data.hasOwnProperty('playlistItems')) {
                 obj['playlistItems'] = ApiClient.convertToType(data['playlistItems'], ['String']);
             }
-            if (data.hasOwnProperty('screenAsFallback')) {
-                obj['screenAsFallback'] = ApiClient.convertToType(data['screenAsFallback'], Object);
-            }
         }
         return obj;
     }
@@ -150,7 +145,7 @@ class FileEntity {
 
 }
 
-FileEntity.RequiredProperties = ["id", "filename", "originalName", "path", "mimeType", "duration", "size", "checksum", "createdAt", "updatedAt", "playlistItems", "screenAsFallback"];
+FileEntity.RequiredProperties = ["id", "filename", "originalName", "path", "mimeType", "duration", "size", "checksum", "createdAt", "updatedAt", "playlistItems"];
 
 /**
  * @member {Number} id
@@ -206,11 +201,6 @@ FileEntity.prototype['updatedAt'] = undefined;
  * @member {Array.<String>} playlistItems
  */
 FileEntity.prototype['playlistItems'] = undefined;
-
-/**
- * @member {Object} screenAsFallback
- */
-FileEntity.prototype['screenAsFallback'] = undefined;
 
 
 

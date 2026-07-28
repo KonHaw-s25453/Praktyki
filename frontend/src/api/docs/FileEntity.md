@@ -15,6 +15,5 @@ Name | Type | Description | Notes
 **createdAt** | **Date** |  | 
 **updatedAt** | **Date** |  | 
 **playlistItems** | **[String]** |  | 
-**screenAsFallback** | **Object** |  | 
 
 

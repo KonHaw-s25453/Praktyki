@@ -170,8 +170,11 @@ Class | Method | HTTP request | Description
  - [CmsApi.PlaylistItemEntity](docs/PlaylistItemEntity.md)
  - [CmsApi.RecordLogDto](docs/RecordLogDto.md)
  - [CmsApi.ReorderPlaylistItemsDto](docs/ReorderPlaylistItemsDto.md)
+ - [CmsApi.ScreenEntity](docs/ScreenEntity.md)
+ - [CmsApi.ScreenPlaylistEntity](docs/ScreenPlaylistEntity.md)
  - [CmsApi.UpdateFileDto](docs/UpdateFileDto.md)
  - [CmsApi.UpdatePlaylistDto](docs/UpdatePlaylistDto.md)
+ - [CmsApi.UpdateScreenPlaylistDto](docs/UpdateScreenPlaylistDto.md)
 
 
 ## Documentation for Authorization
