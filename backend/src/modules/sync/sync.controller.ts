@@ -14,18 +14,22 @@ import { SyncService } from './sync.service';
 import { GetManifestQueryDto } from './dto/get-manifest-query.dto';
 import { UpdateScreenStateDto } from './dto/update-screen-state.dto';
 import { RecordLogDto } from './dto/record-log.dto';
+import { ApiHeader,ApiTags } from '@nestjs/swagger';
+
+
 // import { ScreenAuthGuard } from './guards/screen-auth.guard'; // Przykładowy guard auth
 
 @Controller('sync')
+@ApiTags('Sync')
 // @UseGuards(ScreenAuthGuard) // Odkomentuj, aby zabezpieczyć cały kontroler przed nieautoryzowanym dostępem
 export class SyncController {
   constructor(private syncService: SyncService) {}
-
-  /**
-   * Ekran pobiera manifest
-   * GET /sync/manifest?sinceRevision=123
-   */
   @Get('manifest')
+  @ApiHeader({
+  name: 'X-Screen-ID',
+  description: 'Screen identifier',
+  required: true,
+})
   async getManifest(
     @Query() query: GetManifestQueryDto,
     @Request() req: any,
@@ -110,7 +114,7 @@ export class SyncController {
    * Pobierz logi ekranu
    * GET /sync/:screenId/logs
    */
-  @Get(':screenId/logs')
+  @Get(':screenId/logs')  
   async getLogs(@Param('screenId', ParseIntPipe) screenId: number): Promise<any[]> {
     return this.syncService.getScreenLogs(screenId);
   }
