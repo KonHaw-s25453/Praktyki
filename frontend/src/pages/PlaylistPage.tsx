@@ -8,7 +8,7 @@ import type { PlaylistEntity } from "../api/src/model/PlaylistEntity";
 
 
 
-const filesApi = new PlaylistsApi();
+const playlistApi = new PlaylistsApi();
 
 type PlaylistsPageProps = {
     onEdit: (playlistId: number) => void;
@@ -21,41 +21,63 @@ export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
 
 
     const loadPlaylists = () => {
-    filesApi.playlistsControllerFindAll(
-        (error: any, data: PlaylistEntity[]) => {
+        playlistApi.playlistsControllerFindAll(
+            (error: any, data: PlaylistEntity[]) => {
 
-            console.log("PLAYLIST ERROR:", error);
-            console.log("PLAYLIST DATA:", data);
+                console.log("PLAYLIST ERROR:", error);
+                console.log("PLAYLIST DATA:", data);
 
-            if (error) {
-                console.error(
-                    "Błąd pobierania:",
-                    error
-                );
+                if (error) {
+                    console.error(
+                        "Błąd pobierania:",
+                        error
+                    );
+                    setLoading(false);
+                    return;
+                }
+
+                setPlaylists(data ?? []);
                 setLoading(false);
-                return;
             }
-
-            setPlaylists(data ?? []);
-            setLoading(false);
-        }
-    );
-};
+        );
+    };
 
 
 
-useEffect(() => {
-    loadPlaylists();
-}, []);
+    useEffect(() => {
+        loadPlaylists();
+    }, []);
 
+    const createPlaylist = () => {
+        playlistApi.playlistsControllerCreate(
+            {
+                name: "Nowa playlista",
+                description: "",
+            },
+            (error, playlist) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
+                if (!playlist) {
+                    console.error("Nie otrzymano danych playlisty");
+                    return;
+                }
+
+                onEdit(playlist.id);
+            }
+        );
+    };
 
 
     const deletePlaylist = (id: number) => {
 
-        if (!confirm("Usunąć playlistę?")) { 
-            return; }
+        if (!confirm("Usunąć playlistę?")) {
+            return;
+        }
 
-        filesApi.playlistsControllerDelete(
+        playlistApi.playlistsControllerDelete(
             id,
             (error) => {
 
@@ -94,11 +116,19 @@ useEffect(() => {
                 Biblioteka List Odtwarzania
             </h1>
 
-            <PlaylistList
-    playlists={playlists}
-    onDelete={deletePlaylist}
-    onEdit={onEdit}
-/>  
+            <button onClick={createPlaylist}>
+                + Nowa playlista
+            </button>
+
+            {playlists.length === 0 ? (
+                <p>Nie utworzono jeszcze żadnej playlisty.</p>
+            ) : (
+                <PlaylistList
+                    playlists={playlists}
+                    onDelete={deletePlaylist}
+                    onEdit={onEdit}
+                />
+            )}
 
         </div>
     );

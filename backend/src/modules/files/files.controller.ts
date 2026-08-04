@@ -16,7 +16,9 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { FileEntity } from '../../entities';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody,ApiResponse } from '@nestjs/swagger';
-import type { Express } from 'express';
+import type { Express, Response  } from 'express';
+import {Res,} from '@nestjs/common';
+import * as path from 'path';
 
 
 
@@ -83,6 +85,26 @@ getAllVideos(): Promise<FileEntity[]> {
 })
 getAllImages(): Promise<FileEntity[]> {
   return this.filesService.getAllImages();
+}
+
+@Get(':id/content')
+@ApiResponse({
+  status: 200,
+  description: 'Zawartość pliku',
+  schema: {
+    type: 'string',
+    format: 'binary',
+  },
+})
+async getContent(
+  @Param('id', ParseIntPipe) id: number,
+  @Res() res: Response,
+) {
+  const file = await this.filesService.findById(id);
+
+  const filePath = path.resolve(file.path);
+
+  return res.sendFile(filePath);
 }
 
 @Get(':id')

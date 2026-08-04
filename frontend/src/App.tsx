@@ -21,15 +21,15 @@ export default function App() {
                 <button onClick={() => setPage("playlists")}>
                     Playlisty
                 </button>
+
                 <button onClick={() => setPage("playlistEdit")}>
                     Edycja playlisty
                 </button>
-                 <button onClick={() => setPage("screens")}>
+
+                <button onClick={() => setPage("screens")}>
                     Ekrany
                 </button>
-                <button onClick={() => setPage("screenEdit")}>
-                Edycja ekranu
-                </button>
+
 </nav>
 
 
