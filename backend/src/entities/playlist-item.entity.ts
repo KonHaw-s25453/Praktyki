@@ -26,6 +26,10 @@ export class PlaylistItemEntity {
   duration: number;
 
   @ApiProperty()
+  @Column({ type: 'int', default: 1 })
+  videoLoops: number;
+
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 

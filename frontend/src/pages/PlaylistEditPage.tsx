@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import PlaylistsApi from "../api/src/api/PlaylistsApi";
 import type { PlaylistEntity } from "../api/src/model/PlaylistEntity";
-import UpdatePlaylistDto from "../api/src/model/UpdatePlaylistDto";
 import AddItemToPlaylistDto from "../api/src/model/AddItemToPlaylistDto";
 import FilesApi from "../api/src/api/FilesApi";
 import type { FileEntity } from "../api/src/model/FileEntity";
@@ -267,17 +266,25 @@ const moveItem = (index: number, direction: number) => {
     
     const savePlaylist = () => {
 
+    console.log("SENDING PLAYLIST:", JSON.stringify(playlist, null, 2));
+
     if (!playlist) {
         return;
     }
 
-    const dto = new UpdatePlaylistDto(
-    playlist.name,
-    playlist.description ?? ""
+       const dto = {
+        name: playlist.name,
+        description: playlist.description ?? "",
+        repeatMode: playlist.repeatMode,
+        items: playlist.items.map(item => ({
+            id: item.id,
+            duration: item.duration,
+            position: item.position,
+            videoLoops: item.videoLoops ?? 1 
+        }))
+    };
 
-    
-);
-
+    console.log("SENDING DTO:", JSON.stringify(dto, null, 2));
 
 
 playlistsApi.playlistsControllerUpdate(
@@ -357,9 +364,31 @@ playlistsApi.playlistsControllerUpdate(
 
         {item.file?.originalName ?? "Brak pliku"}
 
-        {" ("}
-    {item.duration}s
-        {")"}
+       {" "}
+
+<input
+    type="number"
+    min="1"
+    value={item.duration ?? 30}
+    onChange={(e) => {
+        const newItems = playlist.items?.map(i =>
+            i.id === item.id
+                ? {
+                    ...i,
+                    duration: Number(e.target.value)
+                }
+                : i
+        );
+
+        setPlaylist({
+            ...playlist,
+            items: newItems
+        });
+    }}
+/>
+
+sek.
+
 
     <button
     onClick={() => moveItem(index, -1)}

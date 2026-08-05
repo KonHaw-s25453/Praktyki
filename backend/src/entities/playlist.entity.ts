@@ -30,6 +30,17 @@ export class PlaylistEntity {
   @Column({ type: 'int', default: 1 })
   revision: number;
 
+ @ApiProperty({
+    description: 'Action after playlist ends',
+    enum: ['LOOP', 'FALLBACK'],
+  })
+  @Column({
+    type: 'varchar',
+    length: 20,
+    default: 'LOOP',
+  })
+  repeatMode: string;
+
   @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;

@@ -34,40 +34,42 @@ export class SyncService {
    * Get manifest for screen - core sync logic
    */
   async getManifestForScreen(
-    screenId: number,
-    sinceRevision?: number,
-  ): Promise<ManifestResponse> {
-    const screen = await this.screenRepository.findWithPlaylists(screenId);
-    if (!screen) {
-      throw new NotFoundException(`Screen with ID ${screenId} not found`);
-    }
+  screenId: number,
+  sinceRevision?: number,
+): Promise<ManifestResponse> {
 
-    // Pobierz cached manifest
-    let cachedManifest = await this.cacheManifestRepository.findByScreenId(screenId);
+  const screen = await this.screenRepository.findWithPlaylists(screenId);
 
-    if (!cachedManifest) {
-      // Bezpieczna regeneracja bez pętli rekurencyjnej
-      cachedManifest = await this.regenerateManifestForScreen(screenId);
-    }
+  if (!screen) {
+    throw new NotFoundException(`Screen with ID ${screenId} not found`);
+  }
 
-    // Jeśli client ma aktualną wersję, zwróć NOT_CHANGED
-    if (sinceRevision && sinceRevision === cachedManifest.revision) {
-      return {
-        revision: cachedManifest.revision,
-        manifest: {},
-        status: 'NOT_CHANGED',
-      };
-    }
+  let cachedManifest =
+    await this.cacheManifestRepository.findByScreenId(screenId);
 
-    // Update last_seen przy rzeczywistym pobieraniu pełnego manifestu
-    await this.screenRepository.updateLastSeen(screenId);
+  // Cache nie istnieje albo jest stary
+  if (!cachedManifest) {
+    cachedManifest =
+      await this.regenerateManifestForScreen(screenId);
+  }
 
+  if (sinceRevision !== undefined &&
+      sinceRevision === cachedManifest.revision) {
     return {
       revision: cachedManifest.revision,
-      manifest: cachedManifest.manifest,
-      status: 'OK',
+      manifest: {},
+      status: 'NOT_CHANGED',
     };
   }
+
+  await this.screenRepository.updateLastSeen(screenId);
+
+  return {
+    revision: cachedManifest.revision,
+    manifest: cachedManifest.manifest,
+    status: 'OK',
+  };
+}
 
   /**
    * Regenerate manifest for screen (call when playlist/assignment changes)
@@ -82,6 +84,9 @@ export class SyncService {
     const activeAssignments = await this.screenPlaylistRepository.findActiveByScreenId(
       screenId,
     );
+
+    console.log('ACTIVE ASSIGNMENTS:', activeAssignments.length);
+    console.log(activeAssignments);
 
     // Zbuduj manifest
     const manifest = await this.buildManifest(activeAssignments, screen);
@@ -179,27 +184,29 @@ export class SyncService {
 
       for (const item of assignment.playlist.items) {
         items.push({
-          position: item.position,
-          duration: item.duration,
-          file: {
-            id: item.file.id,
-            filename: item.file.filename,
-            path: item.file.path,
-            mimeType: item.file.mimeType,
-            size: item.file.size,
-            checksum: item.file.checksum,
+           position: item.position,
+    duration: item.duration,
+    videoLoops: item.videoLoops,
+    file: {
+      id: item.file.id,
+      filename: item.file.filename,
+      path: item.file.path,
+      mimeType: item.file.mimeType,
+      size: item.file.size,
+      checksum: item.file.checksum,
           },
         });
       }
 
       playlists.push({
-        id: assignment.playlist.id,
-        name: assignment.playlist.name,
-        revision: assignment.playlist.revision,
-        priority: assignment.priority,
-        activeFrom: assignment.activeFrom,
-        activeTo: assignment.activeTo,
-        items: items.sort((a, b) => a.position - b.position),
+         id: assignment.playlist.id,
+    name: assignment.playlist.name,
+    revision: assignment.playlist.revision,
+    repeatMode: assignment.playlist.repeatMode,
+    priority: assignment.priority,
+    activeFrom: assignment.activeFrom,
+    activeTo: assignment.activeTo,
+    items: items.sort((a, b) => a.position - b.position),
       });
     }
 
@@ -207,14 +214,15 @@ export class SyncService {
       screenId: screen.id,
       timestamp: new Date().toISOString(),
       playlists: playlists.sort((a, b) => a.priority - b.priority),
-      fallback: {
+      fallback: screen.fallbackFile ? 
+      {
   id: screen.fallbackFile.id,
   filename: screen.fallbackFile.filename,
   path: screen.fallbackFile.path,
   mimeType: screen.fallbackFile.mimeType,
   size: screen.fallbackFile.size,
   checksum: screen.fallbackFile.checksum,
-      },
+      } : null
     };
   }
 

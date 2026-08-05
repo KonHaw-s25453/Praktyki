@@ -10,7 +10,7 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
 
   async findByScreenId(screenId: number): Promise<ScreenPlaylistEntity[]> {
     return this.createQueryBuilder('sp')
-      .where('sp.screenId = :screenId', { screenId })
+      .where('sp.screen_id = :screenId', { screenId })
       .leftJoinAndSelect('sp.playlist', 'playlist')
       .leftJoinAndSelect('playlist.items', 'items')
       .leftJoinAndSelect('items.file', 'file')
@@ -20,8 +20,12 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
 
   async findActiveByScreenId(screenId: number): Promise<ScreenPlaylistEntity[]> {
     const now = new Date();
+
+    console.log("SCREEN ID:", screenId);
+    console.log("NOW:", now);
+
     return this.createQueryBuilder('sp')
-      .where('sp.screenId = :screenId', { screenId })
+      .where('sp.screen_id = :screenId', { screenId })
       .andWhere('(sp.activeFrom IS NULL OR sp.activeFrom <= :now)', { now })
       .andWhere('(sp.activeTo IS NULL OR sp.activeTo >= :now)', { now })
       .leftJoinAndSelect('sp.playlist', 'playlist')
@@ -29,12 +33,16 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
       .leftJoinAndSelect('items.file', 'file')
       .orderBy('sp.priority', 'ASC')
       .addOrderBy('playlist.id', 'ASC')
-      .getMany();
+      .getMany()
+      .then(result => {
+      console.log("FOUND:", result);
+      return result;
+      });
   }
 
   async findByPlaylistId(playlistId: number): Promise<ScreenPlaylistEntity[]> {
     return this.createQueryBuilder('sp')
-      .where('sp.playlistId = :playlistId', { playlistId })
+      .where('sp.playlist_id = :playlistId', { playlistId })
       .leftJoinAndSelect('sp.screen', 'screen')
       .getMany();
   }
@@ -52,7 +60,7 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
     await this.createQueryBuilder()
       .update()
       .set({ revision: () => 'revision + 1' })
-      .where('screenId = :screenId', { screenId })
+      .where('screen_id = :screenId', { screenId })
       .execute();
   }
 }

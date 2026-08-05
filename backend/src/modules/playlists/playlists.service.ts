@@ -37,11 +37,36 @@ async findById(id: number): Promise<PlaylistEntity> {
 }
 
   async update(id: number, updatePlaylistDto: UpdatePlaylistDto): Promise<PlaylistEntity> {
-    await this.findById(id); // sprawdzić czy istnieje
+  const playlist = await this.findById(id);
 
-    await this.playlistRepository.update(id, updatePlaylistDto);
-    return this.findById(id);
+  playlist.name = updatePlaylistDto.name ?? playlist.name;
+  playlist.description = updatePlaylistDto.description ?? playlist.description;
+  playlist.repeatMode = updatePlaylistDto.repeatMode ?? playlist.repeatMode;
+
+  await this.playlistRepository.save(playlist);
+
+if (updatePlaylistDto.items) {
+  for (const dtoItem of updatePlaylistDto.items) {
+
+    const updateData: any = {
+      duration: dtoItem.duration,
+      position: dtoItem.position,
+    };
+
+    if (dtoItem.videoLoops !== undefined) {
+      updateData.videoLoops = dtoItem.videoLoops;
+    }
+
+    await this.playlistItemRepository.update(
+      dtoItem.id,
+      updateData,
+    );
   }
+}
+
+return this.findById(id);
+}
+
 
   async delete(id: number): Promise<void> {
     await this.findById(id); // sprawdzić czy istnieje
@@ -78,6 +103,7 @@ async findById(id: number): Promise<PlaylistEntity> {
       file:file,
       position: addItemDto.position,
       duration: addItemDto.duration,
+      videoLoops: addItemDto.videoLoops ?? 1,
     });
 
     return this.playlistItemRepository.save(item);

@@ -1,5 +1,6 @@
-import { IsInt, IsPositive, IsNotEmpty } from 'class-validator';
+import { IsInt, IsPositive, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
 export class AddItemToPlaylistDto {
   @ApiProperty()
   @IsInt()
@@ -18,4 +19,12 @@ export class AddItemToPlaylistDto {
   @IsPositive()
   @IsNotEmpty()
   duration: number;
+
+  @ApiProperty({
+    default: 1,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  videoLoops?: number;
 }
