@@ -18,7 +18,7 @@ export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
 
     const [playlists, setPlaylists] = useState<PlaylistEntity[]>([]);
     const [loading, setLoading] = useState(true);
-
+  
 
     const loadPlaylists = () => {
         playlistApi.playlistsControllerFindAll(
@@ -37,6 +37,7 @@ export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
                 }
 
                 setPlaylists(data ?? []);
+               
                 setLoading(false);
             }
         );

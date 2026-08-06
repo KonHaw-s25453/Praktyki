@@ -7,6 +7,8 @@ import type { PlaylistEntity } from "../api/src/model/PlaylistEntity";
 
 type ScreenEditPageProps = {
     screenId: number | null;
+    onBack: () => void;
+    onDirtyChange: (dirty: boolean) => void;
 };
 
 const screensApi = new ScreensApi();
@@ -15,6 +17,8 @@ const playlistsApi = new PlaylistsApi();
 
 export default function ScreenEditPage({
     screenId,
+    onBack,
+    onDirtyChange,
 }: ScreenEditPageProps) 
 {
 const [assignment, setAssignment] = useState<any>(null);
@@ -23,6 +27,8 @@ const [priority, setPriority] = useState(10);
 const [activeFrom, setActiveFrom] = useState("");
 const [activeTo, setActiveTo] = useState("");
 const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+const [isDirty, setIsDirty] = useState(false);
+const [showSaveDialog, setShowSaveDialog] = useState(false);
 
 useEffect(() => {
 
@@ -68,6 +74,9 @@ useEffect(() => {
             ? assignment.activeTo.substring(0, 10)
             : ""
     );
+
+    setIsDirty(false);
+    onDirtyChange(false);
 
 }, [assignment]);
 
@@ -129,7 +138,8 @@ const assignPlaylist = (playlistId:number) => {
                 }
 
                 console.log("Playlist updated");
-
+                setIsDirty(false);
+                onDirtyChange(false);
                 screensApi.screensControllerFindById(
     screenId,
     (error, data) => {
@@ -164,10 +174,23 @@ const assignPlaylist = (playlistId:number) => {
                 }
 
                 console.log("Playlist assigned");
+                setIsDirty(false);
+                onDirtyChange(false);
             }
         );
     }
 };
+
+const requestLeave = () => {
+
+    if (isDirty) {
+        setShowSaveDialog(true);
+        return;
+    }
+
+    // tutaj później przejście do innej strony/listy
+};
+
 
 return (
 
@@ -177,6 +200,10 @@ return (
         <h1>
             Edycja ekranu
         </h1>
+
+        <button onClick={onBack}>
+         ← Powrót do ekranów
+        </button>
 
         {assignment ? (
             <>
@@ -202,13 +229,15 @@ return (
 
             <select
                 value={selectedPlaylistId ?? ""}
-                onChange={(e) =>
+                onChange={(e) => {
                     setSelectedPlaylistId(
                         e.target.value === ""
                             ? null
                             : Number(e.target.value)
-                    )
-                }
+                    );
+                    setIsDirty(true);
+                    onDirtyChange(true);
+                }}
             >
                 <option value="">
                     -- wybierz playlistę --
@@ -233,11 +262,13 @@ return (
 <input
     type="number"
     value={priority}
-    onChange={(e) =>
+    onChange={(e) =>{
         setPriority(
             Number(e.target.value)
-        )
-    }
+        );
+        setIsDirty(true);
+        onDirtyChange
+    }}
 />
 
 
@@ -248,9 +279,11 @@ return (
 <input
     type="date"
     value={activeFrom}
-    onChange={(e) =>
-        setActiveFrom(e.target.value)
-    }
+    onChange={(e) =>{
+        setActiveFrom(e.target.value);
+        setIsDirty(true);
+        onDirtyChange(true);
+    }}
 />
 
 
@@ -261,9 +294,11 @@ return (
 <input
     type="date"
     value={activeTo}
-    onChange={(e) =>
+    onChange={(e) =>{
         setActiveTo(e.target.value)
-    }
+        setIsDirty(true);
+        onDirtyChange(true);
+    }}
 />
 
 <button
@@ -278,6 +313,52 @@ return (
     }}
 >
     Zapisz przypisanie
+</button>
+
+{showSaveDialog && (
+    <div>
+        <div>
+            Masz niezapisane zmiany.
+        </div>
+
+        <button
+            onClick={() => {
+                if (selectedPlaylistId !== null) {
+            assignPlaylist(selectedPlaylistId);
+        }
+                setShowSaveDialog(false);
+            }}
+        >
+            Zapisz
+        </button>
+
+
+        <button
+            onClick={() => {
+                setIsDirty(false);
+                onDirtyChange(false);
+                setShowSaveDialog(false);
+
+                // tutaj później przejście dalej
+            }}
+        >
+            Odrzuć
+        </button>
+
+
+        <button
+            onClick={() => {
+                setShowSaveDialog(false);
+            }}
+        >
+            Anuluj
+        </button>
+
+    </div>
+)}
+
+<button onClick={requestLeave}>
+    ← Powrót
 </button>
 
     </div>

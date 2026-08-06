@@ -11,22 +11,38 @@ export default function App() {
     "screenEdit">("files");
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
     const [selectedScreenId, setSelectedScreenId] = useState<number | null>(null);
+    const [isDirty, setIsDirty] = useState(false);
+
+    const navigate = (targetPage: "files" | "playlists" | "playlistEdit" | "screens" |
+    "screenEdit") => {
+        if (isDirty) {
+            const confirmLeave = window.confirm(
+                "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
+            );
+            if (!confirmLeave) {
+                return;
+            }
+        }
+        setPage(targetPage);
+        setIsDirty(false);
+    }
+
     return (
         <>
             <nav>
-                <button onClick={() => setPage("files")}>
+                <button onClick={() => navigate("files")}>
                     Pliki
                 </button>
 
-                <button onClick={() => setPage("playlists")}>
+                <button onClick={() => navigate("playlists")}>
                     Playlisty
                 </button>
 
-                <button onClick={() => setPage("playlistEdit")}>
+                <button onClick={() => navigate("playlistEdit")}>
                     Edycja playlisty
                 </button>
 
-                <button onClick={() => setPage("screens")}>
+                <button onClick={() => navigate("screens")}>
                     Ekrany
                 </button>
 
@@ -49,9 +65,11 @@ export default function App() {
 
 
         {page === "playlistEdit" && (
-            <PlaylistEditPage
-                playlistId={selectedPlaylistId}
-            />
+           <PlaylistEditPage
+            playlistId={selectedPlaylistId}
+            onBack={() => navigate("playlists")}
+            onDirtyChange={setIsDirty}
+/>
         )}
 
 
@@ -68,6 +86,8 @@ export default function App() {
         {page === "screenEdit" && (
             <ScreenEditPage
                 screenId={selectedScreenId}
+                onBack={() => navigate("screens")}
+                onDirtyChange={setIsDirty}
             />
         )}
     </>

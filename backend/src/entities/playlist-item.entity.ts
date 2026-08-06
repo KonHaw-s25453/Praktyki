@@ -10,8 +10,9 @@ import {
 import { PlaylistEntity } from './playlist.entity';
 import { FileEntity } from './file.entity';
 import { ApiProperty } from '@nestjs/swagger';
-
+import { Index } from 'typeorm';
 @Entity('playlist_items')
+@Index(['playlist', 'position'])
 export class PlaylistItemEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
@@ -50,7 +51,7 @@ export class PlaylistItemEntity {
   type: () => FileEntity,
 })
   @ManyToOne(() => FileEntity, file => file.playlistItems, {
-  onDelete: 'CASCADE',
+  onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'file_id' })
   file: FileEntity;
