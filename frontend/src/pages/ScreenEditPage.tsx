@@ -129,7 +129,7 @@ const assignPlaylist = (playlistId:number) => {
 
         screensApi.screensControllerUpdateAssignment(
             screenId,
-            playlistId,
+            assignment.playlistId,
             dto,
             (error) => {
                 if(error){
@@ -176,6 +176,17 @@ const assignPlaylist = (playlistId:number) => {
                 console.log("Playlist assigned");
                 setIsDirty(false);
                 onDirtyChange(false);
+
+                screensApi.screensControllerFindById(
+    screenId,
+    (error, data) => {
+        if (!error) {
+            setAssignment(
+                data.screenPlaylists?.[0] ?? null
+            );
+        }
+    }
+);
             }
         );
     }
@@ -267,7 +278,7 @@ return (
             Number(e.target.value)
         );
         setIsDirty(true);
-        onDirtyChange
+        onDirtyChange(true);
     }}
 />
 
@@ -338,8 +349,6 @@ return (
                 setIsDirty(false);
                 onDirtyChange(false);
                 setShowSaveDialog(false);
-
-                // tutaj później przejście dalej
             }}
         >
             Odrzuć

@@ -59,6 +59,13 @@ export class ScreenEntity {
   })
   fallbackFileId: number;
 
+  @ApiProperty({ nullable: true })
+  @Column({
+      type: 'varchar',
+      length: 500,
+      nullable: true,
+  })
+    playerUrl: string | null;
 
   @ManyToOne(
     () => FileEntity,

@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { ScreenRepository, ScreenPlaylistRepository, FileRepository } from '../../repositories';
+import { ScreenRepository, ScreenPlaylistRepository, FileRepository, CacheManifestRepository, } from '../../repositories';
 import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
+
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class ScreensService {
     private screenRepository: ScreenRepository,
     private screenPlaylistRepository: ScreenPlaylistRepository,
     private fileRepository: FileRepository,
+    private cacheManifestRepository: CacheManifestRepository,
   ) {}
 
   async create(createScreenDto: CreateScreenDto): Promise<ScreenEntity> {
@@ -101,18 +103,25 @@ async findById(id: number, withPlaylists = false): Promise<ScreenEntity> {
     if (existing) {
       throw new ConflictException('This playlist is already assigned to this screen');
     }
-
+    
     const screenPlaylist = this.screenPlaylistRepository.create({
-      screenId,
-      playlistId: assignPlaylistDto.playlistId,
-      priority: assignPlaylistDto.priority || 1,
-      activeFrom: assignPlaylistDto.activeFrom
-        ? new Date(assignPlaylistDto.activeFrom)
-        : null,
-      activeTo: assignPlaylistDto.activeTo ? new Date(assignPlaylistDto.activeTo) : null,
-    });
+  screenId,
+  playlistId: assignPlaylistDto.playlistId,
+  priority: assignPlaylistDto.priority || 1,
+  activeFrom: assignPlaylistDto.activeFrom
+    ? new Date(assignPlaylistDto.activeFrom)
+    : null,
+  activeTo: assignPlaylistDto.activeTo
+    ? new Date(assignPlaylistDto.activeTo)
+    : null,
+});
 
-    return this.screenPlaylistRepository.save(screenPlaylist);
+const result = await this.screenPlaylistRepository.save(screenPlaylist);
+
+await this.cacheManifestRepository.deleteByScreenId(screenId);
+
+return result;
+  
   }
 
   async removePlaylistFromScreen(screenId: number, playlistId: number): Promise<void> {
@@ -126,6 +135,7 @@ async findById(id: number, withPlaylists = false): Promise<ScreenEntity> {
     }
 
     await this.screenPlaylistRepository.delete(assignment.id);
+    await this.cacheManifestRepository.deleteByScreenId(screenId);
   }
 
 
@@ -149,6 +159,7 @@ async updateAssignment(
     if (dto.activeTo !== undefined) updates.activeTo = new Date(dto.activeTo);
 
     await this.screenPlaylistRepository.update(assignment.id, updates);
+    await this.cacheManifestRepository.deleteByScreenId(screenId);
 
     const updatedAssignment = await this.screenPlaylistRepository.findOne({
       where: { id: assignment.id },

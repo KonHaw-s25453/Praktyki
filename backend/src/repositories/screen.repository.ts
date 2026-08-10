@@ -67,7 +67,18 @@ export class ScreenRepository extends Repository<ScreenEntity> {
     });
 }
 
-  async updateLastSeen(id: number): Promise<void> {
-    await this.update(id, { lastSeen: new Date() });
+async updateLastSeen(
+    screenId: number,
+    playerUrl?: string,
+): Promise<void> {
+  const updateData: Partial<ScreenEntity> = {
+    lastSeen: new Date(),
+  };
+
+  if (playerUrl !== undefined) {
+    updateData.playerUrl = playerUrl;
   }
+
+  await this.update(screenId, updateData);
+}
 }

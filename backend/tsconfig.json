@@ -20,6 +20,6 @@
     "emitDecoratorMetadata": true,
     "types": ["node", "jest", "multer", "express"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/migrations/1786376250038-AddPlayerUrlToScreens.ts"],
   "exclude": ["node_modules", "backend/dist"]
 }

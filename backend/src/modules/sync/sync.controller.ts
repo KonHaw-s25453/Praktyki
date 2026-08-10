@@ -15,6 +15,7 @@ import { GetManifestQueryDto } from './dto/get-manifest-query.dto';
 import { UpdateScreenStateDto } from './dto/update-screen-state.dto';
 import { RecordLogDto } from './dto/record-log.dto';
 import { ApiHeader,ApiTags } from '@nestjs/swagger';
+import { UpdateScreenHeartbeatDto } from './dto/update-screen-heartbeat.dto';
 
 
 // import { ScreenAuthGuard } from './guards/screen-auth.guard'; // Przykładowy guard auth
@@ -34,6 +35,9 @@ export class SyncController {
     @Query() query: GetManifestQueryDto,
     @Request() req: any,
   ): Promise<any> {
+    console.log('MANIFEST REQUEST');
+    console.log('SCREEN ID HEADER:', req.headers['x-screen-id']);
+    console.log('QUERY:', query);
     // Bezpieczne wyciągnięcie nagłówka (nagłówek może być stringiem lub tablicą)
     const rawScreenId = req.headers['x-screen-id'];
     const screenIdStr = Array.isArray(rawScreenId) ? rawScreenId[0] : rawScreenId;
@@ -82,12 +86,19 @@ export class SyncController {
    * Ekran wysyła heartbeat
    * POST /sync/:screenId/heartbeat
    */
-  @Post(':screenId/heartbeat')
-  async heartbeat(
-    @Param('screenId', ParseIntPipe) screenId: number,
-  ): Promise<void> {
-    await this.syncService.touchScreen(screenId);
-  }
+ @Post(':screenId/heartbeat')
+async heartbeat(
+  @Param('screenId', ParseIntPipe) screenId: number,
+  @Body() heartbeatDto: UpdateScreenHeartbeatDto,
+): Promise<void> {
+
+  console.log('HEARTBEAT DTO:', heartbeatDto);
+
+  await this.syncService.touchScreen(
+    screenId,
+    heartbeatDto.playerUrl,
+  );
+}
 
   /**
    * Sprawdź czy manifest się zmienił

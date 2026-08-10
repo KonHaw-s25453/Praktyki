@@ -10,6 +10,7 @@ export class CreateScreenDto {
   @ApiProperty({
     required: false,
   })
+  
   @IsString()
   @IsOptional()
   location?: string;
@@ -21,4 +22,13 @@ export class CreateScreenDto {
   @IsInt()
   @IsPositive()
   fallbackFileId: number;
-}
+
+  @ApiProperty({
+    required: false,
+    example: 'http://localhost:5174',
+    description: 'Adres aplikacji Player dla tego ekranu',
+  })
+  @IsString()
+  @IsOptional()
+  playerUrl?: string;
+  }

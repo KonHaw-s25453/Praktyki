@@ -34,4 +34,12 @@ export class UpdateScreenDto {
   @IsOptional()
   @IsPositive()
   fallbackFileId?: number;
+
+  @ApiPropertyOptional({
+    example: 'http://192.168.1.101:5174',
+    description: 'Adres aplikacji Player dla tego ekranu',
+})
+@IsString()
+@IsOptional()
+playerUrl?: string;
 }
