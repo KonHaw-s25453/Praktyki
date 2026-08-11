@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
+import {getCachedFileUrl, getCachedManifest, syncManifest,} from "./cache";
+
+interface PlaylistFile {
+  id: number;
+  filename: string;
+  path: string;
+  mimeType: string;
+  size: number;
+  checksum: string;
+}
 
 interface PlaylistItem {
   position: number;
   duration: number;
   videoLoops: number;
-  file: {
-    filename: string;
-    mimeType: string;
-  };
+  file: PlaylistFile;
 }
 
 interface Playlist {
@@ -21,14 +28,7 @@ interface ManifestResponse {
     screenId: number;
     timestamp: string;
     playlists: Playlist[];
-    fallback: {
-      id: number;
-      filename: string;
-      path: string;
-      mimeType: string;
-      size: number;
-      checksum: string;
-    };
+    fallback: PlaylistFile | null;
   };
   status: string;
 }
@@ -40,33 +40,76 @@ export default function Player() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const params = new URLSearchParams(window.location.search);
   const screenId = params.get("screenId");
+  const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("SCREEN ID:", screenId, typeof screenId);
+  if (!screenId) {
+    return;
+  }
 
-    fetch("http://localhost:3000/sync/manifest", {
-      headers: {
-        "X-Screen-ID": String(screenId),
-      },
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("MANIFEST ERROR:", response.status, errorText);
-          throw new Error(`Cannot load manifest: ${response.status}`);
-}
+  const loadManifest = async () => {
+    try {
+      console.log("SCREEN ID:", screenId, typeof screenId);
 
-        return response.json();
-      })
-      .then((data: ManifestResponse) => {
-        console.log("MANIFEST:", data);
-        setManifest(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      });
-  }, [screenId]);
+      const response = await fetch(
+        "http://localhost:3000/sync/manifest",
+        {
+          headers: {
+            "X-Screen-ID": String(screenId),
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Cannot load manifest: ${response.status}`,
+        );
+      }
+
+      const data: ManifestResponse = await response.json();
+
+      console.log("MANIFEST FROM BACKEND:", data);
+
+      await syncManifest(data);
+
+      console.log("CACHE READY");
+
+      setManifest(data);
+      setCurrentIndex(0);
+      setError("");
+    } catch (err) {
+      console.error(
+        "Backend unavailable, trying cached manifest...",
+        err,
+      );
+
+      try {
+        const cached = await getCachedManifest();
+
+        if (!cached) {
+          setError(
+    "Backend niedostępny i brak zapisanej konfiguracji.",
+                  );
+                return;
+                     }
+
+        console.log("USING CACHED MANIFEST:", cached);
+
+        setManifest(cached as ManifestResponse);
+        setCurrentIndex(0);
+        setError("");
+      } catch (cacheError) {
+        console.error("CACHE LOAD ERROR:", cacheError);
+
+        setError(
+          "Backend niedostępny i brak zapisanej konfiguracji.",
+        );
+      }
+    }
+  };
+
+  loadManifest();
+}, [screenId]);
 
   useEffect(() => {
     if (!screenId) {
@@ -165,6 +208,11 @@ export default function Player() {
 
         console.log("NEW MANIFEST:", newManifest);
 
+        await syncManifest(newManifest);
+
+        console.log("CACHE READY FOR NEW MANIFEST");
+
+
         setManifest(newManifest);
         setCurrentIndex(0);
       }
@@ -179,6 +227,62 @@ export default function Player() {
     clearInterval(interval);
   };
 }, [screenId, manifest]);
+
+useEffect(() => {
+  if (!manifest) {
+    return;
+  }
+
+  const playlist = manifest.manifest.playlists[0];
+
+  if (!playlist) {
+    return;
+  }
+
+  const item = playlist.items[currentIndex];
+
+  if (!item) {
+    return;
+  }
+
+  let objectUrl: string | null = null;
+
+  const loadCachedFile = async () => {
+    try {
+      objectUrl = await getCachedFileUrl(item.file.id);
+
+      if (!objectUrl) {
+        throw new Error(
+          `File ${item.file.id} is not available in cache`,
+        );
+      }
+
+      console.log(
+        "LOCAL FILE URL:",
+        item.file.filename,
+        objectUrl,
+      );
+
+      setCurrentFileUrl(objectUrl);
+    } catch (err) {
+      console.error("Cache playback error:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Cannot load cached file",
+      );
+    }
+  };
+
+  loadCachedFile();
+
+  return () => {
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+    }
+  };
+}, [manifest, currentIndex]);
+
 
   if (error) {
     return <h1>{error}</h1>;
@@ -232,7 +336,7 @@ return (
   <div className="player">
     {file.mimeType.startsWith("video/") ? (
       <video
-        src={`http://localhost:3000/assets/${file.filename}`}
+        src={currentFileUrl ?? undefined}
         autoPlay
         muted
         playsInline
@@ -241,7 +345,7 @@ return (
       />
     ) : (
       <img
-        src={`http://localhost:3000/assets/${file.filename}`}
+        src={currentFileUrl ?? undefined}
         alt=""
         onLoad={() => {
           setTimeout(next, item.duration * 1000);
