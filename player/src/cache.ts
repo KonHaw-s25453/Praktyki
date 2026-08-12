@@ -124,6 +124,101 @@ export async function getCachedFile(
   });
 }
 
+export async function getCachedFiles(): Promise<CachedFile[]> {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(FILE_STORE, "readonly");
+    const store = transaction.objectStore(FILE_STORE);
+
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      resolve(request.result as CachedFile[]);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+}
+
+export async function getCacheInfo() {
+  const files = await getCachedFiles();
+
+  const used = files.reduce(
+    (total, file) => total + file.blob.size,
+    0
+  );
+
+  let quota: number | null = null;
+  let available: number | null = null;
+
+  if (navigator.storage?.estimate) {
+    const estimate = await navigator.storage.estimate();
+
+    quota = estimate.quota ?? null;
+
+    if (quota !== null) {
+      available = Math.max(quota - used, 0);
+    }
+  }
+
+  return { used, quota, available };
+}
+
+export interface CacheComparison {
+  required: ManifestFile[];
+  cached: CachedFile[];
+  missing: ManifestFile[];
+}
+
+export async function compareManifestWithCache(
+  manifest: PlayerManifest,
+): Promise<CacheComparison> {
+  const required = getFilesFromManifest(manifest);
+  const cachedFiles = await getCachedFiles();
+
+  const cachedIds = new Set(
+    cachedFiles.map((file) => file.id),
+  );
+
+  const missing = required.filter(
+    (file) => !cachedIds.has(file.id),
+  );
+
+  const cached = cachedFiles.filter(
+    (file) => required.some(
+      (requiredFile) => requiredFile.id === file.id,
+    ),
+  );
+
+  return {
+    required,
+    cached,
+    missing,
+  };
+}
+
+export function canFitMissingFiles(
+  missing: ManifestFile[],
+  available: number,
+): boolean {
+  const requiredSpace = missing.reduce(
+    (total, file) => total + file.size,
+    0,
+  );
+
+  console.log("MISSING FILES SIZE:", requiredSpace);
+  console.log("AVAILABLE STORAGE:", available);
+  console.log(
+    "ENOUGH STORAGE:",
+    requiredSpace <= available,
+  );
+
+  return requiredSpace <= available;
+}
+
 export async function saveCachedFile(
   file: CachedFile,
 ): Promise<void> {

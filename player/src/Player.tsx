@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import {getCachedFileUrl, getCachedManifest, syncManifest,} from "./cache";
+import {
+  getCachedFileUrl, 
+  getCachedManifest, 
+  getCachedFiles, 
+  getCacheInfo, 
+  syncManifest, 
+  compareManifestWithCache, 
+  canFitMissingFiles
+        } from "./cache";
 
 interface PlaylistFile {
   id: number;
@@ -47,68 +55,139 @@ export default function Player() {
     return;
   }
 
-  const loadManifest = async () => {
-    try {
-      console.log("SCREEN ID:", screenId, typeof screenId);
+const loadManifest = async () => {
+  try {
+    console.log("SCREEN ID:", screenId, typeof screenId);
 
-      const response = await fetch(
-        "http://localhost:3000/sync/manifest",
-        {
-          headers: {
-            "X-Screen-ID": String(screenId),
-          },
+    const cachedFiles = await getCachedFiles();
+    console.log("ALL CACHED FILES:", cachedFiles);
+
+    const cacheInfo = await getCacheInfo();
+    console.log("CACHE INFO:", cacheInfo);
+
+    const response = await fetch(
+      "http://localhost:3000/sync/manifest",
+      {
+        headers: {
+          "X-Screen-ID": String(screenId),
         },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Cannot load manifest: ${response.status}`,
+      );
+    }
+
+    const data: ManifestResponse = await response.json();
+
+    console.log("MANIFEST FROM BACKEND:", data);
+
+    const comparison = await compareManifestWithCache(data);
+
+    console.log("MANIFEST VS CACHE:", comparison);
+    console.log("REQUIRED FILES:", comparison.required);
+    console.log("CACHED FILES:", comparison.cached);
+    console.log("MISSING FILES:", comparison.missing);
+
+  
+    const canFit = canFitMissingFiles(
+      comparison.missing,
+      cacheInfo.available ?? 0,
+    );
+
+
+    console.log("CAN FIT MISSING FILES:", canFit);
+
+    if (!canFit) {
+      console.warn(
+        "Brak miejsca na nowy manifest — próbuję użyć starego manifestu.",
       );
 
-      if (!response.ok) {
-        throw new Error(
-          `Cannot load manifest: ${response.status}`,
+      const cachedManifest = await getCachedManifest();
+
+      if (cachedManifest) {
+        console.log(
+          "USING OLD CACHED MANIFEST:",
+          cachedManifest,
         );
-      }
 
-      const data: ManifestResponse = await response.json();
-
-      console.log("MANIFEST FROM BACKEND:", data);
-
-      await syncManifest(data);
-
-      console.log("CACHE READY");
-
-      setManifest(data);
-      setCurrentIndex(0);
-      setError("");
-    } catch (err) {
-      console.error(
-        "Backend unavailable, trying cached manifest...",
-        err,
-      );
-
-      try {
-        const cached = await getCachedManifest();
-
-        if (!cached) {
-          setError(
-    "Backend niedostępny i brak zapisanej konfiguracji.",
-                  );
-                return;
-                     }
-
-        console.log("USING CACHED MANIFEST:", cached);
-
-        setManifest(cached as ManifestResponse);
+        setManifest(cachedManifest as ManifestResponse);
         setCurrentIndex(0);
         setError("");
-      } catch (cacheError) {
-        console.error("CACHE LOAD ERROR:", cacheError);
 
+        return;
+      }
+
+      console.warn(
+        "Brak starego manifestu — używam fallbacku.",
+      );
+
+      const fallback = data.manifest.fallback;
+
+      if (fallback) {
+        setManifest({
+          ...data,
+          manifest: {
+            ...data.manifest,
+            playlists: [],
+          },
+        });
+
+        setCurrentIndex(0);
+        setError("");
+
+        return;
+      }
+
+      setError(
+        "Brak wystarczającego miejsca w pamięci podręcznej i brak fallbacku.",
+      );
+
+      return;
+    }
+
+    // Wszystko jest OK — synchronizujemy nowy manifest
+    await syncManifest(data);
+
+    console.log("CACHE READY");
+
+    setManifest(data);
+    setCurrentIndex(0);
+    setError("");
+  } catch (err) {
+    console.error(
+      "Backend unavailable, trying cached manifest...",
+      err,
+    );
+
+    try {
+      const cached = await getCachedManifest();
+
+      if (!cached) {
         setError(
           "Backend niedostępny i brak zapisanej konfiguracji.",
         );
+        return;
       }
-    }
-  };
 
-  loadManifest();
+      console.log("USING CACHED MANIFEST:", cached);
+
+      setManifest(cached as ManifestResponse);
+      setCurrentIndex(0);
+      setError("");
+    } catch (cacheError) {
+      console.error("CACHE LOAD ERROR:", cacheError);
+
+      setError(
+        "Backend niedostępny i brak zapisanej konfiguracji.",
+      );
+    }
+  }
+};
+ 
+loadManifest();
 }, [screenId]);
 
   useEffect(() => {
@@ -264,15 +343,33 @@ useEffect(() => {
       );
 
       setCurrentFileUrl(objectUrl);
-    } catch (err) {
-      console.error("Cache playback error:", err);
+    }  catch (err) {
+    console.error("Cache playback error:", err);
+
+    const fallback = manifest.manifest.fallback;
+
+    if (fallback) {
+      console.warn("Plik nie jest w cache — używam fallbacku.");
+
+      setManifest({
+        ...manifest,
+        manifest: {
+          ...manifest.manifest,
+          playlists: [],
+        },
+      });
+
+      setCurrentIndex(0);
+      setError("");
+    } else {
       setError(
         err instanceof Error
           ? err.message
           : "Cannot load cached file",
       );
     }
-  };
+  }
+};
 
   loadCachedFile();
 
