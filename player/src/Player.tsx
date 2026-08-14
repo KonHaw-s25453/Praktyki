@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   getCachedFileUrl, 
   getCachedManifest, 
@@ -50,8 +50,55 @@ export default function Player() {
   const screenId = params.get("screenId");
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
 
+const logEvent = useCallback(
+  async (
+    message: string,
+    level: "INFO" | "ERROR" | "PLAYBACK" = "INFO",
+  ) => {
+    if (!screenId) {
+      console.warn("Cannot send log: missing screenId");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/sync/${screenId}/logs`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message,
+            level,
+          }),
+        },
+      );
+
+      const text = await response.text();
+
+      console.log("LOG RESPONSE:", {
+        status: response.status,
+        body: text,
+      });
+    } catch (err) {
+      console.error("Failed to send player log:", err);
+    }
+  },
+  [screenId],
+);
+
+useEffect(() => {
+  if (!screenId) {
+    return;
+  }
+
+  logEvent("PLAYER_STARTED", "INFO");
+}, [screenId, logEvent]);
+
   useEffect(() => {
   if (!screenId) {
+    logEvent("PLAYER_STARTED","INFO");
     return;
   }
 
@@ -82,6 +129,9 @@ const loadManifest = async () => {
 
     const data: ManifestResponse = await response.json();
 
+    await logEvent(
+    `MANIFEST_LOADED revision=${data.revision}`,
+  );
     console.log("MANIFEST FROM BACKEND:", data);
 
     const comparison = await compareManifestWithCache(data);
@@ -149,7 +199,13 @@ const loadManifest = async () => {
     }
 
     // Wszystko jest OK — synchronizujemy nowy manifest
+    await logEvent(
+  `SYNC_STARTED revision=${data.revision}`,
+    );
     await syncManifest(data);
+    await logEvent(
+  `SYNC_COMPLETED revision=${data.revision}`,
+    );
 
     console.log("CACHE READY");
 
@@ -188,7 +244,7 @@ const loadManifest = async () => {
 };
  
 loadManifest();
-}, [screenId]);
+}, [screenId, logEvent]);
 
   useEffect(() => {
     if (!screenId) {
@@ -244,6 +300,8 @@ loadManifest();
   if (!screenId || !manifest) {
     return;
   }
+
+
 
   const checkForChanges = async () => {
     try {
@@ -328,6 +386,10 @@ useEffect(() => {
 
   const loadCachedFile = async () => {
     try {
+      await logEvent(
+        `ITEM_STARTED file=${item.file.filename}`,
+      );
+
       objectUrl = await getCachedFileUrl(item.file.id);
 
       if (!objectUrl) {
@@ -343,42 +405,55 @@ useEffect(() => {
       );
 
       setCurrentFileUrl(objectUrl);
-    }  catch (err) {
-    console.error("Cache playback error:", err);
+    } catch (err) {
+      console.error("Cache playback error:", err);
 
-    const fallback = manifest.manifest.fallback;
-
-    if (fallback) {
-      console.warn("Plik nie jest w cache — używam fallbacku.");
-
-      setManifest({
-        ...manifest,
-        manifest: {
-          ...manifest.manifest,
-          playlists: [],
-        },
-      });
-
-      setCurrentIndex(0);
-      setError("");
-    } else {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Cannot load cached file",
+      await logEvent(
+        `PLAYER_ERROR file=${item.file.filename}`,
+        "ERROR",
       );
+
+      const fallback = manifest.manifest.fallback;
+
+      if (fallback) {
+        console.warn(
+          "Plik nie jest w cache — używam fallbacku.",
+        );
+
+        await logEvent(
+          `CACHE_MISS_USING_FALLBACK file=${item.file.filename}`,
+          "WARN",
+        );
+
+        setManifest({
+          ...manifest,
+          manifest: {
+            ...manifest.manifest,
+            playlists: [],
+          },
+        });
+
+        setCurrentIndex(0);
+        setError("");
+      } else {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Cannot load cached file",
+        );
+      }
     }
-  }
-};
+  };
 
   loadCachedFile();
 
-  return () => {
+ /* return () => {
     if (objectUrl) {
       URL.revokeObjectURL(objectUrl);
     }
-  };
-}, [manifest, currentIndex]);
+  }; */
+  
+}, [manifest, currentIndex,logEvent]);
 
 
   if (error) {
