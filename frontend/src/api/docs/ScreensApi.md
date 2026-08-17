@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**screensControllerGetByLocation**](ScreensApi.md#screensControllerGetByLocation) | **GET** /screens/location/{location} | 
 [**screensControllerHeartbeat**](ScreensApi.md#screensControllerHeartbeat) | **POST** /screens/{id}/heartbeat | 
 [**screensControllerRemovePlaylist**](ScreensApi.md#screensControllerRemovePlaylist) | **DELETE** /screens/{id}/playlists/{playlistId} | 
+[**screensControllerUpdate**](ScreensApi.md#screensControllerUpdate) | **PUT** /screens/{id} | 
 [**screensControllerUpdateAssignment**](ScreensApi.md#screensControllerUpdateAssignment) | **PUT** /screens/{id}/playlists/{playlistId} | 
 
 
@@ -401,6 +402,51 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+## screensControllerUpdate
+
+> screensControllerUpdate(id, updateScreenDto)
+
+
+
+### Example
+
+```javascript
+import CmsApi from 'cms_api';
+
+let apiInstance = new CmsApi.ScreensApi();
+let id = 3.4; // Number | 
+let updateScreenDto = new CmsApi.UpdateScreenDto(); // UpdateScreenDto | 
+apiInstance.screensControllerUpdate(id, updateScreenDto, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+});
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **Number**|  | 
+ **updateScreenDto** | [**UpdateScreenDto**](UpdateScreenDto.md)|  | 
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: Not defined
 
 

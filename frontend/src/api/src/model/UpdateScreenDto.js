@@ -14,20 +14,18 @@
 import ApiClient from '../ApiClient';
 
 /**
- * The CreateScreenDto model module.
- * @module model/CreateScreenDto
+ * The UpdateScreenDto model module.
+ * @module model/UpdateScreenDto
  * @version 1.0
  */
-class CreateScreenDto {
+class UpdateScreenDto {
     /**
-     * Constructs a new <code>CreateScreenDto</code>.
-     * @alias module:model/CreateScreenDto
-     * @param name {String} 
-     * @param fallbackFileId {Number} ID obrazu lub filmu używanego jako ekran awaryjny
+     * Constructs a new <code>UpdateScreenDto</code>.
+     * @alias module:model/UpdateScreenDto
      */
-    constructor(name, fallbackFileId) { 
+    constructor() { 
         
-        CreateScreenDto.initialize(this, name, fallbackFileId);
+        UpdateScreenDto.initialize(this);
     }
 
     /**
@@ -35,21 +33,19 @@ class CreateScreenDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, fallbackFileId) { 
-        obj['name'] = name;
-        obj['fallbackFileId'] = fallbackFileId;
+    static initialize(obj) { 
     }
 
     /**
-     * Constructs a <code>CreateScreenDto</code> from a plain JavaScript object, optionally creating a new instance.
+     * Constructs a <code>UpdateScreenDto</code> from a plain JavaScript object, optionally creating a new instance.
      * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
      * @param {Object} data The plain JavaScript object bearing properties of interest.
-     * @param {module:model/CreateScreenDto} obj Optional instance to populate.
-     * @return {module:model/CreateScreenDto} The populated <code>CreateScreenDto</code> instance.
+     * @param {module:model/UpdateScreenDto} obj Optional instance to populate.
+     * @return {module:model/UpdateScreenDto} The populated <code>UpdateScreenDto</code> instance.
      */
     static constructFromObject(data, obj) {
         if (data) {
-            obj = obj || new CreateScreenDto();
+            obj = obj || new UpdateScreenDto();
 
             if (data.hasOwnProperty('name')) {
                 obj['name'] = ApiClient.convertToType(data['name'], 'String');
@@ -68,17 +64,11 @@ class CreateScreenDto {
     }
 
     /**
-     * Validates the JSON data with respect to <code>CreateScreenDto</code>.
+     * Validates the JSON data with respect to <code>UpdateScreenDto</code>.
      * @param {Object} data The plain JavaScript object bearing properties of interest.
-     * @return {boolean} to indicate whether the JSON data is valid with respect to <code>CreateScreenDto</code>.
+     * @return {boolean} to indicate whether the JSON data is valid with respect to <code>UpdateScreenDto</code>.
      */
     static validateJSON(data) {
-        // check to make sure all required properties are present in the JSON string
-        for (const property of CreateScreenDto.RequiredProperties) {
-            if (!data.hasOwnProperty(property)) {
-                throw new Error("The required field `" + property + "` is not found in the JSON data: " + JSON.stringify(data));
-            }
-        }
         // ensure the json data is a string
         if (data['name'] && !(typeof data['name'] === 'string' || data['name'] instanceof String)) {
             throw new Error("Expected the field `name` to be a primitive type in the JSON string but got " + data['name']);
@@ -98,34 +88,36 @@ class CreateScreenDto {
 
 }
 
-CreateScreenDto.RequiredProperties = ["name", "fallbackFileId"];
+
 
 /**
+ * Nazwa ekranu
  * @member {String} name
  */
-CreateScreenDto.prototype['name'] = undefined;
+UpdateScreenDto.prototype['name'] = undefined;
 
 /**
+ * Lokalizacja ekranu
  * @member {String} location
  */
-CreateScreenDto.prototype['location'] = undefined;
+UpdateScreenDto.prototype['location'] = undefined;
 
 /**
- * ID obrazu lub filmu używanego jako ekran awaryjny
+ * ID pliku używanego jako fallback
  * @member {Number} fallbackFileId
  */
-CreateScreenDto.prototype['fallbackFileId'] = undefined;
+UpdateScreenDto.prototype['fallbackFileId'] = undefined;
 
 /**
  * Adres aplikacji Player dla tego ekranu
  * @member {String} playerUrl
  */
-CreateScreenDto.prototype['playerUrl'] = undefined;
+UpdateScreenDto.prototype['playerUrl'] = undefined;
 
 
 
 
 
 
-export default CreateScreenDto;
+export default UpdateScreenDto;
 

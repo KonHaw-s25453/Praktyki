@@ -28,15 +28,16 @@ class PlaylistEntity {
      * @param name {String} 
      * @param description {Object} 
      * @param revision {Number} 
+     * @param repeatMode {module:model/PlaylistEntity.RepeatModeEnum} Action after playlist ends
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param items {Array.<module:model/PlaylistItemEntity>} 
      * @param screenPlaylists {Array.<module:model/ScreenPlaylistEntity>} 
      * @param screenStates {Array.<Object>} 
      */
-    constructor(id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
+    constructor(id, name, description, revision, repeatMode, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
         
-        PlaylistEntity.initialize(this, id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates);
+        PlaylistEntity.initialize(this, id, name, description, revision, repeatMode, createdAt, updatedAt, items, screenPlaylists, screenStates);
     }
 
     /**
@@ -44,11 +45,12 @@ class PlaylistEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, name, description, revision, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
+    static initialize(obj, id, name, description, revision, repeatMode, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
         obj['id'] = id;
         obj['name'] = name;
         obj['description'] = description;
         obj['revision'] = revision;
+        obj['repeatMode'] = repeatMode;
         obj['createdAt'] = createdAt;
         obj['updatedAt'] = updatedAt;
         obj['items'] = items;
@@ -78,6 +80,9 @@ class PlaylistEntity {
             }
             if (data.hasOwnProperty('revision')) {
                 obj['revision'] = ApiClient.convertToType(data['revision'], 'Number');
+            }
+            if (data.hasOwnProperty('repeatMode')) {
+                obj['repeatMode'] = ApiClient.convertToType(data['repeatMode'], 'String');
             }
             if (data.hasOwnProperty('createdAt')) {
                 obj['createdAt'] = ApiClient.convertToType(data['createdAt'], 'Date');
@@ -114,6 +119,10 @@ class PlaylistEntity {
         if (data['name'] && !(typeof data['name'] === 'string' || data['name'] instanceof String)) {
             throw new Error("Expected the field `name` to be a primitive type in the JSON string but got " + data['name']);
         }
+        // ensure the json data is a string
+        if (data['repeatMode'] && !(typeof data['repeatMode'] === 'string' || data['repeatMode'] instanceof String)) {
+            throw new Error("Expected the field `repeatMode` to be a primitive type in the JSON string but got " + data['repeatMode']);
+        }
         if (data['items']) { // data not null
             // ensure the json data is an array
             if (!Array.isArray(data['items'])) {
@@ -145,7 +154,7 @@ class PlaylistEntity {
 
 }
 
-PlaylistEntity.RequiredProperties = ["id", "name", "description", "revision", "createdAt", "updatedAt", "items", "screenPlaylists", "screenStates"];
+PlaylistEntity.RequiredProperties = ["id", "name", "description", "revision", "repeatMode", "createdAt", "updatedAt", "items", "screenPlaylists", "screenStates"];
 
 /**
  * @member {Number} id
@@ -166,6 +175,12 @@ PlaylistEntity.prototype['description'] = undefined;
  * @member {Number} revision
  */
 PlaylistEntity.prototype['revision'] = undefined;
+
+/**
+ * Action after playlist ends
+ * @member {module:model/PlaylistEntity.RepeatModeEnum} repeatMode
+ */
+PlaylistEntity.prototype['repeatMode'] = undefined;
 
 /**
  * @member {Date} createdAt
@@ -194,6 +209,27 @@ PlaylistEntity.prototype['screenStates'] = undefined;
 
 
 
+
+
+/**
+ * Allowed values for the <code>repeatMode</code> property.
+ * @enum {String}
+ * @readonly
+ */
+PlaylistEntity['RepeatModeEnum'] = {
+
+    /**
+     * value: "LOOP"
+     * @const
+     */
+    "LOOP": "LOOP",
+
+    /**
+     * value: "FALLBACK"
+     * @const
+     */
+    "FALLBACK": "FALLBACK"
+};
 
 
 

@@ -4,6 +4,7 @@ import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
+import { UpdateScreenDto } from './dto/update-screen.dto';
 
 import * as crypto from 'crypto';
 
@@ -175,6 +176,20 @@ async updateAssignment(
   async updateLastSeen(id: number): Promise<void> {
     await this.screenRepository.updateLastSeen(id);
   }
+
+  async update(id: number, dto: UpdateScreenDto) {
+    const screen = await this.screenRepository.findOne({
+        where: { id },
+    });
+
+    if (!screen) {
+        throw new NotFoundException('Screen not found');
+    }
+
+    Object.assign(screen, dto);
+
+    return this.screenRepository.save(screen);
+}
 
   async generateNewApiKey(id: number): Promise<string> {
     await this.findById(id);

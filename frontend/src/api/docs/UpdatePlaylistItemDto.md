@@ -1,12 +1,12 @@
-# CmsApi.AddItemToPlaylistDto
+# CmsApi.UpdatePlaylistItemDto
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fileId** | **Number** |  | 
+**id** | **Number** |  | 
 **position** | **Number** |  | 
 **duration** | **Number** |  | 
-**videoLoops** | **Number** |  | [default to 1]
+**videoLoops** | **Number** |  | [optional] 
 
 

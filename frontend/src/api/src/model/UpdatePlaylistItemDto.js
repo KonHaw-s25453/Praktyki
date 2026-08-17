@@ -14,22 +14,21 @@
 import ApiClient from '../ApiClient';
 
 /**
- * The AddItemToPlaylistDto model module.
- * @module model/AddItemToPlaylistDto
+ * The UpdatePlaylistItemDto model module.
+ * @module model/UpdatePlaylistItemDto
  * @version 1.0
  */
-class AddItemToPlaylistDto {
+class UpdatePlaylistItemDto {
     /**
-     * Constructs a new <code>AddItemToPlaylistDto</code>.
-     * @alias module:model/AddItemToPlaylistDto
-     * @param fileId {Number} 
+     * Constructs a new <code>UpdatePlaylistItemDto</code>.
+     * @alias module:model/UpdatePlaylistItemDto
+     * @param id {Number} 
      * @param position {Number} 
      * @param duration {Number} 
-     * @param videoLoops {Number} 
      */
-    constructor(fileId, position, duration, videoLoops) { 
+    constructor(id, position, duration) { 
         
-        AddItemToPlaylistDto.initialize(this, fileId, position, duration, videoLoops);
+        UpdatePlaylistItemDto.initialize(this, id, position, duration);
     }
 
     /**
@@ -37,26 +36,25 @@ class AddItemToPlaylistDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, fileId, position, duration, videoLoops) { 
-        obj['fileId'] = fileId;
+    static initialize(obj, id, position, duration) { 
+        obj['id'] = id;
         obj['position'] = position;
         obj['duration'] = duration;
-        obj['videoLoops'] = videoLoops || 1;
     }
 
     /**
-     * Constructs a <code>AddItemToPlaylistDto</code> from a plain JavaScript object, optionally creating a new instance.
+     * Constructs a <code>UpdatePlaylistItemDto</code> from a plain JavaScript object, optionally creating a new instance.
      * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
      * @param {Object} data The plain JavaScript object bearing properties of interest.
-     * @param {module:model/AddItemToPlaylistDto} obj Optional instance to populate.
-     * @return {module:model/AddItemToPlaylistDto} The populated <code>AddItemToPlaylistDto</code> instance.
+     * @param {module:model/UpdatePlaylistItemDto} obj Optional instance to populate.
+     * @return {module:model/UpdatePlaylistItemDto} The populated <code>UpdatePlaylistItemDto</code> instance.
      */
     static constructFromObject(data, obj) {
         if (data) {
-            obj = obj || new AddItemToPlaylistDto();
+            obj = obj || new UpdatePlaylistItemDto();
 
-            if (data.hasOwnProperty('fileId')) {
-                obj['fileId'] = ApiClient.convertToType(data['fileId'], 'Number');
+            if (data.hasOwnProperty('id')) {
+                obj['id'] = ApiClient.convertToType(data['id'], 'Number');
             }
             if (data.hasOwnProperty('position')) {
                 obj['position'] = ApiClient.convertToType(data['position'], 'Number');
@@ -72,13 +70,13 @@ class AddItemToPlaylistDto {
     }
 
     /**
-     * Validates the JSON data with respect to <code>AddItemToPlaylistDto</code>.
+     * Validates the JSON data with respect to <code>UpdatePlaylistItemDto</code>.
      * @param {Object} data The plain JavaScript object bearing properties of interest.
-     * @return {boolean} to indicate whether the JSON data is valid with respect to <code>AddItemToPlaylistDto</code>.
+     * @return {boolean} to indicate whether the JSON data is valid with respect to <code>UpdatePlaylistItemDto</code>.
      */
     static validateJSON(data) {
         // check to make sure all required properties are present in the JSON string
-        for (const property of AddItemToPlaylistDto.RequiredProperties) {
+        for (const property of UpdatePlaylistItemDto.RequiredProperties) {
             if (!data.hasOwnProperty(property)) {
                 throw new Error("The required field `" + property + "` is not found in the JSON data: " + JSON.stringify(data));
             }
@@ -90,33 +88,32 @@ class AddItemToPlaylistDto {
 
 }
 
-AddItemToPlaylistDto.RequiredProperties = ["fileId", "position", "duration", "videoLoops"];
+UpdatePlaylistItemDto.RequiredProperties = ["id", "position", "duration"];
 
 /**
- * @member {Number} fileId
+ * @member {Number} id
  */
-AddItemToPlaylistDto.prototype['fileId'] = undefined;
+UpdatePlaylistItemDto.prototype['id'] = undefined;
 
 /**
  * @member {Number} position
  */
-AddItemToPlaylistDto.prototype['position'] = undefined;
+UpdatePlaylistItemDto.prototype['position'] = undefined;
 
 /**
  * @member {Number} duration
  */
-AddItemToPlaylistDto.prototype['duration'] = undefined;
+UpdatePlaylistItemDto.prototype['duration'] = undefined;
 
 /**
  * @member {Number} videoLoops
- * @default 1
  */
-AddItemToPlaylistDto.prototype['videoLoops'] = 1;
+UpdatePlaylistItemDto.prototype['videoLoops'] = undefined;
 
 
 
 
 
 
-export default AddItemToPlaylistDto;
+export default UpdatePlaylistItemDto;
 

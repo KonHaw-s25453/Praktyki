@@ -9,9 +9,9 @@ Name | Type | Description | Notes
 **location** | **Object** |  | 
 **apiKey** | **Object** |  | 
 **fallbackFileId** | **Number** | ID pliku fallback | 
+**playerUrl** | **Object** |  | 
 **createdAt** | **Date** |  | 
 **screenPlaylists** | [**[ScreenPlaylistEntity]**](ScreenPlaylistEntity.md) |  | 
-**logs** | **[Object]** |  | 
-**state** | **Object** |  | 
+**state** | **[Object]** |  | 
 
 

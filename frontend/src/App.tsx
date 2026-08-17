@@ -3,18 +3,19 @@ import PlaylistsPage from "./pages/PlaylistPage.tsx";
 import PlaylistEditPage from "./pages/PlaylistEditPage";
 import ScreensPage from "./pages/ScreensPage";
 import ScreenEditPage from "./pages/ScreenEditPage";
+import LogsPage from "./pages/LogsPage";
 import { useState } from "react";
 
 export default function App() {
 
     const [page, setPage] = useState<"files" | "playlists" | "playlistEdit"| "screens" |
-    "screenEdit">("files");
+    "screenEdit"|"logs">("files");
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
     const [selectedScreenId, setSelectedScreenId] = useState<number | null>(null);
     const [isDirty, setIsDirty] = useState(false);
 
     const navigate = (targetPage: "files" | "playlists" | "playlistEdit" | "screens" |
-    "screenEdit") => {
+    "screenEdit"|"logs") => {
         if (isDirty) {
             const confirmLeave = window.confirm(
                 "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
@@ -44,6 +45,10 @@ export default function App() {
 
                 <button onClick={() => navigate("screens")}>
                     Ekrany
+                </button>
+
+                <button onClick={() => navigate("logs")}>
+                    Logi
                 </button>
 
 </nav>
@@ -90,6 +95,10 @@ export default function App() {
                 onDirtyChange={setIsDirty}
             />
         )}
+
+        {page === "logs" && (
+        <LogsPage />
+)}
     </>
 );
 }

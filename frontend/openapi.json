@@ -146,6 +146,37 @@
         ]
       }
     },
+    "/files/{id}/content": {
+      "get": {
+        "operationId": "FilesController_getContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Zawartość pliku",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Files"
+        ]
+      }
+    },
     "/files/{id}": {
       "get": {
         "operationId": "FilesController_findById",
@@ -629,6 +660,37 @@
         "tags": [
           "Screens"
         ]
+      },
+      "put": {
+        "operationId": "ScreensController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScreenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Screens"
+        ]
       }
     },
     "/screens/{id}/playlists": {
@@ -806,7 +868,17 @@
     "/sync/manifest": {
       "get": {
         "operationId": "SyncController_getManifest",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "X-Screen-ID",
+            "in": "header",
+            "description": "Screen identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -917,6 +989,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScreenHeartbeatDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -1132,11 +1214,20 @@
           },
           "description": {
             "type": "string"
+          },
+          "repeatMode": {
+            "type": "string",
+            "enum": [
+              "LOOP",
+              "FALLBACK"
+            ],
+            "default": "LOOP"
           }
         },
         "required": [
           "name",
-          "description"
+          "description",
+          "repeatMode"
         ]
       },
       "ScreenPlaylistEntity": {
@@ -1215,6 +1306,14 @@
           "revision": {
             "type": "number"
           },
+          "repeatMode": {
+            "type": "string",
+            "description": "Action after playlist ends",
+            "enum": [
+              "LOOP",
+              "FALLBACK"
+            ]
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -1247,6 +1346,7 @@
           "name",
           "description",
           "revision",
+          "repeatMode",
           "createdAt",
           "updatedAt",
           "items",
@@ -1264,6 +1364,9 @@
             "type": "number"
           },
           "duration": {
+            "type": "number"
+          },
+          "videoLoops": {
             "type": "number"
           },
           "createdAt": {
@@ -1285,10 +1388,33 @@
           "id",
           "position",
           "duration",
+          "videoLoops",
           "createdAt",
           "updatedAt",
           "playlist",
           "file"
+        ]
+      },
+      "UpdatePlaylistItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "position": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "videoLoops": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "position",
+          "duration"
         ]
       },
       "UpdatePlaylistDto": {
@@ -1299,12 +1425,21 @@
           },
           "description": {
             "type": "string"
+          },
+          "repeatMode": {
+            "type": "string",
+            "enum": [
+              "LOOP",
+              "FALLBACK"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdatePlaylistItemDto"
+            }
           }
-        },
-        "required": [
-          "name",
-          "description"
-        ]
+        }
       },
       "AddItemToPlaylistDto": {
         "type": "object",
@@ -1317,12 +1452,17 @@
           },
           "duration": {
             "type": "number"
+          },
+          "videoLoops": {
+            "type": "number",
+            "default": 1
           }
         },
         "required": [
           "fileId",
           "position",
-          "duration"
+          "duration",
+          "videoLoops"
         ]
       },
       "ReorderPlaylistItemsDto": {
@@ -1353,6 +1493,11 @@
             "type": "number",
             "description": "ID obrazu lub filmu używanego jako ekran awaryjny",
             "example": 1
+          },
+          "playerUrl": {
+            "type": "string",
+            "example": "http://localhost:5174",
+            "description": "Adres aplikacji Player dla tego ekranu"
           }
         },
         "required": [
@@ -1387,6 +1532,10 @@
             "type": "number",
             "description": "ID pliku fallback"
           },
+          "playerUrl": {
+            "type": "object",
+            "nullable": true
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -1397,20 +1546,12 @@
               "$ref": "#/components/schemas/ScreenPlaylistEntity"
             }
           },
-          "logs": {
+          "state": {
+            "nullable": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ScreenLogEntity"
             }
-          },
-          "state": {
-            "nullable": true,
-            "type": "object",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ScreenStateEntity"
-              }
-            ]
           }
         },
         "required": [
@@ -1419,9 +1560,9 @@
           "location",
           "apiKey",
           "fallbackFileId",
+          "playerUrl",
           "createdAt",
           "screenPlaylists",
-          "logs",
           "state"
         ]
       },
@@ -1467,6 +1608,31 @@
           }
         }
       },
+      "UpdateScreenDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Ekran hol główny",
+            "description": "Nazwa ekranu"
+          },
+          "location": {
+            "type": "string",
+            "example": "Budynek A, parter",
+            "description": "Lokalizacja ekranu"
+          },
+          "fallbackFileId": {
+            "type": "number",
+            "example": 15,
+            "description": "ID pliku używanego jako fallback"
+          },
+          "playerUrl": {
+            "type": "string",
+            "example": "http://192.168.1.101:5174",
+            "description": "Adres aplikacji Player dla tego ekranu"
+          }
+        }
+      },
       "UpdateScreenStateDto": {
         "type": "object",
         "properties": {
@@ -1495,6 +1661,12 @@
         "required": [
           "message"
         ]
+      },
+      "UpdateScreenHeartbeatDto": {
+        "type": "object",
+        "properties": {
+
+        }
       }
     }
   }

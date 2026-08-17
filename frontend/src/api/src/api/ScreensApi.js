@@ -16,6 +16,7 @@ import ApiClient from "../ApiClient";
 import AssignPlaylistDto from '../model/AssignPlaylistDto';
 import CreateScreenDto from '../model/CreateScreenDto';
 import ScreenEntity from '../model/ScreenEntity';
+import UpdateScreenDto from '../model/UpdateScreenDto';
 import UpdateScreenPlaylistDto from '../model/UpdateScreenPlaylistDto';
 
 /**
@@ -398,6 +399,51 @@ export default class ScreensApi {
       let returnType = null;
       return this.apiClient.callApi(
         '/screens/{id}/playlists/{playlistId}', 'DELETE',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
+     * Callback function to receive the result of the screensControllerUpdate operation.
+     * @callback module:api/ScreensApi~screensControllerUpdateCallback
+     * @param {String} error Error message, if any.
+     * @param data This operation does not return a value.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Number} id 
+     * @param {module:model/UpdateScreenDto} updateScreenDto 
+     * @param {module:api/ScreensApi~screensControllerUpdateCallback} callback The callback function, accepting three arguments: error, data, response
+     */
+    screensControllerUpdate(id, updateScreenDto, callback) {
+      let postBody = updateScreenDto;
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling screensControllerUpdate");
+      }
+      // verify the required parameter 'updateScreenDto' is set
+      if (updateScreenDto === undefined || updateScreenDto === null) {
+        throw new Error("Missing the required parameter 'updateScreenDto' when calling screensControllerUpdate");
+      }
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = [];
+      let returnType = null;
+      return this.apiClient.callApi(
+        '/screens/{id}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );

@@ -169,16 +169,22 @@ export default class SyncApi {
      */
 
     /**
+     * @param {String} xScreenID Screen identifier
      * @param {module:api/SyncApi~syncControllerGetManifestCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    syncControllerGetManifest(callback) {
+    syncControllerGetManifest(xScreenID, callback) {
       let postBody = null;
+      // verify the required parameter 'xScreenID' is set
+      if (xScreenID === undefined || xScreenID === null) {
+        throw new Error("Missing the required parameter 'xScreenID' when calling syncControllerGetManifest");
+      }
 
       let pathParams = {
       };
       let queryParams = {
       };
       let headerParams = {
+        'X-Screen-ID': xScreenID
       };
       let formParams = {
       };
@@ -204,13 +210,18 @@ export default class SyncApi {
 
     /**
      * @param {Number} screenId 
+     * @param {Object.<String, Object>} body 
      * @param {module:api/SyncApi~syncControllerHeartbeatCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    syncControllerHeartbeat(screenId, callback) {
-      let postBody = null;
+    syncControllerHeartbeat(screenId, body, callback) {
+      let postBody = body;
       // verify the required parameter 'screenId' is set
       if (screenId === undefined || screenId === null) {
         throw new Error("Missing the required parameter 'screenId' when calling syncControllerHeartbeat");
+      }
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling syncControllerHeartbeat");
       }
 
       let pathParams = {
@@ -224,7 +235,7 @@ export default class SyncApi {
       };
 
       let authNames = [];
-      let contentTypes = [];
+      let contentTypes = ['application/json'];
       let accepts = [];
       let returnType = null;
       return this.apiClient.callApi(

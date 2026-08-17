@@ -24,10 +24,11 @@ class CreatePlaylistDto {
      * @alias module:model/CreatePlaylistDto
      * @param name {String} 
      * @param description {String} 
+     * @param repeatMode {module:model/CreatePlaylistDto.RepeatModeEnum} 
      */
-    constructor(name, description) { 
+    constructor(name, description, repeatMode) { 
         
-        CreatePlaylistDto.initialize(this, name, description);
+        CreatePlaylistDto.initialize(this, name, description, repeatMode);
     }
 
     /**
@@ -35,9 +36,10 @@ class CreatePlaylistDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, description) { 
+    static initialize(obj, name, description, repeatMode) { 
         obj['name'] = name;
         obj['description'] = description;
+        obj['repeatMode'] = repeatMode || 'LOOP';
     }
 
     /**
@@ -56,6 +58,9 @@ class CreatePlaylistDto {
             }
             if (data.hasOwnProperty('description')) {
                 obj['description'] = ApiClient.convertToType(data['description'], 'String');
+            }
+            if (data.hasOwnProperty('repeatMode')) {
+                obj['repeatMode'] = ApiClient.convertToType(data['repeatMode'], 'String');
             }
         }
         return obj;
@@ -81,6 +86,10 @@ class CreatePlaylistDto {
         if (data['description'] && !(typeof data['description'] === 'string' || data['description'] instanceof String)) {
             throw new Error("Expected the field `description` to be a primitive type in the JSON string but got " + data['description']);
         }
+        // ensure the json data is a string
+        if (data['repeatMode'] && !(typeof data['repeatMode'] === 'string' || data['repeatMode'] instanceof String)) {
+            throw new Error("Expected the field `repeatMode` to be a primitive type in the JSON string but got " + data['repeatMode']);
+        }
 
         return true;
     }
@@ -88,7 +97,7 @@ class CreatePlaylistDto {
 
 }
 
-CreatePlaylistDto.RequiredProperties = ["name", "description"];
+CreatePlaylistDto.RequiredProperties = ["name", "description", "repeatMode"];
 
 /**
  * @member {String} name
@@ -100,8 +109,35 @@ CreatePlaylistDto.prototype['name'] = undefined;
  */
 CreatePlaylistDto.prototype['description'] = undefined;
 
+/**
+ * @member {module:model/CreatePlaylistDto.RepeatModeEnum} repeatMode
+ * @default 'LOOP'
+ */
+CreatePlaylistDto.prototype['repeatMode'] = 'LOOP';
 
 
+
+
+
+/**
+ * Allowed values for the <code>repeatMode</code> property.
+ * @enum {String}
+ * @readonly
+ */
+CreatePlaylistDto['RepeatModeEnum'] = {
+
+    /**
+     * value: "LOOP"
+     * @const
+     */
+    "LOOP": "LOOP",
+
+    /**
+     * value: "FALLBACK"
+     * @const
+     */
+    "FALLBACK": "FALLBACK"
+};
 
 
 

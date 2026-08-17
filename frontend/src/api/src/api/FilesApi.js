@@ -303,6 +303,47 @@ export default class FilesApi {
     }
 
     /**
+     * Callback function to receive the result of the filesControllerGetContent operation.
+     * @callback module:api/FilesApi~filesControllerGetContentCallback
+     * @param {String} error Error message, if any.
+     * @param {File} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Number} id 
+     * @param {module:api/FilesApi~filesControllerGetContentCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link File}
+     */
+    filesControllerGetContent(id, callback) {
+      let postBody = null;
+      // verify the required parameter 'id' is set
+      if (id === undefined || id === null) {
+        throw new Error("Missing the required parameter 'id' when calling filesControllerGetContent");
+      }
+
+      let pathParams = {
+        'id': id
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = File;
+      return this.apiClient.callApi(
+        '/files/{id}/content', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
      * Callback function to receive the result of the filesControllerUpdate operation.
      * @callback module:api/FilesApi~filesControllerUpdateCallback
      * @param {String} error Error message, if any.

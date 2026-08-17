@@ -13,6 +13,7 @@ import { CreateScreenDto } from './dto/create-screen.dto';
 import { AssignPlaylistDto } from './dto/assign-playlist.dto';
 import { ScreenEntity, ScreenPlaylistEntity } from '../../entities';
 import { UpdateScreenPlaylistDto } from './dto/update-screen-playlist.dto';
+import { UpdateScreenDto } from './dto/update-screen.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 
@@ -87,4 +88,13 @@ export class ScreensController {
   getByLocation(@Param('location') location: string): Promise<ScreenEntity[]> {
     return this.screensService.getScreensInLocation(location);
   }
+
+  @Put(':id')
+async update(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() dto: UpdateScreenDto,
+) {
+  return this.screensService.update(id, dto);
+}
+
 }

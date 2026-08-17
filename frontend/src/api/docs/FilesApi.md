@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**filesControllerFindById**](FilesApi.md#filesControllerFindById) | **GET** /files/{id} | 
 [**filesControllerGetAllImages**](FilesApi.md#filesControllerGetAllImages) | **GET** /files/images | 
 [**filesControllerGetAllVideos**](FilesApi.md#filesControllerGetAllVideos) | **GET** /files/videos | 
+[**filesControllerGetContent**](FilesApi.md#filesControllerGetContent) | **GET** /files/{id}/content | 
 [**filesControllerUpdate**](FilesApi.md#filesControllerUpdate) | **PUT** /files/{id} | 
 [**filesControllerUploadFile**](FilesApi.md#filesControllerUploadFile) | **POST** /files/upload | 
 
@@ -294,6 +295,49 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**[FileEntity]**](FileEntity.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## filesControllerGetContent
+
+> File filesControllerGetContent(id)
+
+
+
+### Example
+
+```javascript
+import CmsApi from 'cms_api';
+
+let apiInstance = new CmsApi.FilesApi();
+let id = 3.4; // Number | 
+apiInstance.filesControllerGetContent(id, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **Number**|  | 
+
+### Return type
+
+**File**
 
 ### Authorization
 

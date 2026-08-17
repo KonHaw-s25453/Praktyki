@@ -27,6 +27,8 @@ import ScreenEntity from './model/ScreenEntity';
 import ScreenPlaylistEntity from './model/ScreenPlaylistEntity';
 import UpdateFileDto from './model/UpdateFileDto';
 import UpdatePlaylistDto from './model/UpdatePlaylistDto';
+import UpdatePlaylistItemDto from './model/UpdatePlaylistItemDto';
+import UpdateScreenDto from './model/UpdateScreenDto';
 import UpdateScreenPlaylistDto from './model/UpdateScreenPlaylistDto';
 import AppApi from './api/AppApi';
 import FilesApi from './api/FilesApi';
@@ -156,6 +158,18 @@ export {
      * @property {module:model/UpdatePlaylistDto}
      */
     UpdatePlaylistDto,
+
+    /**
+     * The UpdatePlaylistItemDto model constructor.
+     * @property {module:model/UpdatePlaylistItemDto}
+     */
+    UpdatePlaylistItemDto,
+
+    /**
+     * The UpdateScreenDto model constructor.
+     * @property {module:model/UpdateScreenDto}
+     */
+    UpdateScreenDto,
 
     /**
      * The UpdateScreenPlaylistDto model constructor.

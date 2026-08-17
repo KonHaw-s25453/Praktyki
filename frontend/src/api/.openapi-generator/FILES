@@ -21,6 +21,8 @@ docs/ScreensApi.md
 docs/SyncApi.md
 docs/UpdateFileDto.md
 docs/UpdatePlaylistDto.md
+docs/UpdatePlaylistItemDto.md
+docs/UpdateScreenDto.md
 docs/UpdateScreenPlaylistDto.md
 git_push.sh
 mocha.opts
@@ -46,5 +48,8 @@ src/model/ScreenEntity.js
 src/model/ScreenPlaylistEntity.js
 src/model/UpdateFileDto.js
 src/model/UpdatePlaylistDto.js
+src/model/UpdatePlaylistItemDto.js
+src/model/UpdateScreenDto.js
 src/model/UpdateScreenPlaylistDto.js
-test/model/ScreenPlaylistEntity.spec.js
+test/model/UpdatePlaylistItemDto.spec.js
+test/model/UpdateScreenDto.spec.js

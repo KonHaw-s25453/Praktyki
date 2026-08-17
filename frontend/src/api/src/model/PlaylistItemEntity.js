@@ -27,14 +27,15 @@ class PlaylistItemEntity {
      * @param id {Number} 
      * @param position {Number} 
      * @param duration {Number} 
+     * @param videoLoops {Number} 
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param playlist {module:model/PlaylistEntity} 
      * @param file {module:model/FileEntity} 
      */
-    constructor(id, position, duration, createdAt, updatedAt, playlist, file) { 
+    constructor(id, position, duration, videoLoops, createdAt, updatedAt, playlist, file) { 
         
-        PlaylistItemEntity.initialize(this, id, position, duration, createdAt, updatedAt, playlist, file);
+        PlaylistItemEntity.initialize(this, id, position, duration, videoLoops, createdAt, updatedAt, playlist, file);
     }
 
     /**
@@ -42,10 +43,11 @@ class PlaylistItemEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, position, duration, createdAt, updatedAt, playlist, file) { 
+    static initialize(obj, id, position, duration, videoLoops, createdAt, updatedAt, playlist, file) { 
         obj['id'] = id;
         obj['position'] = position;
         obj['duration'] = duration;
+        obj['videoLoops'] = videoLoops;
         obj['createdAt'] = createdAt;
         obj['updatedAt'] = updatedAt;
         obj['playlist'] = playlist;
@@ -71,6 +73,9 @@ class PlaylistItemEntity {
             }
             if (data.hasOwnProperty('duration')) {
                 obj['duration'] = ApiClient.convertToType(data['duration'], 'Number');
+            }
+            if (data.hasOwnProperty('videoLoops')) {
+                obj['videoLoops'] = ApiClient.convertToType(data['videoLoops'], 'Number');
             }
             if (data.hasOwnProperty('createdAt')) {
                 obj['createdAt'] = ApiClient.convertToType(data['createdAt'], 'Date');
@@ -115,7 +120,7 @@ class PlaylistItemEntity {
 
 }
 
-PlaylistItemEntity.RequiredProperties = ["id", "position", "duration", "createdAt", "updatedAt", "playlist", "file"];
+PlaylistItemEntity.RequiredProperties = ["id", "position", "duration", "videoLoops", "createdAt", "updatedAt", "playlist", "file"];
 
 /**
  * @member {Number} id
@@ -131,6 +136,11 @@ PlaylistItemEntity.prototype['position'] = undefined;
  * @member {Number} duration
  */
 PlaylistItemEntity.prototype['duration'] = undefined;
+
+/**
+ * @member {Number} videoLoops
+ */
+PlaylistItemEntity.prototype['videoLoops'] = undefined;
 
 /**
  * @member {Date} createdAt

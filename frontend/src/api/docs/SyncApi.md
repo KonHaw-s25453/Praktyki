@@ -147,7 +147,7 @@ No authorization required
 
 ## syncControllerGetManifest
 
-> syncControllerGetManifest()
+> syncControllerGetManifest(xScreenID)
 
 
 
@@ -157,7 +157,8 @@ No authorization required
 import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
-apiInstance.syncControllerGetManifest((error, data, response) => {
+let xScreenID = "xScreenID_example"; // String | Screen identifier
+apiInstance.syncControllerGetManifest(xScreenID, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -168,7 +169,10 @@ apiInstance.syncControllerGetManifest((error, data, response) => {
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **xScreenID** | **String**| Screen identifier | 
 
 ### Return type
 
@@ -186,7 +190,7 @@ No authorization required
 
 ## syncControllerHeartbeat
 
-> syncControllerHeartbeat(screenId)
+> syncControllerHeartbeat(screenId, body)
 
 
 
@@ -197,7 +201,8 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
 let screenId = 3.4; // Number | 
-apiInstance.syncControllerHeartbeat(screenId, (error, data, response) => {
+let body = {key: null}; // Object | 
+apiInstance.syncControllerHeartbeat(screenId, body, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -212,6 +217,7 @@ apiInstance.syncControllerHeartbeat(screenId, (error, data, response) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **screenId** | **Number**|  | 
+ **body** | **Object**|  | 
 
 ### Return type
 
@@ -223,7 +229,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: Not defined
 
 

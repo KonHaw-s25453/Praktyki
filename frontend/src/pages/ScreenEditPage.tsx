@@ -29,6 +29,9 @@ const [activeTo, setActiveTo] = useState("");
 const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
 const [isDirty, setIsDirty] = useState(false);
 const [showSaveDialog, setShowSaveDialog] = useState(false);
+const [name, setName] = useState("");
+const [location, setLocation] = useState("");
+
 
 useEffect(() => {
 
@@ -40,15 +43,18 @@ useEffect(() => {
         screenId,
         (error, data) => {
 
+
             if (!error && data) {
 
-                const assignment = data.screenPlaylists?.[0];
+    setName(data.name ?? "");
+    setLocation(data.location ?? "");
 
-                setAssignment(
-                    assignment ?? null
-                );
+    const assignment = data.screenPlaylists?.[0];
 
-            }
+    setAssignment(
+        assignment ?? null
+    );
+}
         }
     );
 
@@ -203,6 +209,35 @@ const requestLeave = () => {
 };
 
 
+const saveScreen = () => {
+
+    if (!screenId) {
+        console.error("Brak screenId");
+        return;
+    }
+
+    screensApi.screensControllerUpdate(
+        screenId,
+        {
+            name,
+            location,
+        },
+        (error) => {
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            console.log("Screen updated");
+
+            setIsDirty(false);
+            onDirtyChange(false);
+        }
+    );
+};
+
+
 return (
 
     
@@ -211,7 +246,33 @@ return (
         <h1>
             Edycja ekranu
         </h1>
+        <h2>
+    Nazwa
+</h2>
 
+<input
+    type="text"
+    value={name}
+    onChange={(e) => {
+        setName(e.target.value);
+        setIsDirty(true);
+        onDirtyChange(true);
+    }}
+/>
+
+<h2>
+    Lokalizacja
+</h2>
+
+<input
+    type="text"
+    value={location}
+    onChange={(e) => {
+        setLocation(e.target.value);
+        setIsDirty(true);
+        onDirtyChange(true);
+    }}
+/>
         <button onClick={onBack}>
          ← Powrót do ekranów
         </button>
@@ -234,6 +295,13 @@ return (
             </p>
         )}
 
+<button
+    onClick={() => {
+        saveScreen();
+    }}
+>
+    Zapisz dane ekranu
+</button>
 
         <label>
             Playlista:

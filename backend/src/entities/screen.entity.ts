@@ -110,17 +110,7 @@ export class ScreenEntity {
   @ApiProperty({
     type: () => [ScreenLogEntity],
   })
-  @OneToMany(
-    () => ScreenLogEntity,
-    (log) => log.screen,
-    {
-      cascade: true,
-    },
-  )
-  logs: ScreenLogEntity[];
-
-
-
+ 
   @ApiProperty({
     type: () => ScreenStateEntity,
     nullable: true,

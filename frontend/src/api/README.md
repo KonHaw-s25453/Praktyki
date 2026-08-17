@@ -128,6 +128,7 @@ Class | Method | HTTP request | Description
 *CmsApi.FilesApi* | [**filesControllerFindById**](docs/FilesApi.md#filesControllerFindById) | **GET** /files/{id} | 
 *CmsApi.FilesApi* | [**filesControllerGetAllImages**](docs/FilesApi.md#filesControllerGetAllImages) | **GET** /files/images | 
 *CmsApi.FilesApi* | [**filesControllerGetAllVideos**](docs/FilesApi.md#filesControllerGetAllVideos) | **GET** /files/videos | 
+*CmsApi.FilesApi* | [**filesControllerGetContent**](docs/FilesApi.md#filesControllerGetContent) | **GET** /files/{id}/content | 
 *CmsApi.FilesApi* | [**filesControllerUpdate**](docs/FilesApi.md#filesControllerUpdate) | **PUT** /files/{id} | 
 *CmsApi.FilesApi* | [**filesControllerUploadFile**](docs/FilesApi.md#filesControllerUploadFile) | **POST** /files/upload | 
 *CmsApi.PlaylistsApi* | [**playlistsControllerAddItem**](docs/PlaylistsApi.md#playlistsControllerAddItem) | **POST** /playlists/{id}/items | 
@@ -148,6 +149,7 @@ Class | Method | HTTP request | Description
 *CmsApi.ScreensApi* | [**screensControllerGetByLocation**](docs/ScreensApi.md#screensControllerGetByLocation) | **GET** /screens/location/{location} | 
 *CmsApi.ScreensApi* | [**screensControllerHeartbeat**](docs/ScreensApi.md#screensControllerHeartbeat) | **POST** /screens/{id}/heartbeat | 
 *CmsApi.ScreensApi* | [**screensControllerRemovePlaylist**](docs/ScreensApi.md#screensControllerRemovePlaylist) | **DELETE** /screens/{id}/playlists/{playlistId} | 
+*CmsApi.ScreensApi* | [**screensControllerUpdate**](docs/ScreensApi.md#screensControllerUpdate) | **PUT** /screens/{id} | 
 *CmsApi.ScreensApi* | [**screensControllerUpdateAssignment**](docs/ScreensApi.md#screensControllerUpdateAssignment) | **PUT** /screens/{id}/playlists/{playlistId} | 
 *CmsApi.SyncApi* | [**syncControllerCheckManifestChanged**](docs/SyncApi.md#syncControllerCheckManifestChanged) | **GET** /sync/{screenId}/check | 
 *CmsApi.SyncApi* | [**syncControllerGetFallback**](docs/SyncApi.md#syncControllerGetFallback) | **GET** /sync/{screenId}/fallback | 
@@ -174,6 +176,8 @@ Class | Method | HTTP request | Description
  - [CmsApi.ScreenPlaylistEntity](docs/ScreenPlaylistEntity.md)
  - [CmsApi.UpdateFileDto](docs/UpdateFileDto.md)
  - [CmsApi.UpdatePlaylistDto](docs/UpdatePlaylistDto.md)
+ - [CmsApi.UpdatePlaylistItemDto](docs/UpdatePlaylistItemDto.md)
+ - [CmsApi.UpdateScreenDto](docs/UpdateScreenDto.md)
  - [CmsApi.UpdateScreenPlaylistDto](docs/UpdateScreenPlaylistDto.md)
 
 

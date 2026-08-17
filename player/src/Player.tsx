@@ -49,11 +49,14 @@ export default function Player() {
   const params = new URLSearchParams(window.location.search);
   const screenId = params.get("screenId");
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
+  const [fallbackReason, setFallbackReason] = useState<
+  "NORMAL" | "ERROR" | null
+>(null);
 
 const logEvent = useCallback(
   async (
     message: string,
-    level: "INFO" | "ERROR" | "PLAYBACK" = "INFO",
+    level: "INFO" | "ERROR" | "PLAYBACK" |"WARN" = "INFO",
   ) => {
     if (!screenId) {
       console.warn("Cannot send log: missing screenId");
@@ -151,6 +154,11 @@ const loadManifest = async () => {
     console.log("CAN FIT MISSING FILES:", canFit);
 
     if (!canFit) {
+      await logEvent(
+    `CACHE_FULL available=${cacheInfo.available ?? 0}`,
+    "WARN",
+    );
+
       console.warn(
         "Brak miejsca na nowy manifest — próbuję użyć starego manifestu.",
       );
@@ -177,6 +185,7 @@ const loadManifest = async () => {
       const fallback = data.manifest.fallback;
 
       if (fallback) {
+        setFallbackReason("ERROR");
         setManifest({
           ...data,
           manifest: {
@@ -391,6 +400,7 @@ useEffect(() => {
       );
 
       objectUrl = await getCachedFileUrl(item.file.id);
+      
 
       if (!objectUrl) {
         throw new Error(
@@ -409,8 +419,10 @@ useEffect(() => {
       console.error("Cache playback error:", err);
 
       await logEvent(
-        `PLAYER_ERROR file=${item.file.filename}`,
-        "ERROR",
+  `CACHE_PLAYBACK_ERROR file=${item.file.filename} error=${
+    err instanceof Error ? err.message : String(err)
+  }`,
+  "ERROR",
       );
 
       const fallback = manifest.manifest.fallback;
@@ -424,6 +436,8 @@ useEffect(() => {
           `CACHE_MISS_USING_FALLBACK file=${item.file.filename}`,
           "WARN",
         );
+        
+        setFallbackReason("ERROR");
 
         setManifest({
           ...manifest,
@@ -452,7 +466,7 @@ useEffect(() => {
       URL.revokeObjectURL(objectUrl);
     }
   }; */
-  
+
 }, [manifest, currentIndex,logEvent]);
 
 
@@ -487,6 +501,19 @@ if (manifest.manifest.playlists.length === 0) {
                     alt="Fallback"
                 />
             )}
+         {fallbackReason === "ERROR" && (
+        <div
+    style={{
+      position: "fixed",
+      left: 0,
+      right: 0,
+      bottom: "60px",
+      height: "12px",
+      backgroundColor: "crimson",
+      zIndex: 9999,
+    }}
+  />
+      )}
         </div>
     );
 }
@@ -514,14 +541,26 @@ return (
         playsInline
       // controls
         onEnded={next}
+        onError={() => {
+          logEvent(
+            `VIDEO_PLAYBACK_ERROR file=${file.filename}`,
+            "ERROR",
+    );
+  }}
       />
     ) : (
       <img
         src={currentFileUrl ?? undefined}
         alt=""
         onLoad={() => {
-          setTimeout(next, item.duration * 1000);
+          setTimeout(next, item.duration * 1000);  
         }}
+        onError={() => {
+          logEvent(
+            `IMAGE_PLAYBACK_ERROR file=${file.filename}`,
+            "ERROR",
+    );
+  }}
       />
     )}
   </div>

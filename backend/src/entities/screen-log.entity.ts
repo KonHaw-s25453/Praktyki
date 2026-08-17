@@ -3,10 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { ScreenEntity } from './screen.entity';
 
 @Entity('screen_logs')
 export class ScreenLogEntity {
@@ -24,10 +21,4 @@ export class ScreenLogEntity {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @ManyToOne(() => ScreenEntity, screen => screen.logs, {
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn({ name: 'screen_id' })
-  screen: ScreenEntity | null;
 }

@@ -12,6 +12,7 @@
  */
 
 import ApiClient from '../ApiClient';
+import UpdatePlaylistItemDto from './UpdatePlaylistItemDto';
 
 /**
  * The UpdatePlaylistDto model module.
@@ -22,12 +23,10 @@ class UpdatePlaylistDto {
     /**
      * Constructs a new <code>UpdatePlaylistDto</code>.
      * @alias module:model/UpdatePlaylistDto
-     * @param name {String} 
-     * @param description {String} 
      */
-    constructor(name, description) { 
+    constructor() { 
         
-        UpdatePlaylistDto.initialize(this, name, description);
+        UpdatePlaylistDto.initialize(this);
     }
 
     /**
@@ -35,9 +34,7 @@ class UpdatePlaylistDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, description) { 
-        obj['name'] = name;
-        obj['description'] = description;
+    static initialize(obj) { 
     }
 
     /**
@@ -57,6 +54,12 @@ class UpdatePlaylistDto {
             if (data.hasOwnProperty('description')) {
                 obj['description'] = ApiClient.convertToType(data['description'], 'String');
             }
+            if (data.hasOwnProperty('repeatMode')) {
+                obj['repeatMode'] = ApiClient.convertToType(data['repeatMode'], 'String');
+            }
+            if (data.hasOwnProperty('items')) {
+                obj['items'] = ApiClient.convertToType(data['items'], [UpdatePlaylistItemDto]);
+            }
         }
         return obj;
     }
@@ -67,12 +70,6 @@ class UpdatePlaylistDto {
      * @return {boolean} to indicate whether the JSON data is valid with respect to <code>UpdatePlaylistDto</code>.
      */
     static validateJSON(data) {
-        // check to make sure all required properties are present in the JSON string
-        for (const property of UpdatePlaylistDto.RequiredProperties) {
-            if (!data.hasOwnProperty(property)) {
-                throw new Error("The required field `" + property + "` is not found in the JSON data: " + JSON.stringify(data));
-            }
-        }
         // ensure the json data is a string
         if (data['name'] && !(typeof data['name'] === 'string' || data['name'] instanceof String)) {
             throw new Error("Expected the field `name` to be a primitive type in the JSON string but got " + data['name']);
@@ -81,6 +78,20 @@ class UpdatePlaylistDto {
         if (data['description'] && !(typeof data['description'] === 'string' || data['description'] instanceof String)) {
             throw new Error("Expected the field `description` to be a primitive type in the JSON string but got " + data['description']);
         }
+        // ensure the json data is a string
+        if (data['repeatMode'] && !(typeof data['repeatMode'] === 'string' || data['repeatMode'] instanceof String)) {
+            throw new Error("Expected the field `repeatMode` to be a primitive type in the JSON string but got " + data['repeatMode']);
+        }
+        if (data['items']) { // data not null
+            // ensure the json data is an array
+            if (!Array.isArray(data['items'])) {
+                throw new Error("Expected the field `items` to be an array in the JSON data but got " + data['items']);
+            }
+            // validate the optional field `items` (array)
+            for (const item of data['items']) {
+                UpdatePlaylistItemDto.validateJSON(item);
+            };
+        }
 
         return true;
     }
@@ -88,7 +99,7 @@ class UpdatePlaylistDto {
 
 }
 
-UpdatePlaylistDto.RequiredProperties = ["name", "description"];
+
 
 /**
  * @member {String} name
@@ -100,8 +111,39 @@ UpdatePlaylistDto.prototype['name'] = undefined;
  */
 UpdatePlaylistDto.prototype['description'] = undefined;
 
+/**
+ * @member {module:model/UpdatePlaylistDto.RepeatModeEnum} repeatMode
+ */
+UpdatePlaylistDto.prototype['repeatMode'] = undefined;
+
+/**
+ * @member {Array.<module:model/UpdatePlaylistItemDto>} items
+ */
+UpdatePlaylistDto.prototype['items'] = undefined;
 
 
+
+
+
+/**
+ * Allowed values for the <code>repeatMode</code> property.
+ * @enum {String}
+ * @readonly
+ */
+UpdatePlaylistDto['RepeatModeEnum'] = {
+
+    /**
+     * value: "LOOP"
+     * @const
+     */
+    "LOOP": "LOOP",
+
+    /**
+     * value: "FALLBACK"
+     * @const
+     */
+    "FALLBACK": "FALLBACK"
+};
 
 
 

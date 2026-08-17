@@ -10,7 +10,7 @@ export class ScreenLogRepository extends Repository<ScreenLogEntity> {
 
   async findByScreenId(screenId: number, limit: number = 100): Promise<ScreenLogEntity[]> {
     return this.find({
-      where: { screenId },
+      where: { screenId } ,
       order: { createdAt: 'DESC' },
       take: limit,
     });
@@ -37,7 +37,7 @@ export class ScreenLogRepository extends Repository<ScreenLogEntity> {
     limit: number = 50,
   ): Promise<ScreenLogEntity[]> {
     return this.find({
-      where: { screenId, level },
+      where: {screenId, level },
       order: { createdAt: 'DESC' },
       take: limit,
     });
