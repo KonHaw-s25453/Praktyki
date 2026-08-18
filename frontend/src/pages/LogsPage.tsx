@@ -50,38 +50,44 @@ export default function LogsPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedScreenId === null) {
-      return;
-    }
+  if (selectedScreenId === null) {
+    return;
+  }
 
-    const loadLogs = async () => {
-      setLoading(true);
-      setError("");
+  const loadLogs = async () => {
+    setLoading(true);
+    setError("");
 
-      try {
-        const response = await fetch(
-          `http://localhost:3000/sync/${selectedScreenId}/logs`,
+    try {
+      const response = await fetch(
+        `http://localhost:3000/sync/${selectedScreenId}/logs`,
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Cannot load logs: ${response.status}`,
         );
-
-        if (!response.ok) {
-          throw new Error(
-            `Cannot load logs: ${response.status}`,
-          );
-        }
-
-        const data: ScreenLog[] = await response.json();
-
-        setLogs(data);
-      } catch (err) {
-        console.error("Failed to load logs:", err);
-        setError("Nie udało się pobrać logów.");
-      } finally {
-        setLoading(false);
       }
-    };
 
-    loadLogs();
-  }, [selectedScreenId]);
+      const data: ScreenLog[] = await response.json();
+
+      setLogs(data);
+    } catch (err) {
+      console.error("Failed to load logs:", err);
+      setError("Nie udało się pobrać logów.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadLogs();
+
+  const interval = setInterval(loadLogs, 5000);
+
+  return () => {
+    clearInterval(interval);
+  };
+}, [selectedScreenId]);
 
   return (
     <div>
@@ -108,31 +114,35 @@ export default function LogsPage() {
 
       {error && <p>{error}</p>}
 
-      {!loading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Poziom</th>
-              <th>Zdarzenie</th>
-            </tr>
-          </thead>
+ {!loading && !error && (
+  logs.length === 0 ? (
+    <p>Brak logów dla tego ekranu.</p>
+  ) : (
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Poziom</th>
+          <th>Zdarzenie</th>
+        </tr>
+      </thead>
 
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td>
-                  {new Date(log.createdAt).toLocaleString()}
-                </td>
+      <tbody>
+        {logs.map((log) => (
+          <tr key={log.id}>
+            <td>
+              {new Date(log.createdAt).toLocaleString()}
+            </td>
 
-                <td>{log.level}</td>
+            <td>{log.level}</td>
 
-                <td>{log.message}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            <td>{log.message}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+)}
     </div>
   );
 }

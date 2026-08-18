@@ -145,7 +145,7 @@ export class SyncService {
     }
 
     await this.screenLogRepository.save({
-      screen: { id: screenId },
+      screenId,
       message,
       level,
     });

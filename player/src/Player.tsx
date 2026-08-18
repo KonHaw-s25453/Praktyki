@@ -91,17 +91,8 @@ const logEvent = useCallback(
   [screenId],
 );
 
-useEffect(() => {
-  if (!screenId) {
-    return;
-  }
-
-  logEvent("PLAYER_STARTED", "INFO");
-}, [screenId, logEvent]);
-
   useEffect(() => {
   if (!screenId) {
-    logEvent("PLAYER_STARTED","INFO");
     return;
   }
 
