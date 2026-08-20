@@ -316,8 +316,9 @@ export async function syncManifest(
       `CACHE MISS: ${file.id} ${file.filename}`,
     );
 
+    const API_URL = import.meta.env.VITE_API_URL;
     const response = await fetch(
-      `http://localhost:3000/assets/${file.filename}`,
+      `${API_URL}/assets/${file.filename}`,
     );
 
     if (!response.ok) {

@@ -1,6 +1,6 @@
 # CmsApi.SyncApi
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *import.meta.env.VITE_API_URL*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

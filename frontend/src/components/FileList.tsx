@@ -1,6 +1,7 @@
 import type React from "react";
 import type { FileDto } from "../types/FileDto";
 
+const API_URL = import.meta.env.VITE_API_URL;
 interface FileListProps {
     files: FileDto[];
     onDelete: (id: number) => void;
@@ -39,7 +40,7 @@ function VideoThumbnail({ file }: { file: FileDto }) {
 
     return (
         <video
-            src={`http://localhost:3000/files/${file.id}/content`}
+            src={`${API_URL}/files/${file.id}/content`}
             preload="metadata"
             muted
             onLoadedMetadata={(event) => {
@@ -81,7 +82,7 @@ export default function FileList({ files, onDelete }: FileListProps) {
 
                     {file.mimeType.startsWith("image/") ? (
                         <img
-                            src={`http://localhost:3000/files/${file.id}/content`}
+                            src={`${API_URL}/files/${file.id}/content`}
                             alt={file.originalName}
                             style={{
                                 width: "160px",

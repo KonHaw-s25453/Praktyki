@@ -33,7 +33,7 @@ console.log('STATIC:', join(process.cwd(), 'files'));;
   .setTitle('CMS API')
   .setDescription('API dla ekranów')
   .setVersion('1.0')
-  .addServer('http://localhost:3000')
+  .addServer('')
   .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -32,11 +32,12 @@ class ApiClient {
      * Overrides the default value set in spec file if present
      * @param {String} basePath
      */
+    
     constructor(basePath = 'http://localhost:3000') {
         /**
          * The base URL against which to resolve every API call's (relative) path.
          * @type {String}
-         * @default http://localhost:3000
+         * @default import.meta.env.VITE_API_URL
          */
         this.basePath = basePath.replace(/\/+$/, '');
 
@@ -52,9 +53,7 @@ class ApiClient {
          * @type {Array.<String>}
          * @default {}
          */
-        this.defaultHeaders = {
-            'User-Agent': 'OpenAPI-Generator/1.0/Javascript'
-        };
+        this.defaultHeaders = {};
 
         /**
          * The default HTTP timeout for all API calls.
@@ -594,7 +593,7 @@ class ApiClient {
     hostSettings() {
         return [
             {
-              'url': "http://localhost:3000",
+              'url': "import.meta.env.VITE_API_URL",
               'description': "No description provided",
             }
       ];

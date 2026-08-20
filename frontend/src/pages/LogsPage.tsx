@@ -23,8 +23,9 @@ export default function LogsPage() {
   useEffect(() => {
     const loadScreens = async () => {
       try {
+        const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(
-          "http://localhost:3000/screens",
+          `${API_URL}/screens`,
         );
 
         if (!response.ok) {
@@ -59,8 +60,9 @@ export default function LogsPage() {
     setError("");
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(
-        `http://localhost:3000/sync/${selectedScreenId}/logs`,
+        `${API_URL}/sync/${selectedScreenId}/logs`,
       );
 
       if (!response.ok) {

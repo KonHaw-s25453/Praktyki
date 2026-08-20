@@ -4,7 +4,7 @@ import FilesApi from "./src/api/FilesApi";
 
 const apiClient = new ApiClient();
 
-apiClient.basePath = "http://localhost:3000";
+apiClient.basePath = 'http://localhost:3000';
 
 
 const filesApi = new FilesApi(apiClient);

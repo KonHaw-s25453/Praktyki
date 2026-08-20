@@ -42,7 +42,7 @@ interface ManifestResponse {
 }
 export default function Player() {
 
-
+ 
   const [manifest, setManifest] = useState<ManifestResponse | null>(null);
   const [error, setError] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,8 +64,9 @@ const logEvent = useCallback(
     }
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(
-        `http://localhost:3000/sync/${screenId}/logs`,
+        `${API_URL}/sync/${screenId}/logs`,
         {
           method: "POST",
           headers: {
@@ -106,8 +107,9 @@ const loadManifest = async () => {
     const cacheInfo = await getCacheInfo();
     console.log("CACHE INFO:", cacheInfo);
 
+    const API_URL = import.meta.env.VITE_API_URL;
     const response = await fetch(
-      "http://localhost:3000/sync/manifest",
+      `${API_URL}/sync/manifest`,
       {
         headers: {
           "X-Screen-ID": String(screenId),
@@ -255,8 +257,9 @@ loadManifest();
 
     const sendHeartbeat = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(
-            `http://localhost:3000/sync/${screenId}/heartbeat`,
+            `${API_URL}/sync/${screenId}/heartbeat`,
             {
                 method: "POST",
                 headers: {
@@ -305,8 +308,9 @@ loadManifest();
 
   const checkForChanges = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(
-        `http://localhost:3000/sync/${screenId}/check?currentRevision=${manifest.revision}`,
+        `${API_URL}/sync/${screenId}/check?currentRevision=${manifest.revision}`,
       );
 
       if (!response.ok) {
@@ -325,8 +329,9 @@ loadManifest();
       if (data.changed) {
         console.log("MANIFEST CHANGED - loading new manifest");
 
+        const API_URL = import.meta.env.VITE_API_URL;
         const manifestResponse = await fetch(
-          "http://localhost:3000/sync/manifest",
+          `${API_URL}/sync/manifest`,
           {
             headers: {
               "X-Screen-ID": String(screenId),
@@ -419,27 +424,60 @@ useEffect(() => {
       const fallback = manifest.manifest.fallback;
 
       if (fallback) {
-        console.warn(
-          "Plik nie jest w cache — używam fallbacku.",
-        );
+  console.warn(
+    "Plik nie jest w cache — używam fallbacku.",
+  );
 
-        await logEvent(
-          `CACHE_MISS_USING_FALLBACK file=${item.file.filename}`,
-          "WARN",
-        );
-        
-        setFallbackReason("ERROR");
+  await logEvent(
+    `CACHE_MISS_USING_FALLBACK file=${item.file.filename}`,
+    "WARN",
+  );
 
-        setManifest({
-          ...manifest,
-          manifest: {
-            ...manifest.manifest,
-            playlists: [],
-          },
-        });
+  setFallbackReason("ERROR");
 
-        setCurrentIndex(0);
-        setError("");
+  setCurrentFileUrl(null);
+
+  try {
+    const fallbackUrl = await getCachedFileUrl(fallback.id);
+
+   if (!fallbackUrl) {
+  console.error(
+    `Fallback file ${fallback.id} is not available in cache`,
+  );
+
+  setError(
+    `Fallback file ${fallback.id} is not available in cache`,
+  );
+
+  return;
+}
+
+    setCurrentFileUrl(fallbackUrl);
+  } catch (fallbackError) {
+    console.error(
+      "Fallback cache error:",
+      fallbackError,
+    );
+
+    setError(
+      fallbackError instanceof Error
+        ? fallbackError.message
+        : "Fallback is not available in cache",
+    );
+
+    return;
+  }
+
+  setManifest({
+    ...manifest,
+    manifest: {
+      ...manifest.manifest,
+      playlists: [],
+    },
+  });
+
+  setCurrentIndex(0);
+  setError("");
       } else {
         setError(
           err instanceof Error
@@ -470,43 +508,44 @@ useEffect(() => {
   }
 
 if (manifest.manifest.playlists.length === 0) {
-    const fallback = manifest.manifest.fallback;
+  const fallback = manifest.manifest.fallback;
 
-    if (!fallback) {
-        return <p>Brak playlisty i fallbacku</p>;
-    }
+  if (!fallback) {
+    return <p>Brak playlisty i fallbacku</p>;
+  }
 
-    return (
-        <div className="player">
-            {fallback.mimeType.startsWith("video/") ? (
-                <video
-                    src={`http://localhost:3000/assets/${fallback.filename}`}
-                    autoPlay
-                    muted
-                    playsInline
-                    loop
-                />
-            ) : (
-                <img
-                    src={`http://localhost:3000/assets/${fallback.filename}`}
-                    alt="Fallback"
-                />
-            )}
-         {fallbackReason === "ERROR" && (
-        <div
-    style={{
-      position: "fixed",
-      left: 0,
-      right: 0,
-      bottom: "60px",
-      height: "12px",
-      backgroundColor: "crimson",
-      zIndex: 9999,
-    }}
-  />
+  return (
+    <div className="player">
+      {fallback.mimeType.startsWith("video/") ? (
+        <video
+          src={currentFileUrl ?? undefined}
+          autoPlay
+          muted
+          playsInline
+          loop
+        />
+      ) : (
+        <img
+          src={currentFileUrl ?? undefined}
+          alt="Fallback"
+        />
       )}
-        </div>
-    );
+
+      {fallbackReason === "ERROR" && (
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            right: 0,
+            bottom: "60px",
+            height: "12px",
+            backgroundColor: "crimson",
+            zIndex: 9999,
+          }}
+        />
+      )}
+    </div>
+  );
 }
 
   const playlist = manifest.manifest.playlists[0];

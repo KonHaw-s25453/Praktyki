@@ -11,7 +11,8 @@ import type { FileDto } from "../types/FileDto";
 
 
 const filesApi = new FilesApi();
-
+console.log("API CLIENT:", filesApi.apiClient);
+console.log("BASE PATH:", filesApi.apiClient.basePath);
 
 export default function FilesPage() {
 
