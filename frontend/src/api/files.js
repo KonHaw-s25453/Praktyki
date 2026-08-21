@@ -33,11 +33,11 @@ export function uploadFile(file) {
                 file: file
             },
             (error, data, response) => {
-                console.log("UPLOAD CALLBACK");
-                console.log("error:", error);
-                console.log("data:", data);
-                console.log("response:", response);
-
+               /* console.log("UPLOAD CALLBACK");
+               // console.log("error:", error);
+               // console.log("data:", data);
+                 console.log("response:", response);
+                */
                 if (error) {
                     reject(error)
                     return;

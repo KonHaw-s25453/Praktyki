@@ -1,7 +1,7 @@
 import FileUpload from "../components/FileUpload.tsx";
 export default function UploadPage() {
     const handleUploadSuccess = () => {
-        console.log("File uploaded successfully");
+        //console.log("File uploaded successfully");
     };
 
     return (

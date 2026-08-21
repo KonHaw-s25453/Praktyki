@@ -7,6 +7,7 @@ import { ScreensModule } from './modules/screens/screens.module';
 import { SyncModule } from './modules/sync/sync.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AppService } from './app.service';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ScheduleModule.forRoot(),
     DatabaseModule,
     FilesModule,
     PlaylistsModule,
@@ -24,3 +26,4 @@ import { AppService } from './app.service';
   providers: [AppService],
 })
 export class AppModule {}
+

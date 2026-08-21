@@ -52,4 +52,31 @@ export class ScreenLogRepository extends Repository<ScreenLogEntity> {
       .where('createdAt < :cutoffDate', { cutoffDate })
       .execute();
   }
+
+  async deleteExcessLogs(maxLogs: number): Promise<number> {
+  const count = await this.count();
+
+  if (count <= maxLogs) {
+    return 0;
+  }
+
+  const excess = count - maxLogs;
+
+  const result = await this.createQueryBuilder()
+    .delete()
+    .where(
+      `id IN (
+        SELECT id FROM (
+          SELECT id
+          FROM screen_logs
+          ORDER BY createdAt ASC
+          LIMIT ${excess}
+        ) AS old_logs
+      )`,
+    )
+    .execute();
+
+  return result.affected ?? 0;
+}
+
 }

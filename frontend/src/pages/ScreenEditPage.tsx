@@ -87,23 +87,23 @@ useEffect(() => {
 }, [assignment]);
 
 
-useEffect(() => {
+/*useEffect(() => {
     console.log(
         "SELECTED CHANGED:",
         selectedPlaylistId
     );
 }, [selectedPlaylistId]);
-
+*/
 
 useEffect(() => {
 
-        console.log( "SELECTED CHANGED:", selectedPlaylistId);
+        //console.log( "SELECTED CHANGED:", selectedPlaylistId);
 
     playlistsApi.playlistsControllerFindAll(
         (error, data) => {
 
-        console.log("BEFORE SET PLAYLISTS");
-        console.log("DATA:", data);
+        //console.log("BEFORE SET PLAYLISTS");
+        //console.log("DATA:", data);
 
 
             if (!error) {
@@ -143,7 +143,7 @@ const assignPlaylist = (playlistId:number) => {
                     return;
                 }
 
-                console.log("Playlist updated");
+                //console.log("Playlist updated");
                 setIsDirty(false);
                 onDirtyChange(false);
                 screensApi.screensControllerFindById(
@@ -179,7 +179,7 @@ const assignPlaylist = (playlistId:number) => {
                     return;
                 }
 
-                console.log("Playlist assigned");
+                //console.log("Playlist assigned");
                 setIsDirty(false);
                 onDirtyChange(false);
 
@@ -229,7 +229,7 @@ const saveScreen = () => {
                 return;
             }
 
-            console.log("Screen updated");
+            //console.log("Screen updated");
 
             setIsDirty(false);
             onDirtyChange(false);

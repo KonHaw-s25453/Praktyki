@@ -85,8 +85,6 @@ export class SyncService {
       screenId,
     );
 
-    console.log('ACTIVE ASSIGNMENTS:', activeAssignments.length);
-    console.log(activeAssignments);
 
     // Zbuduj manifest
     const manifest = await this.buildManifest(activeAssignments, screen);

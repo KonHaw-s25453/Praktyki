@@ -18,8 +18,7 @@ app.useStaticAssets(join(process.cwd(), 'files'), {
   prefix: '/assets/',
 });
 
-console.log('CWD:', process.cwd());
-console.log('STATIC:', join(process.cwd(), 'files'));;
+
 
   app.useGlobalPipes(
     new ValidationPipe({

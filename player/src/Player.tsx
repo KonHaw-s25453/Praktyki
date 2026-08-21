@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   getCachedFileUrl, 
   getCachedManifest, 
-  getCachedFiles, 
+  //getCachedFiles, 
   getCacheInfo, 
   syncManifest, 
   compareManifestWithCache, 
@@ -64,8 +64,8 @@ const logEvent = useCallback(
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(
+      const API_URL = import.meta.env.VITE_API_URL
+        await fetch(
         `${API_URL}/sync/${screenId}/logs`,
         {
           method: "POST",
@@ -78,13 +78,7 @@ const logEvent = useCallback(
           }),
         },
       );
-
-      const text = await response.text();
-
-      console.log("LOG RESPONSE:", {
-        status: response.status,
-        body: text,
-      });
+   
     } catch (err) {
       console.error("Failed to send player log:", err);
     }
@@ -99,13 +93,14 @@ const logEvent = useCallback(
 
 const loadManifest = async () => {
   try {
+   /* 
     console.log("SCREEN ID:", screenId, typeof screenId);
 
     const cachedFiles = await getCachedFiles();
     console.log("ALL CACHED FILES:", cachedFiles);
-
+*/
     const cacheInfo = await getCacheInfo();
-    console.log("CACHE INFO:", cacheInfo);
+    //console.log("CACHE INFO:", cacheInfo);
 
     const API_URL = import.meta.env.VITE_API_URL;
     const response = await fetch(
@@ -128,15 +123,15 @@ const loadManifest = async () => {
     await logEvent(
     `MANIFEST_LOADED revision=${data.revision}`,
   );
-    console.log("MANIFEST FROM BACKEND:", data);
+    //console.log("MANIFEST FROM BACKEND:", data);
 
     const comparison = await compareManifestWithCache(data);
-
+    /*
     console.log("MANIFEST VS CACHE:", comparison);
     console.log("REQUIRED FILES:", comparison.required);
     console.log("CACHED FILES:", comparison.cached);
     console.log("MISSING FILES:", comparison.missing);
-
+    */
   
     const canFit = canFitMissingFiles(
       comparison.missing,
@@ -144,7 +139,7 @@ const loadManifest = async () => {
     );
 
 
-    console.log("CAN FIT MISSING FILES:", canFit);
+    //console.log("CAN FIT MISSING FILES:", canFit);
 
     if (!canFit) {
       await logEvent(
@@ -159,10 +154,7 @@ const loadManifest = async () => {
       const cachedManifest = await getCachedManifest();
 
       if (cachedManifest) {
-        console.log(
-          "USING OLD CACHED MANIFEST:",
-          cachedManifest,
-        );
+        //console.log("USING OLD CACHED MANIFEST:",cachedManifest,);
 
         setManifest(cachedManifest as ManifestResponse);
         setCurrentIndex(0);
@@ -209,7 +201,7 @@ const loadManifest = async () => {
   `SYNC_COMPLETED revision=${data.revision}`,
     );
 
-    console.log("CACHE READY");
+    //console.log("CACHE READY");
 
     setManifest(data);
     setCurrentIndex(0);
@@ -230,7 +222,7 @@ const loadManifest = async () => {
         return;
       }
 
-      console.log("USING CACHED MANIFEST:", cached);
+      //console.log("USING CACHED MANIFEST:", cached);
 
       setManifest(cached as ManifestResponse);
       setCurrentIndex(0);
@@ -257,8 +249,8 @@ loadManifest();
 
     const sendHeartbeat = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-        const response = await fetch(
+      const API_URL = import.meta.env.VITE_API_URL
+      await fetch(
             `${API_URL}/sync/${screenId}/heartbeat`,
             {
                 method: "POST",
@@ -270,13 +262,15 @@ loadManifest();
                 }),
             },
         );
-
+        /*
         const text = await response.text();
-
+        
+        
         console.log("HEARTBEAT RESPONSE:", {
             status: response.status,
             body: text,
         });
+        */
     } catch (err) {
         console.error("Heartbeat error:", err);
     }
@@ -284,10 +278,7 @@ loadManifest();
 
     sendHeartbeat();
 
-    console.log("HEARTBEAT:", {
-    screenId,
-    playerUrl,
-});
+    //console.log("HEARTBEAT:", {screenId,playerUrl,});
 
     const interval = setInterval(
         sendHeartbeat,
@@ -324,11 +315,11 @@ loadManifest();
 
       const data = await response.json();
 
-      console.log("MANIFEST CHECK:", data);
+      //console.log("MANIFEST CHECK:", data);
 
       if (data.changed) {
-        console.log("MANIFEST CHANGED - loading new manifest");
-
+       // console.log("MANIFEST CHANGED - loading new manifest");
+      
         const API_URL = import.meta.env.VITE_API_URL;
         const manifestResponse = await fetch(
           `${API_URL}/sync/manifest`,
@@ -348,12 +339,11 @@ loadManifest();
         const newManifest: ManifestResponse =
           await manifestResponse.json();
 
-        console.log("NEW MANIFEST:", newManifest);
+        //console.log("NEW MANIFEST:", newManifest);
 
         await syncManifest(newManifest);
 
-        console.log("CACHE READY FOR NEW MANIFEST");
-
+        //console.log("CACHE READY FOR NEW MANIFEST");
 
         setManifest(newManifest);
         setCurrentIndex(0);
@@ -403,12 +393,13 @@ useEffect(() => {
           `File ${item.file.id} is not available in cache`,
         );
       }
-
+      /*
       console.log(
         "LOCAL FILE URL:",
         item.file.filename,
         objectUrl,
       );
+      */
 
       setCurrentFileUrl(objectUrl);
     } catch (err) {
@@ -551,10 +542,11 @@ if (manifest.manifest.playlists.length === 0) {
   const playlist = manifest.manifest.playlists[0];
   const item = playlist.items[currentIndex];
   const file = item.file;
-
+  /*
  console.log("PLAYLIST:", playlist);
  console.log("CURRENT ITEM:", item);
  console.log("CURRENT FILE:", file);
+ */
 
   const next = () => {
   setCurrentIndex((prev) =>

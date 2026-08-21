@@ -208,13 +208,13 @@ export function canFitMissingFiles(
     (total, file) => total + file.size,
     0,
   );
-
+/*
   console.log("MISSING FILES SIZE:", requiredSpace);
   console.log("AVAILABLE STORAGE:", available);
   console.log(
     "ENOUGH STORAGE:",
     requiredSpace <= available,
-  );
+  );*/
 
   return requiredSpace <= available;
 }
@@ -295,26 +295,21 @@ export async function syncManifest(
   manifest: PlayerManifest,
 ): Promise<void> {
   const files = getFilesFromManifest(manifest);
-
+/*
   console.log(
     "CACHE SYNC: files required:",
     files.map((file) => file.id),
   );
-
+*/
   for (const file of files) {
     const cached = await getCachedFile(file.id);
 
     if (cached) {
-      console.log(
-        `CACHE HIT: ${file.id} ${file.filename}`,
-      );
-
+         //console.log(`CACHE HIT: ${file.id} ${file.filename}`,);
       continue;
     }
 
-    console.log(
-      `CACHE MISS: ${file.id} ${file.filename}`,
-    );
+    //console.log(`CACHE MISS: ${file.id} ${file.filename}`,);
 
     const API_URL = import.meta.env.VITE_API_URL;
     const response = await fetch(
@@ -338,14 +333,12 @@ export async function syncManifest(
       blob,
     });
 
-    console.log(
-      `CACHE SAVED: ${file.id} ${file.filename}`,
-    );
+    //console.log(`CACHE SAVED: ${file.id} ${file.filename}`,);
   }
 
-  console.log("CACHE SYNC: all files available");
+  //console.log("CACHE SYNC: all files available");
 
   await saveCachedManifest(manifest);
 
-  console.log("CACHE SYNC: manifest saved");
+  //console.log("CACHE SYNC: manifest saved");
 }

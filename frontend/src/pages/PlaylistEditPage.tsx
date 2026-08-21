@@ -42,8 +42,8 @@ export default function PlaylistEditPage({
             playlistId,
             (error: any, data: PlaylistEntity) => {
 
-                console.log("PLAYLIST EDIT ERROR:", error);
-                console.log("PLAYLIST EDIT DATA:", data);
+               // console.log("PLAYLIST EDIT ERROR:", error);
+               // console.log("PLAYLIST EDIT DATA:", data);
 
 
                 if (error) {
@@ -70,7 +70,7 @@ export default function PlaylistEditPage({
     filesApi.filesControllerFindAll(
         (error, data) => {
 
-            console.log("FILES DATA:", data);
+           // console.log("FILES DATA:", data);
 
             if (!error) {
                 setFiles(data ?? []);
@@ -124,19 +124,19 @@ const reorderItems = (items: PlaylistItemEntity[]) => {
 
 const moveItem = (index: number, direction: number) => {
 
-console.log(
-    "STATE ORDER:",
-    playlist.items?.map(i => ({
-        id: i.id,
-        pos: i.position,
-        dur: i.duration
-    }))
-);
+// console.log(
+//     "STATE ORDER:",
+//     playlist.items?.map(i => ({
+//         id: i.id,
+//         pos: i.position,
+//         dur: i.duration
+//    }))
+//);
 
-console.log(
-    "CLICKED INDEX:",
-    index
-);
+//console.log(
+//    "CLICKED INDEX:",
+//    index
+//);
 
 
 
@@ -174,7 +174,7 @@ console.log(
     setIsDirty(true);
     onDirtyChange(true);
 
-    console.log("AFTER MOVE:", updatedItems);
+    //console.log("AFTER MOVE:", updatedItems);
 };
 
     const removeItem = (itemId: number) => {
@@ -215,7 +215,7 @@ console.log(
 
     const addFileToPlaylist = (fileId: number) => {
 
-    console.log("FILE ID:", fileId);
+    //console.log("FILE ID:", fileId);
     if (!playlist) {
         return;
     }
@@ -232,17 +232,19 @@ console.log(
     );
   
 
-   console.log("PLAYLIST:", playlist);
+  /* console.log("PLAYLIST:", playlist);
     console.log("ITEMS:", playlist.items);
     console.log("POSITION:", position);
     console.log("DTO:", dto);
-
+    */
 
 
     playlistsApi.playlistsControllerAddItem(
         playlist.id!,
         dto,
-        (error, data) => {
+        (error, 
+        //data
+        ) => {
 
             if (error) {
                 console.error(
@@ -253,18 +255,14 @@ console.log(
             }
 
 
-            console.log(
-                "Dodano element:",
-                data
-            );
-
+        //console.log("Dodano element:",data);
 
             playlistsApi.playlistsControllerFindById(
                 playlist.id!,
                 (error, data) => {
                     if (!error && data) {
-                        console.log("UPDATED PLAYLIST:", data);
-                        console.log("UPDATED ITEMS:", data.items);
+                       // console.log("UPDATED PLAYLIST:", data);
+                       // console.log("UPDATED ITEMS:", data.items);
                         setPlaylist(data);
                         setIsDirty(true);
                         onDirtyChange(true);
@@ -280,7 +278,7 @@ console.log(
     
     const savePlaylist = () => {
 
-    console.log("SENDING PLAYLIST:", JSON.stringify(playlist, null, 2));
+    //console.log("SENDING PLAYLIST:", JSON.stringify(playlist, null, 2));
 
     if (!playlist) {
         return;
@@ -298,7 +296,7 @@ console.log(
         }))
     };
 
-    console.log("SENDING DTO:", JSON.stringify(dto, null, 2));
+    //console.log("SENDING DTO:", JSON.stringify(dto, null, 2));
 
 
 playlistsApi.playlistsControllerUpdate(

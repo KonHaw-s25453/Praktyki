@@ -22,6 +22,7 @@ import {
 } from '../../repositories';
 import { SyncService } from './sync.service';
 import { SyncController } from './sync.controller';
+import { LogCleanupService } from './log-cleanup.service';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { SyncController } from './sync.controller';
     PlaylistItemRepository,
     FileRepository,
     SyncService,
+    LogCleanupService,
   ],
   controllers: [SyncController],
   exports: [SyncService],

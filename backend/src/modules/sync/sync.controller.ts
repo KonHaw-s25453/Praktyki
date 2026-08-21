@@ -35,9 +35,9 @@ export class SyncController {
     @Query() query: GetManifestQueryDto,
     @Request() req: any,
   ): Promise<any> {
-    console.log('MANIFEST REQUEST');
-    console.log('SCREEN ID HEADER:', req.headers['x-screen-id']);
-    console.log('QUERY:', query);
+   // console.log('MANIFEST REQUEST');
+  //console.log('SCREEN ID HEADER:', req.headers['x-screen-id']);
+  //  console.log('QUERY:', query);
     // Bezpieczne wyciągnięcie nagłówka (nagłówek może być stringiem lub tablicą)
     const rawScreenId = req.headers['x-screen-id'];
     const screenIdStr = Array.isArray(rawScreenId) ? rawScreenId[0] : rawScreenId;
@@ -92,7 +92,7 @@ async heartbeat(
   @Body() heartbeatDto: UpdateScreenHeartbeatDto,
 ): Promise<void> {
 
-  console.log('HEARTBEAT DTO:', heartbeatDto);
+ // console.log('HEARTBEAT DTO:', heartbeatDto);
 
   await this.syncService.touchScreen(
     screenId,

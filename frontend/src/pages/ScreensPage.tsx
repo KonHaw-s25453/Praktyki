@@ -41,11 +41,11 @@ export default function ScreensPage({
 
         screensApi.screensControllerFindAll(
             (error, data) => {
-            console.log("SCREENS ERROR:", error);
+            /*console.log("SCREENS ERROR:", error);
             console.log("SCREENS DATA:", data);
             console.log(
             JSON.stringify(data, null, 2)
-            );
+            );*/
 
 
                 if (!error) {

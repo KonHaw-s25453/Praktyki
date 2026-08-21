@@ -21,8 +21,8 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
   async findActiveByScreenId(screenId: number): Promise<ScreenPlaylistEntity[]> {
     const now = new Date();
 
-    console.log("SCREEN ID:", screenId);
-    console.log("NOW:", now);
+   // console.log("SCREEN ID:", screenId);
+   // console.log("NOW:", now);
 
     return this.createQueryBuilder('sp')
       .where('sp.screen_id = :screenId', { screenId })
@@ -35,7 +35,7 @@ export class ScreenPlaylistRepository extends Repository<ScreenPlaylistEntity> {
       .addOrderBy('playlist.id', 'ASC')
       .getMany()
       .then(result => {
-      console.log("FOUND:", result);
+      // console.log("FOUND:", result);
       return result;
       });
   }
