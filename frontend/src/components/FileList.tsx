@@ -107,7 +107,12 @@ export default function FileList({ files, onDelete }: FileListProps) {
                         </div>
                     )}
 
-                    <div>
+                    <div
+                      style={{
+                            overflowWrap: "anywhere",
+                            wordBreak: "break-word",
+                            marginTop: "8px"
+                            }}>
                         {file.originalName}
                     </div>
 

@@ -199,13 +199,11 @@ const assignPlaylist = (playlistId:number) => {
 };
 
 const requestLeave = () => {
-
     if (isDirty) {
         setShowSaveDialog(true);
         return;
     }
-
-    // tutaj później przejście do innej strony/listy
+    onBack
 };
 
 
@@ -273,9 +271,6 @@ return (
         onDirtyChange(true);
     }}
 />
-        <button onClick={onBack}>
-         ← Powrót do ekranów
-        </button>
 
         {assignment ? (
             <>
@@ -417,6 +412,7 @@ return (
                 setIsDirty(false);
                 onDirtyChange(false);
                 setShowSaveDialog(false);
+                onBack();
             }}
         >
             Odrzuć

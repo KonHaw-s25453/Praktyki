@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import "./LogsPage.css";
 interface ScreenLog {
   id: number;
   message: string | null;
@@ -91,6 +91,23 @@ export default function LogsPage() {
   };
 }, [selectedScreenId]);
 
+const getLogClass = (log: ScreenLog) => {
+  switch (log.level?.toUpperCase()) {
+    case "ERROR":
+      return "log-error";
+
+    case "WARN":
+      return "log-warn";
+
+    case "INFO":
+    case "PLAYBACK":
+      return "log-info";
+
+    default:
+      return "";
+  }
+};
+
   return (
     <div>
       <h1>Logi ekranów</h1>
@@ -131,7 +148,7 @@ export default function LogsPage() {
 
       <tbody>
         {logs.map((log) => (
-          <tr key={log.id}>
+          <tr key={log.id} className={getLogClass(log)}>
             <td>
               {new Date(log.createdAt).toLocaleString()}
             </td>
