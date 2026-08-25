@@ -68,11 +68,22 @@ export class ScreenRepository extends Repository<ScreenEntity> {
 }
 
 async updateLastSeen(
-    screenId: number,
-    playerUrl?: string,
-): Promise<void> {
+  screenId: number,
+  playerUrl?: string,
+): Promise<boolean> {
+  const screen = await this.findOne({
+    where: { id: screenId },
+  });
+
+  if (!screen) {
+    return false;
+  }
+
+  const wasOffline = !screen.isOnline;
+
   const updateData: Partial<ScreenEntity> = {
     lastSeen: new Date(),
+    isOnline: true,
   };
 
   if (playerUrl !== undefined) {
@@ -80,5 +91,7 @@ async updateLastSeen(
   }
 
   await this.update(screenId, updateData);
+
+  return wasOffline;
 }
 }

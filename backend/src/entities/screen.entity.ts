@@ -86,6 +86,11 @@ export class ScreenEntity {
   })
   lastSeen: Date | null;
 
+  @Column({
+  type: 'boolean',
+  default: false,
+  })
+  isOnline: boolean;
 
   @ApiProperty()
   @CreateDateColumn()

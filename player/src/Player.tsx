@@ -241,53 +241,58 @@ loadManifest();
 }, [screenId, logEvent]);
 
   useEffect(() => {
-    if (!screenId) {
-        return;
-    }
+  if (!screenId) {
+    return;
+  }
 
-    const playerUrl = window.location.origin;
+  const playerUrl = window.location.origin;
 
-    const sendHeartbeat = async () => {
+  const sendHeartbeat = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL
+      const API_URL = import.meta.env.VITE_API_URL;
+
       await fetch(
-            `${API_URL}/sync/${screenId}/heartbeat`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    playerUrl,
-                }),
-            },
-        );
-        /*
-        const text = await response.text();
-        
-        
-        console.log("HEARTBEAT RESPONSE:", {
-            status: response.status,
-            body: text,
-        });
-        */
+        `${API_URL}/sync/${screenId}/heartbeat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            playerUrl,
+            visible: document.visibilityState === "visible",
+          }),
+        },
+      );
     } catch (err) {
-        console.error("Heartbeat error:", err);
+      console.error("Heartbeat error:", err);
     }
-};
+  };
 
+  const handleVisibilityChange = () => {
     sendHeartbeat();
+  };
 
-    //console.log("HEARTBEAT:", {screenId,playerUrl,});
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibilityChange,
+  );
 
-    const interval = setInterval(
-        sendHeartbeat,
-        30_000,
+  sendHeartbeat();
+
+  const interval = setInterval(
+    sendHeartbeat,
+    30_000,
+  );
+
+  return () => {
+    clearInterval(interval);
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
     );
-    
-    return () => {
-        clearInterval(interval);
-    };
+  };
 }, [screenId]);
 
  useEffect(() => {

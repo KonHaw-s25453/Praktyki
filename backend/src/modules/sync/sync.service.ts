@@ -119,14 +119,53 @@ export class SyncService {
     return this.screenStateRepository.findByScreenId(screenId);
   }
   
-  async touchScreen(
-    screenId: number,
-    playerUrl: string,
+async touchScreen(
+  screenId: number,
+  playerUrl: string,
+  visible: boolean,
 ): Promise<void> {
-    await this.screenRepository.updateLastSeen(
-        screenId,
-        playerUrl,
-    );
+  const screen = await this.screenRepository.findOne({
+    where: { id: screenId },
+  });
+
+  if (!screen) {
+    throw new NotFoundException(`Screen with ID ${screenId} not found`);
+  }
+
+  console.log(
+    `[HEARTBEAT] screen=${screenId}, isOnline=${screen.isOnline}`,
+  );
+
+  if (!screen.isOnline) {
+    console.log(`[HEARTBEAT] SCREEN_ONLINE screen=${screenId}`);
+
+    await this.screenLogRepository.save({
+      screenId,
+      message: 'SCREEN_ONLINE',
+      level: 'INFO',
+    });
+  }
+
+  const wasOffline = await this.screenRepository.updateLastSeen(
+  screenId,
+  playerUrl,
+);
+
+if (wasOffline) {
+  await this.recordLog(
+    screenId,
+    'SCREEN_ONLINE',
+    'INFO',
+  );
+}
+
+  const updatedScreen = await this.screenRepository.findOne({
+    where: { id: screenId },
+  });
+
+  console.log(
+    `[HEARTBEAT] after update: screen=${screenId}, isOnline=${updatedScreen?.isOnline}`,
+  );
 }
 
   /**

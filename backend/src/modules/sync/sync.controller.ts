@@ -97,6 +97,7 @@ async heartbeat(
   await this.syncService.touchScreen(
     screenId,
     heartbeatDto.playerUrl,
+    heartbeatDto.visible,
   );
 }
 
