@@ -116,7 +116,7 @@ api.appControllerGetHello(callback);
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *import.meta.env.VITE_API_URL*
+All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

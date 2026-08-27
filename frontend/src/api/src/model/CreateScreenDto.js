@@ -23,11 +23,10 @@ class CreateScreenDto {
      * Constructs a new <code>CreateScreenDto</code>.
      * @alias module:model/CreateScreenDto
      * @param name {String} 
-     * @param fallbackFileId {Number} ID obrazu lub filmu używanego jako ekran awaryjny
      */
-    constructor(name, fallbackFileId) { 
+    constructor(name) { 
         
-        CreateScreenDto.initialize(this, name, fallbackFileId);
+        CreateScreenDto.initialize(this, name);
     }
 
     /**
@@ -35,9 +34,8 @@ class CreateScreenDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, fallbackFileId) { 
+    static initialize(obj, name) { 
         obj['name'] = name;
-        obj['fallbackFileId'] = fallbackFileId;
     }
 
     /**
@@ -56,9 +54,6 @@ class CreateScreenDto {
             }
             if (data.hasOwnProperty('location')) {
                 obj['location'] = ApiClient.convertToType(data['location'], 'String');
-            }
-            if (data.hasOwnProperty('fallbackFileId')) {
-                obj['fallbackFileId'] = ApiClient.convertToType(data['fallbackFileId'], 'Number');
             }
             if (data.hasOwnProperty('playerUrl')) {
                 obj['playerUrl'] = ApiClient.convertToType(data['playerUrl'], 'String');
@@ -98,7 +93,7 @@ class CreateScreenDto {
 
 }
 
-CreateScreenDto.RequiredProperties = ["name", "fallbackFileId"];
+CreateScreenDto.RequiredProperties = ["name"];
 
 /**
  * @member {String} name
@@ -109,12 +104,6 @@ CreateScreenDto.prototype['name'] = undefined;
  * @member {String} location
  */
 CreateScreenDto.prototype['location'] = undefined;
-
-/**
- * ID obrazu lub filmu używanego jako ekran awaryjny
- * @member {Number} fallbackFileId
- */
-CreateScreenDto.prototype['fallbackFileId'] = undefined;
 
 /**
  * Adres aplikacji Player dla tego ekranu

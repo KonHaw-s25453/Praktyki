@@ -72,6 +72,12 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property videoLoops (base name: "videoLoops")', function() {
+      // uncomment below and update the code to test the property videoLoops
+      //var instance = new CmsApi.AddItemToPlaylistDto();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

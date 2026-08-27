@@ -58,8 +58,8 @@ export class SyncController {
    * Ekran aktualizuje swój state
    * POST /sync/:screenId/state
    */
-  @Post(':screenId/state')
-  async updateScreenState(
+    @Post(':screenId/state')
+    async updateScreenState(
     @Param('screenId', ParseIntPipe) screenId: number,
     @Body() updateStateDto: UpdateScreenStateDto,
   ): Promise<any> {
@@ -67,6 +67,7 @@ export class SyncController {
       screenId,
       updateStateDto.currentPlaylistId,
       updateStateDto.currentIndex,
+      updateStateDto.visible
     );
   }
 
@@ -86,13 +87,16 @@ export class SyncController {
    * Ekran wysyła heartbeat
    * POST /sync/:screenId/heartbeat
    */
- @Post(':screenId/heartbeat')
+@Post(':screenId/heartbeat')
 async heartbeat(
   @Param('screenId', ParseIntPipe) screenId: number,
   @Body() heartbeatDto: UpdateScreenHeartbeatDto,
 ): Promise<void> {
 
- // console.log('HEARTBEAT DTO:', heartbeatDto);
+  console.log(
+    `[HEARTBEAT CONTROLLER] screen=${screenId}`,
+    heartbeatDto,
+  );
 
   await this.syncService.touchScreen(
     screenId,

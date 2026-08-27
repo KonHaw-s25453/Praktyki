@@ -84,6 +84,12 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property playerUrl (base name: "playerUrl")', function() {
+      // uncomment below and update the code to test the property playerUrl
+      //var instance = new CmsApi.ScreenEntity();
+      //expect(instance).to.be();
+    });
+
     it('should have the property createdAt (base name: "createdAt")', function() {
       // uncomment below and update the code to test the property createdAt
       //var instance = new CmsApi.ScreenEntity();
@@ -96,20 +102,14 @@
       //expect(instance).to.be();
     });
 
-    it('should have the property logs (base name: "logs")', function() {
-      // uncomment below and update the code to test the property logs
+    it('should have the property screenLogs (base name: "screenLogs")', function() {
+      // uncomment below and update the code to test the property screenLogs
       //var instance = new CmsApi.ScreenEntity();
       //expect(instance).to.be();
     });
 
     it('should have the property state (base name: "state")', function() {
       // uncomment below and update the code to test the property state
-      //var instance = new CmsApi.ScreenEntity();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property fallbackFile (base name: "fallbackFile")', function() {
-      // uncomment below and update the code to test the property fallbackFile
       //var instance = new CmsApi.ScreenEntity();
       //expect(instance).to.be();
     });

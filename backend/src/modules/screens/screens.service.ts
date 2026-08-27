@@ -8,6 +8,7 @@ import { UpdateScreenDto } from './dto/update-screen.dto';
 
 import * as crypto from 'crypto';
 
+const GLOBAL_FALLBACK_FILE_ID = 1;
 @Injectable()
 export class ScreensService {
   constructor(
@@ -17,16 +18,18 @@ export class ScreensService {
     private cacheManifestRepository: CacheManifestRepository,
   ) {}
 
-  async create(createScreenDto: CreateScreenDto): Promise<ScreenEntity> {
+
+
+async create(createScreenDto: CreateScreenDto): Promise<ScreenEntity> {
   const fallbackFile = await this.fileRepository.findOne({
     where: {
-      id: createScreenDto.fallbackFileId,
+      id: GLOBAL_FALLBACK_FILE_ID,
     },
   });
 
   if (!fallbackFile) {
     throw new NotFoundException(
-      `Fallback file with ID ${createScreenDto.fallbackFileId} not found`,
+      `Global fallback file with ID ${GLOBAL_FALLBACK_FILE_ID} not found`,
     );
   }
 
@@ -35,7 +38,7 @@ export class ScreensService {
     !fallbackFile.mimeType.startsWith('video/')
   ) {
     throw new ConflictException(
-      'Fallback file must be an image or video',
+      'Global fallback file must be an image or video',
     );
   }
 

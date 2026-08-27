@@ -1075,7 +1075,7 @@
   "tags": [],
   "servers": [
     {
-      "url": "import.meta.env.VITE_API_URL"
+      "url": ""
     }
   ],
   "components": {
@@ -1489,11 +1489,6 @@
           "location": {
             "type": "string"
           },
-          "fallbackFileId": {
-            "type": "number",
-            "description": "ID obrazu lub filmu używanego jako ekran awaryjny",
-            "example": 1
-          },
           "playerUrl": {
             "type": "string",
             "example": "http://localhost:5174",
@@ -1501,8 +1496,7 @@
           }
         },
         "required": [
-          "name",
-          "fallbackFileId"
+          "name"
         ]
       },
       "ScreenLogEntity": {
@@ -1536,6 +1530,13 @@
             "type": "object",
             "nullable": true
           },
+          "lastSeen": {
+            "type": "object",
+            "nullable": true
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -1546,12 +1547,20 @@
               "$ref": "#/components/schemas/ScreenPlaylistEntity"
             }
           },
-          "state": {
-            "nullable": true,
+          "screenLogs": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ScreenLogEntity"
             }
+          },
+          "state": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScreenStateEntity"
+              }
+            ]
           }
         },
         "required": [
@@ -1561,8 +1570,11 @@
           "apiKey",
           "fallbackFileId",
           "playerUrl",
+          "lastSeen",
+          "isOnline",
           "createdAt",
           "screenPlaylists",
+          "screenLogs",
           "state"
         ]
       },

@@ -16,14 +16,6 @@ export class CreateScreenDto {
   location?: string;
 
   @ApiProperty({
-    description: 'ID obrazu lub filmu używanego jako ekran awaryjny',
-    example: 1,
-  })
-  @IsInt()
-  @IsPositive()
-  fallbackFileId: number;
-
-  @ApiProperty({
     required: false,
     example: 'http://localhost:5174',
     description: 'Adres aplikacji Player dla tego ekranu',

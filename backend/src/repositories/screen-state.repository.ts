@@ -15,46 +15,78 @@ export class ScreenStateRepository extends Repository<ScreenStateEntity> {
       .getOne();
   }
 
-  async upsertScreenState(
-    screenId: number,
-    state: Partial<ScreenStateEntity>,
-  ): Promise<ScreenStateEntity> {
-    const existing = await this.findByScreenId(screenId);
+ async upsertScreenState(
+  screenId: number,
+  state: Partial<ScreenStateEntity>,
+): Promise<ScreenStateEntity> {
+  const existing = await this.findByScreenId(screenId);
 
-    if (existing) {
-      Object.assign(existing, state);
-      return this.save(existing);
-    }
-
-    const newState = this.create({
-      screenId,
-      ...state,
-    });
-    return this.save(newState);
+  if (existing) {
+    Object.assign(existing, state);
+    return this.save(existing);
   }
+
+  const newState = this.create({
+    screenId,
+    ...state,
+    screen: { id: screenId },
+  });
+
+  return this.save(newState);
+}
 
   async updateLastSync(screenId: number): Promise<void> {
     await this.update(screenId, { lastSync: new Date() });
   }
 
-  async updateCurrentPlayback(
-    screenId: number,
-    playlistId: number,
-    index: number,
-  ): Promise<void> {
-    await this.update(screenId, {
-      currentPlaylistId: playlistId,
-      currentIndex: index,
-      updatedAt: new Date(),
-    });
+async updateCurrentPlayback(
+  screenId: number,
+  playlistId: number,
+  index: number,
+  visible: boolean,
+): Promise<void> {
+  await this.update(screenId, {
+    currentIndex: index,
+    visible,
+    updatedAt: new Date(),
+  });
+
+  await this.dataSource
+    .createQueryBuilder()
+    .relation(ScreenStateEntity, 'currentPlaylist')
+    .of(screenId)
+    .set(playlistId);
   }
 
-  async clearPlaybackState(screenId: number): Promise<void> {
-    await this.update(screenId, {
-      currentPlaylistId: null,
-      currentIndex: 0,
-    });
-  }
+async updateVisibility(
+  screenId: number,
+  visible: boolean,
+): Promise<void> {
+  console.log(
+    `[VISIBILITY] updateVisibility screen=${screenId}, visible=${visible}`,
+  );
+
+  await this.update(screenId, {
+    visible,
+    updatedAt: new Date(),
+  });
+
+  console.log(
+    `[VISIBILITY] saved screen=${screenId}, visible=${visible}`,
+  );
+}
+
+ async clearPlaybackState(screenId: number): Promise<void> {
+  await this.update(screenId, {
+    currentIndex: 0,
+  });
+
+  await this.dataSource
+    .createQueryBuilder()
+    .relation(ScreenStateEntity, 'currentPlaylist')
+    .of(screenId)
+    .set(null);
+    }
 
   async getAllStates(): Promise<ScreenStateEntity[]> {
     return this.createQueryBuilder('ss')

@@ -60,18 +60,6 @@
       //expect(instance).to.be();
     });
 
-    it('should have the property playlistId (base name: "playlistId")', function() {
-      // uncomment below and update the code to test the property playlistId
-      //var instance = new CmsApi.PlaylistItemEntity();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property fileId (base name: "fileId")', function() {
-      // uncomment below and update the code to test the property fileId
-      //var instance = new CmsApi.PlaylistItemEntity();
-      //expect(instance).to.be();
-    });
-
     it('should have the property position (base name: "position")', function() {
       // uncomment below and update the code to test the property position
       //var instance = new CmsApi.PlaylistItemEntity();
@@ -80,6 +68,12 @@
 
     it('should have the property duration (base name: "duration")', function() {
       // uncomment below and update the code to test the property duration
+      //var instance = new CmsApi.PlaylistItemEntity();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property videoLoops (base name: "videoLoops")', function() {
+      // uncomment below and update the code to test the property videoLoops
       //var instance = new CmsApi.PlaylistItemEntity();
       //expect(instance).to.be();
     });

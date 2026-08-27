@@ -246,24 +246,32 @@ loadManifest();
   }
 
   const playerUrl = window.location.origin;
-
+  
+  
   const sendHeartbeat = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL;
+    console.log("API_URL =", import.meta.env.VITE_API_URL);
+    console.log("MANIFEST URL =", `${import.meta.env.VITE_API_URL}/sync/manifest`);
+      const response = await fetch(
+  `${API_URL}/sync/${screenId}/heartbeat`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      playerUrl,
+      visible: document.visibilityState === "visible",
+    }),
+  },
+);
 
-      await fetch(
-        `${API_URL}/sync/${screenId}/heartbeat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            playerUrl,
-            visible: document.visibilityState === "visible",
-          }),
-        },
-      );
+console.log(
+  "HEARTBEAT RESPONSE:",
+  response.status,
+  await response.text(),
+);
     } catch (err) {
       console.error("Heartbeat error:", err);
     }
@@ -278,6 +286,10 @@ loadManifest();
     handleVisibilityChange,
   );
 
+  console.log(
+  "HEARTBEAT URL =",
+  `${import.meta.env.VITE_API_URL}/sync/${screenId}/heartbeat`,
+  );
   sendHeartbeat();
 
   const interval = setInterval(
@@ -370,129 +382,134 @@ useEffect(() => {
     return;
   }
 
-  const playlist = manifest.manifest.playlists[0];
-
-  if (!playlist) {
-    return;
-  }
-
-  const item = playlist.items[currentIndex];
-
-  if (!item) {
-    return;
-  }
-
   let objectUrl: string | null = null;
 
   const loadCachedFile = async () => {
     try {
+      const playlist = manifest.manifest.playlists[0];
+
+      // ==========================================
+      // FALLBACK — brak aktywnej playlisty
+      // ==========================================
+      if (!playlist) {
+        const fallback = manifest.manifest.fallback;
+
+        if (!fallback) {
+          setError("Brak playlisty i fallbacku.");
+          return;
+        }
+
+        await logEvent(
+          `FALLBACK_STARTED file=${fallback.filename}`,
+        );
+
+        objectUrl = await getCachedFileUrl(fallback.id);
+
+        if (!objectUrl) {
+          throw new Error(
+            `Fallback file ${fallback.id} is not available in cache`,
+          );
+        }
+
+        setFallbackReason("NORMAL");
+        setCurrentFileUrl(objectUrl);
+        setCurrentIndex(0);
+        setError("");
+
+        return;
+      }
+
+      // ==========================================
+      // PLAYLIST
+      // ==========================================
+      const item = playlist.items[currentIndex];
+
+      if (!item) {
+        return;
+      }
+
       await logEvent(
         `ITEM_STARTED file=${item.file.filename}`,
       );
 
       objectUrl = await getCachedFileUrl(item.file.id);
-      
 
       if (!objectUrl) {
         throw new Error(
           `File ${item.file.id} is not available in cache`,
         );
       }
-      /*
-      console.log(
-        "LOCAL FILE URL:",
-        item.file.filename,
-        objectUrl,
-      );
-      */
 
+      setFallbackReason(null);
       setCurrentFileUrl(objectUrl);
+      setError("");
+
     } catch (err) {
       console.error("Cache playback error:", err);
 
+      const playlist = manifest.manifest.playlists[0];
+
+      // Jeżeli problem wystąpił przy normalnym pliku playlisty,
+      // próbujemy przejść na fallback.
+      if (playlist) {
+        const item = playlist.items[currentIndex];
+        const fallback = manifest.manifest.fallback;
+
+        if (fallback) {
+          await logEvent(
+            `CACHE_MISS_USING_FALLBACK file=${
+              item?.file.filename ?? "unknown"
+            }`,
+            "WARN",
+          );
+
+          setFallbackReason("ERROR");
+          setCurrentFileUrl(null);
+
+          const fallbackUrl = await getCachedFileUrl(fallback.id);
+
+          if (!fallbackUrl) {
+            setError(
+        `Fallback file ${fallback.id} is not available in cache`,
+          );
+        return;
+        }
+
+      setCurrentFileUrl(fallbackUrl);
+
+      setManifest({
+         ...manifest,
+        manifest: {
+        ...manifest.manifest,
+        playlists: [],
+                  },
+        });
+
+    setCurrentIndex(0);
+    setError("");
+
+      return;
+        }
+      }
+
       await logEvent(
-  `CACHE_PLAYBACK_ERROR file=${item.file.filename} error=${
-    err instanceof Error ? err.message : String(err)
-  }`,
-  "ERROR",
+        `CACHE_PLAYBACK_ERROR error=${
+          err instanceof Error ? err.message : String(err)
+        }`,
+        "ERROR",
       );
 
-      const fallback = manifest.manifest.fallback;
-
-      if (fallback) {
-  console.warn(
-    "Plik nie jest w cache — używam fallbacku.",
-  );
-
-  await logEvent(
-    `CACHE_MISS_USING_FALLBACK file=${item.file.filename}`,
-    "WARN",
-  );
-
-  setFallbackReason("ERROR");
-
-  setCurrentFileUrl(null);
-
-  try {
-    const fallbackUrl = await getCachedFileUrl(fallback.id);
-
-   if (!fallbackUrl) {
-  console.error(
-    `Fallback file ${fallback.id} is not available in cache`,
-  );
-
-  setError(
-    `Fallback file ${fallback.id} is not available in cache`,
-  );
-
-  return;
-}
-
-    setCurrentFileUrl(fallbackUrl);
-  } catch (fallbackError) {
-    console.error(
-      "Fallback cache error:",
-      fallbackError,
-    );
-
-    setError(
-      fallbackError instanceof Error
-        ? fallbackError.message
-        : "Fallback is not available in cache",
-    );
-
-    return;
-  }
-
-  setManifest({
-    ...manifest,
-    manifest: {
-      ...manifest.manifest,
-      playlists: [],
-    },
-  });
-
-  setCurrentIndex(0);
-  setError("");
-      } else {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Cannot load cached file",
-        );
-      }
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Cannot load cached file",
+      );
     }
   };
 
   loadCachedFile();
 
- /* return () => {
-    if (objectUrl) {
-      URL.revokeObjectURL(objectUrl);
-    }
-  }; */
-
-}, [manifest, currentIndex,logEvent]);
+}, [manifest, currentIndex, logEvent]);
 
 
   if (error) {

@@ -79,13 +79,14 @@ export class ScreenEntity {
   })
   fallbackFile: FileEntity;
 
-
+  @ApiProperty({ nullable: true })
   @Column({
     type: 'timestamp',
     nullable: true,
   })
   lastSeen: Date | null;
 
+  @ApiProperty()
   @Column({
   type: 'boolean',
   default: false,
@@ -115,7 +116,8 @@ export class ScreenEntity {
   @ApiProperty({
     type: () => [ScreenLogEntity],
   })
- 
+  screenLogs: ScreenLogEntity[];
+  
   @ApiProperty({
     type: () => ScreenStateEntity,
     nullable: true,

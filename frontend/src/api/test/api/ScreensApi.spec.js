@@ -138,6 +138,16 @@
         done();
       });
     });
+    describe('screensControllerUpdate', function() {
+      it('should call screensControllerUpdate successfully', function(done) {
+        //uncomment below and update the code to test screensControllerUpdate
+        //instance.screensControllerUpdate(function(error) {
+        //  if (error) throw error;
+        //expect().to.be();
+        //});
+        done();
+      });
+    });
     describe('screensControllerUpdateAssignment', function() {
       it('should call screensControllerUpdateAssignment successfully', function(done) {
         //uncomment below and update the code to test screensControllerUpdateAssignment

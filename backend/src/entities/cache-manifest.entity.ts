@@ -15,9 +15,12 @@ export class CacheManifestEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int' })
-  screenId: number;
+  @Column({
+  name: 'screen_id',
+  type: 'int',
+  })
 
+screenId: number;
   @Column({ type: 'int' })
   revision: number;
 

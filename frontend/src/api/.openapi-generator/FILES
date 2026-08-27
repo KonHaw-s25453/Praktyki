@@ -51,5 +51,3 @@ src/model/UpdatePlaylistDto.js
 src/model/UpdatePlaylistItemDto.js
 src/model/UpdateScreenDto.js
 src/model/UpdateScreenPlaylistDto.js
-test/model/UpdatePlaylistItemDto.spec.js
-test/model/UpdateScreenDto.spec.js

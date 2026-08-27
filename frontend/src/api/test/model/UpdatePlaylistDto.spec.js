@@ -66,6 +66,18 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property repeatMode (base name: "repeatMode")', function() {
+      // uncomment below and update the code to test the property repeatMode
+      //var instance = new CmsApi.UpdatePlaylistDto();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property items (base name: "items")', function() {
+      // uncomment below and update the code to test the property items
+      //var instance = new CmsApi.UpdatePlaylistDto();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

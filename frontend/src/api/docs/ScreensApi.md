@@ -1,6 +1,6 @@
 # CmsApi.ScreensApi
 
-All URIs are relative to *import.meta.env.VITE_API_URL*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

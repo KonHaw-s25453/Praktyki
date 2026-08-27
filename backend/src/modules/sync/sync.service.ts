@@ -106,18 +106,22 @@ export class SyncService {
   /**
    * Update screen state (where it is in playback)
    */
-  async updateScreenState(
-    screenId: number,
-    currentPlaylistId: number,
-    currentIndex: number,
-  ): Promise<ScreenStateEntity | null> {
-    await this.screenStateRepository.updateCurrentPlayback(
-      screenId,
-      currentPlaylistId,
-      currentIndex,
-    );
-    return this.screenStateRepository.findByScreenId(screenId);
-  }
+async updateScreenState(
+  screenId: number,
+  currentPlaylistId: number,
+  currentIndex: number,
+  visible: boolean,
+): Promise<ScreenStateEntity | null> {
+
+  await this.screenStateRepository.updateCurrentPlayback(
+    screenId,
+    currentPlaylistId,
+    currentIndex,
+    visible,
+  );
+
+  return this.screenStateRepository.findByScreenId(screenId);
+}
   
 async touchScreen(
   screenId: number,
@@ -158,6 +162,12 @@ if (wasOffline) {
     'INFO',
   );
 }
+
+  await this.screenStateRepository.updateVisibility(
+  screenId,
+  visible,
+  );
+
 
   const updatedScreen = await this.screenRepository.findOne({
     where: { id: screenId },

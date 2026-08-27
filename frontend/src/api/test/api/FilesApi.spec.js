@@ -118,10 +118,30 @@
         done();
       });
     });
+    describe('filesControllerGetContent', function() {
+      it('should call filesControllerGetContent successfully', function(done) {
+        //uncomment below and update the code to test filesControllerGetContent
+        //instance.filesControllerGetContent(function(error) {
+        //  if (error) throw error;
+        //expect().to.be();
+        //});
+        done();
+      });
+    });
     describe('filesControllerUpdate', function() {
       it('should call filesControllerUpdate successfully', function(done) {
         //uncomment below and update the code to test filesControllerUpdate
         //instance.filesControllerUpdate(function(error) {
+        //  if (error) throw error;
+        //expect().to.be();
+        //});
+        done();
+      });
+    });
+    describe('filesControllerUploadFile', function() {
+      it('should call filesControllerUploadFile successfully', function(done) {
+        //uncomment below and update the code to test filesControllerUploadFile
+        //instance.filesControllerUploadFile(function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});

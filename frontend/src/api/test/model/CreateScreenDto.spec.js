@@ -72,6 +72,12 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property playerUrl (base name: "playerUrl")', function() {
+      // uncomment below and update the code to test the property playerUrl
+      //var instance = new CmsApi.CreateScreenDto();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

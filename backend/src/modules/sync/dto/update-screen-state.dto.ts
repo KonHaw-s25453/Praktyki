@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsPositive, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive, IsOptional, IsBoolean } from 'class-validator';
 
 export class UpdateScreenStateDto {
   @IsInt()
@@ -10,4 +10,7 @@ export class UpdateScreenStateDto {
   @IsNotEmpty()
   @IsPositive()
   currentIndex: number;
+
+  @IsBoolean()
+  visible: boolean;
 }

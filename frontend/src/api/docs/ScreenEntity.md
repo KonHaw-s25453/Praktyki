@@ -10,8 +10,11 @@ Name | Type | Description | Notes
 **apiKey** | **Object** |  | 
 **fallbackFileId** | **Number** | ID pliku fallback | 
 **playerUrl** | **Object** |  | 
+**lastSeen** | **Object** |  | 
+**isOnline** | **Boolean** |  | 
 **createdAt** | **Date** |  | 
 **screenPlaylists** | [**[ScreenPlaylistEntity]**](ScreenPlaylistEntity.md) |  | 
-**state** | **[Object]** |  | 
+**screenLogs** | **[Object]** |  | 
+**state** | **Object** |  | 
 
 

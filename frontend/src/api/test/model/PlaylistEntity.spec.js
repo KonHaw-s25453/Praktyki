@@ -78,6 +78,12 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property repeatMode (base name: "repeatMode")', function() {
+      // uncomment below and update the code to test the property repeatMode
+      //var instance = new CmsApi.PlaylistEntity();
+      //expect(instance).to.be();
+    });
+
     it('should have the property createdAt (base name: "createdAt")', function() {
       // uncomment below and update the code to test the property createdAt
       //var instance = new CmsApi.PlaylistEntity();
@@ -86,6 +92,24 @@
 
     it('should have the property updatedAt (base name: "updatedAt")', function() {
       // uncomment below and update the code to test the property updatedAt
+      //var instance = new CmsApi.PlaylistEntity();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property items (base name: "items")', function() {
+      // uncomment below and update the code to test the property items
+      //var instance = new CmsApi.PlaylistEntity();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property screenPlaylists (base name: "screenPlaylists")', function() {
+      // uncomment below and update the code to test the property screenPlaylists
+      //var instance = new CmsApi.PlaylistEntity();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property screenStates (base name: "screenStates")', function() {
+      // uncomment below and update the code to test the property screenStates
       //var instance = new CmsApi.PlaylistEntity();
       //expect(instance).to.be();
     });

@@ -3,6 +3,7 @@ import ScreensApi from "../api/src/api/ScreensApi";
 import PlaylistsApi from "../api/src/api/PlaylistsApi";
 import UpdateScreenPlaylistDto from "../api/src/model/UpdateScreenPlaylistDto";
 import AssignPlaylistDto from "../api/src/model/AssignPlaylistDto";
+import CreateScreenDto from "../api/src/model/CreateScreenDto";
 import type { PlaylistEntity } from "../api/src/model/PlaylistEntity";
 
 type ScreenEditPageProps = {
@@ -35,9 +36,18 @@ const [location, setLocation] = useState("");
 
 useEffect(() => {
 
-    if (!screenId) {
-        return;
-    }
+    if (screenId === null) {
+    setName("");
+    setLocation("");
+    setAssignment(null);
+    setSelectedPlaylistId(null);
+    setPriority(10);
+    setActiveFrom("");
+    setActiveTo("");
+    setIsDirty(false);
+    onDirtyChange(false);
+    return;
+}
 
     screensApi.screensControllerFindById(
         screenId,
@@ -119,10 +129,10 @@ useEffect(() => {
 
 const assignPlaylist = (playlistId:number) => {
 
-    if (!screenId) {
-        console.error("Brak screenId");
-        return;
-    }
+  if (screenId === null) {
+    console.error("Najpierw zapisz ekran.");
+    return;
+}
 
     const dto = new UpdateScreenPlaylistDto();
 
@@ -203,14 +213,33 @@ const requestLeave = () => {
         setShowSaveDialog(true);
         return;
     }
-    onBack
+    onBack()
 };
 
 
 const saveScreen = () => {
 
-    if (!screenId) {
-        console.error("Brak screenId");
+    if (screenId === null) {
+
+        const dto = new CreateScreenDto(name);
+
+        dto.location = location;
+
+        screensApi.screensControllerCreate(
+            dto,
+            (error) => {
+
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
+                setIsDirty(false);
+                onDirtyChange(false);
+                onBack();
+            }
+        );
+
         return;
     }
 
@@ -226,8 +255,6 @@ const saveScreen = () => {
                 console.error(error);
                 return;
             }
-
-            //console.log("Screen updated");
 
             setIsDirty(false);
             onDirtyChange(false);
@@ -376,8 +403,8 @@ return (
 />
 
 <button
+disabled={screenId === null}
     onClick={() => {
-
         if (selectedPlaylistId === null) {
             console.error("Nie wybrano playlisty");
             return;

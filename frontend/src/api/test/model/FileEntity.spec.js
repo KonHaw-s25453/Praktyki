@@ -120,12 +120,6 @@
       //expect(instance).to.be();
     });
 
-    it('should have the property screenAsFallback (base name: "screenAsFallback")', function() {
-      // uncomment below and update the code to test the property screenAsFallback
-      //var instance = new CmsApi.FileEntity();
-      //expect(instance).to.be();
-    });
-
   });
 
 }));

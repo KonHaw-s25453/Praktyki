@@ -29,13 +29,16 @@ class ScreenEntity {
      * @param apiKey {Object} 
      * @param fallbackFileId {Number} ID pliku fallback
      * @param playerUrl {Object} 
+     * @param lastSeen {Object} 
+     * @param isOnline {Boolean} 
      * @param createdAt {Date} 
      * @param screenPlaylists {Array.<module:model/ScreenPlaylistEntity>} 
-     * @param state {Array.<Object>} 
+     * @param screenLogs {Array.<Object>} 
+     * @param state {Object} 
      */
-    constructor(id, name, location, apiKey, fallbackFileId, playerUrl, createdAt, screenPlaylists, state) { 
+    constructor(id, name, location, apiKey, fallbackFileId, playerUrl, lastSeen, isOnline, createdAt, screenPlaylists, screenLogs, state) { 
         
-        ScreenEntity.initialize(this, id, name, location, apiKey, fallbackFileId, playerUrl, createdAt, screenPlaylists, state);
+        ScreenEntity.initialize(this, id, name, location, apiKey, fallbackFileId, playerUrl, lastSeen, isOnline, createdAt, screenPlaylists, screenLogs, state);
     }
 
     /**
@@ -43,15 +46,18 @@ class ScreenEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, name, location, apiKey, fallbackFileId, playerUrl, createdAt, screenPlaylists, state) { 
+    static initialize(obj, id, name, location, apiKey, fallbackFileId, playerUrl, lastSeen, isOnline, createdAt, screenPlaylists, screenLogs, state) { 
         obj['id'] = id;
         obj['name'] = name;
         obj['location'] = location;
         obj['apiKey'] = apiKey;
         obj['fallbackFileId'] = fallbackFileId;
         obj['playerUrl'] = playerUrl;
+        obj['lastSeen'] = lastSeen;
+        obj['isOnline'] = isOnline;
         obj['createdAt'] = createdAt;
         obj['screenPlaylists'] = screenPlaylists;
+        obj['screenLogs'] = screenLogs;
         obj['state'] = state;
     }
 
@@ -84,14 +90,23 @@ class ScreenEntity {
             if (data.hasOwnProperty('playerUrl')) {
                 obj['playerUrl'] = ApiClient.convertToType(data['playerUrl'], Object);
             }
+            if (data.hasOwnProperty('lastSeen')) {
+                obj['lastSeen'] = ApiClient.convertToType(data['lastSeen'], Object);
+            }
+            if (data.hasOwnProperty('isOnline')) {
+                obj['isOnline'] = ApiClient.convertToType(data['isOnline'], 'Boolean');
+            }
             if (data.hasOwnProperty('createdAt')) {
                 obj['createdAt'] = ApiClient.convertToType(data['createdAt'], 'Date');
             }
             if (data.hasOwnProperty('screenPlaylists')) {
                 obj['screenPlaylists'] = ApiClient.convertToType(data['screenPlaylists'], [ScreenPlaylistEntity]);
             }
+            if (data.hasOwnProperty('screenLogs')) {
+                obj['screenLogs'] = ApiClient.convertToType(data['screenLogs'], [Object]);
+            }
             if (data.hasOwnProperty('state')) {
-                obj['state'] = ApiClient.convertToType(data['state'], [Object]);
+                obj['state'] = ApiClient.convertToType(data['state'], Object);
             }
         }
         return obj;
@@ -124,8 +139,8 @@ class ScreenEntity {
             };
         }
         // ensure the json data is an array
-        if (!Array.isArray(data['state'])) {
-            throw new Error("Expected the field `state` to be an array in the JSON data but got " + data['state']);
+        if (!Array.isArray(data['screenLogs'])) {
+            throw new Error("Expected the field `screenLogs` to be an array in the JSON data but got " + data['screenLogs']);
         }
 
         return true;
@@ -134,7 +149,7 @@ class ScreenEntity {
 
 }
 
-ScreenEntity.RequiredProperties = ["id", "name", "location", "apiKey", "fallbackFileId", "playerUrl", "createdAt", "screenPlaylists", "state"];
+ScreenEntity.RequiredProperties = ["id", "name", "location", "apiKey", "fallbackFileId", "playerUrl", "lastSeen", "isOnline", "createdAt", "screenPlaylists", "screenLogs", "state"];
 
 /**
  * @member {Number} id
@@ -168,6 +183,16 @@ ScreenEntity.prototype['fallbackFileId'] = undefined;
 ScreenEntity.prototype['playerUrl'] = undefined;
 
 /**
+ * @member {Object} lastSeen
+ */
+ScreenEntity.prototype['lastSeen'] = undefined;
+
+/**
+ * @member {Boolean} isOnline
+ */
+ScreenEntity.prototype['isOnline'] = undefined;
+
+/**
  * @member {Date} createdAt
  */
 ScreenEntity.prototype['createdAt'] = undefined;
@@ -178,7 +203,12 @@ ScreenEntity.prototype['createdAt'] = undefined;
 ScreenEntity.prototype['screenPlaylists'] = undefined;
 
 /**
- * @member {Array.<Object>} state
+ * @member {Array.<Object>} screenLogs
+ */
+ScreenEntity.prototype['screenLogs'] = undefined;
+
+/**
+ * @member {Object} state
  */
 ScreenEntity.prototype['state'] = undefined;
 

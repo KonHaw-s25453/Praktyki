@@ -92,6 +92,17 @@ async updateLastSeen(
 
   await this.update(screenId, updateData);
 
+  const updated = await this.findOne({
+    where: { id: screenId },
+  });
+
+  console.log('[LAST SEEN TEST]', {
+    screenId,
+    lastSeen: updated?.lastSeen,
+    isOnline: updated?.isOnline,
+    playerUrl: updated?.playerUrl,
+  });
+
   return wasOffline;
 }
 }
