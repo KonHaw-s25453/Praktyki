@@ -1,96 +1,160 @@
-# Screen Cache — projekt (Polski)
+# Screen Cache & Sync Architecture — Dokumentacja Techniczna
 
-Cel: ekran (player) musi mieć lokalny cache manifestu i plików, żeby nie polegać na "live SQL" i żeby odtwarzać nawet offline.
+Dokument opisuje zrealizowaną architekturę pamięci podręcznej (Cache) oraz protokół synchronizacji pomiędzy serwerem NestJS a aplikacją odtwarzacza (Player).
 
-1) Co cachujemy na ekranie
+---
 
-- Manifest: lista przypisanych playlist oraz ich priorytetów/harmonogramów (`screen_playlists`).
-- Dla każdej playlisty: kolejność `playlist_items` z ich `position`, `duration`.
-- Metadane plików z `files`: `id`, `filename`, `path` (URL), `mime_type`, `size`, `checksum`.
-- Prefetchowane pliki multimedialne (pobrane do lokalnego storage/a filesystemu).
+## 1. Architektura Pamięci Podręcznej Odtwarzacza (IndexedDB)
 
-2) Schemat wersjonowania / invalidation (zalecenia)
+Aplikacja `player/` wykorzystuje przeglądarkową bazę **IndexedDB** (`digital-signage-player`, wersja 1) do trwałego przechowywania treści i manifestu na urządzeniu końcowym.
 
-- Każda encja mająca znaczenie dla odtwarzania powinna mieć `updated_at` i/lub `revision` (INT).
-- Zmiana zawartości playlisty, pozycji lub przypisania ekranu powinna inkrementować odpowiedni `revision` (aplikacja).
-- Serwer zwraca manifest z polem `revision` (np. najwyższe z `screen_playlists.revision` i `playlists.revision`).
+### Magazyny Obiektów (Object Stores):
+1. **`files`** (klucz główny: `id` - liczba):
+   - Przechowuje pobrane pliki binarne jako obiekty `Blob`.
+   - Struktura rekordu:
+     ```typescript
+     {
+       id: number,
+       filename: string,
+       mimeType: string,
+       size: number,
+       checksum: string,
+       blob: Blob
+     }
+     ```
+2. **`manifest`** (klucz główny: `key` - ciąg znaków):
+   - Przechowuje aktualnie obowiązujący manifest pod kluczem `"active"`.
 
-3) API: proste i odporne
+---
 
-- GET `/api/v1/screens/manifest`
+## 2. Protokół Synchronizacji i Wersjonowania (Revisions)
 
-  - Auth: `Authorization: ApiKey <api_key>` lub `X-API-KEY` header.
-  - Query: `?since_revision=123`
-  - Response 200: `{ "revision": 124, "playlists": [...], "files": [...] }`
-  - Response 304: empty (jeśli `since_revision` jest aktualne)
-- POST `/api/v1/screens/heartbeat`
+Każda zmiana w konfiguracji playlist, pozycji mediów lub harmonogramów ekranów wpływa na numer rewizji (`revision`).
 
-  - Body: `{ "last_seen": "2026-06-06T..." }` (opcjonalnie)
-- POST `/api/v1/screens/logs`
+### Algorytm Serwerowy (`SyncService`):
+1. Obliczenie rewizji manifestu jako maksymalnej wartości `revision` ze wszystkich aktywnych przypisań (`screen_playlists`) oraz samych playlist (`playlists.revision`).
+2. Buforowanie gotowej struktury JSON w tabeli `cache_manifests`.
+3. Jeśli ekran przesyła w zapytaniu swój aktualny numer rewizji (`sinceRevision`), serwer porównuje go z rewizją w bazie:
+   - Jeżeli `sinceRevision === cachedManifest.revision` → Serwer zwraca:
+     ```json
+     {
+       "revision": 12,
+       "manifest": {},
+       "status": "NOT_CHANGED"
+     }
+     ```
+   - Jeżeli `sinceRevision` jest starsze lub niepodane → Serwer generuje/odczytuje pełny manifest i zwraca:
+     ```json
+     {
+       "revision": 15,
+       "manifest": { ... },
+       "status": "OK"
+     }
+     ```
 
-  - Body: `{ "events": [{"type":"playback","file_id":1,"status":"ok","timestamp":"..."}, ...] }`
+---
 
-4) Manifest (przykład)
+## 3. Rzeczywiste Endpointy API Synchronizacji (`/sync`)
 
-```
-{
-  "revision": 124,
-  "assigned_playlists": [
-    { "playlist_id": 10, "priority": 1, "active_from": null, "active_to": null },
-    { "playlist_id": 12, "priority": 2, "active_from": "2026-06-06T08:00:00", "active_to": "2026-06-06T10:00:00" }
-  ],
-  "playlists": [
-    { "id": 10, "name": "Main", "revision": 5, "items": [ {"position":1, "file_id":3, "duration":15}, ... ] }
-  ],
-  "files": [
-    { "id":3, "path":"https://cdn.example.com/media/3.mp4", "mime_type":"video/mp4", "size":1234567, "checksum":"...sha256..." }
-  ]
-}
-```
+### 1) Pobranie manifestu
+- **Metoda / Ścieżka**: `GET /sync/manifest`
+- **Nagłówki**: `X-Screen-ID: <screenId>` (Wymagany)
+- **Parametry Query**: `?sinceRevision=<numer>` (Opcjonalny)
+- **Odpowiedź**:
+  ```json
+  {
+    "revision": 5,
+    "status": "OK",
+    "manifest": {
+      "screenId": 1,
+      "timestamp": "2026-08-26T17:00:00.000Z",
+      "playlists": [
+        {
+          "id": 1,
+          "name": "Poranna Playlista",
+          "items": [
+            {
+              "position": 1,
+              "duration": 10,
+              "videoLoops": 1,
+              "file": {
+                "id": 3,
+                "filename": "kampania.mp4",
+                "path": "backend/files/...",
+                "mimeType": "video/mp4",
+                "size": 1048576,
+                "checksum": "a1b2c3..."
+              }
+            }
+          ]
+        }
+      ],
+      "fallback": {
+        "id": 9,
+        "filename": "logo.png",
+        "path": "backend/files/...",
+        "mimeType": "image/png",
+        "size": 52428,
+        "checksum": "f4e5d6..."
+      }
+    }
+  }
+  ```
 
-5) Algorytm synchronizacji (ekran)
+### 2) Sygnał życia (Heartbeat)
+- **Metoda / Ścieżka**: `POST /sync/:screenId/heartbeat`
+- **Body**:
+  ```json
+  {
+    "playerUrl": "http://localhost:5174/?screenId=1",
+    "visible": true
+  }
+  ```
+- **Działanie**: Aktualizuje kolumny `last_seen`, `player_url` oraz `is_online` ekranu.
 
-- Na starcie: GET `/manifest` bez `since_revision` (or `0`).
-- Jeśli 200: zapisz manifest atomowo (zapisać najpierw manifest, potem prefetch plików). Zaimplementuj staging: pobierz nowe pliki do tymczasowego folderu i po sukcesie dokonaj swap.
-- Jeśli 304: nic nie rób.
-- Polling: co N sekund/minut (np. 30s–5min w zależności od charakteru). Alternatywa: serwer push (WebSocket/MQTT) do natychmiastowego powiadomienia o zmianach.
-- W razie braku sieci: graj z lokalnego cache. Zgłoś w logach `screen_logs` problemy z aktualizacją.
+### 3) Aktualizacja stanu wykonawczego (Screen State)
+- **Metoda / Ścieżka**: `POST /sync/:screenId/state`
+- **Body**:
+  ```json
+  {
+    "currentPlaylistId": 1,
+    "currentIndex": 2,
+    "visible": true
+  }
+  ```
+- **Działanie**: Zapisuje aktualną pozycję odtwarzania w tabeli `screen_state`.
 
-11) `screen_state` — szybki stan odtwarzacza
+### 4) Rejestracja logów telemetrycznych
+- **Metoda / Ścieżka**: `POST /sync/:screenId/logs`
+- **Body**:
+  ```json
+  {
+    "message": "Playback error: Media decode failed for item 3",
+    "level": "ERROR"
+  }
+  ```
+- **Dozwolone poziomy**: `INFO`, `WARN`, `ERROR`, `PLAYBACK`.
 
-- `screen_state` (tabela migracji `migrations/003_create_screen_state.sql`) przechowuje per-screen runtime state:
-  - `last_sync` — czas ostatniego pobrania manifestu;
-  - `last_playlist_hash` — opcjonalny hash manifestu/playlisty do szybkiego porównania;
-  - `current_playlist_id`, `current_index` — gdzie ekran aktualnie odtwarza (do przywrócenia po restarcie);
-  - `updated_at` — automatyczna aktualizacja timestampem.
-- Użytkowanie:
-  - Ekran może zapisywać swój `screen_state` periodicznie (np. przy zmianie pozycji) aby umożliwić wznowienie po restarcie lub utracie sieci.
-  - Serwer może odczytywać `screen_state` do diagnostyki i do podania differentialnego manifestu.
+### 5) Pobranie pliku awaryjnego (Fallback)
+- **Metoda / Ścieżka**: `GET /sync/:screenId/fallback`
+- **Odpowiedź**: Metadane pliku fallback przypisanego do ekranu.
 
-6) Pobieranie plików
+---
 
-- Pliki serwowane przez CDN/HTTP(s) (najlepiej z obsługą Range dla wideo). Można generować podpisane URL na ograniczony czas.
-- Weryfikacja: po pobraniu sprawdź `checksum` (sha256) i rozmiar.
-- Polityka przestrzeni: quota, LRU eviction; najstarsze nieużywane pliki usuwaj, zostaw minimalny zestaw.
+## 4. Cykl Pracy Odtwarzacza (Player Runtime Lifecycle)
 
-7) Bezpieczeństwo
-
-- Zawsze HTTPS.
-- `api_key` w nagłówku; nie umieszczaj go w URL.
-- Dostarczać podpisane URL do plików gdy chcesz ograniczyć dostęp.
-
-8) Logowanie i telemetria
-
-- Ekrany wysyłają `playback` events + `errors` do `/screens/logs`.
-- Agreguj logs ułatwiające debugowanie (last_seen, manifest_revision, download failures).
-
-9) Wyzwalacze po stronie serwera
-
-- Przy edycji playlist/playlist_items/screen_playlists inkrementuj `revision` i/lub zaktualizuj `updated_at`.
-- Możesz generować i zapisywać `cache_manifests` dla każdego `screen_id` i zwracać gotowy JSON do klienta.
-
-10) Dalsze usprawnienia
-
-- Push updates via MQTT/WebSocket for immediate updates.
-- Differential manifests (lista changed/removed file ids) by zmniejszyć payload.
-- Wersjonowanie plików (np. content hash w ścieżce) ułatwia CDN cache invalidation.
+1. **Inicjalizacja**:
+   - Odczyt `screenId` z adresu URL.
+   - Otwarcie IndexedDB.
+   - Jeśli istnieje zbuforowany manifest w IndexedDB → natychmiastowy start odtwarzania (`PLAY`).
+2. **Synchronizacja w tle (`syncManifest`)**:
+   - Wywołanie `GET /sync/manifest` z `X-Screen-ID`.
+   - Jeśli `status === 'OK'`:
+     - Sprawdzenie dostępnej przestrzeni magazynowej przez `canFitMissingFiles`.
+     - Pobranie nowych plików multimedialnych (`GET /files/:id/content`) jako `Blob` i zapis do IndexedDB.
+     - Usunięcie z bazy IndexedDB plików osieroconych (nieznajdujących się w nowym manifeście ani w fallback).
+     - Zapisanie nowego manifestu pod kluczem `active`.
+3. **Pętla Emisji**:
+   - Wyświetlanie mediów z lokalnych URL-i `URL.createObjectURL(blob)`.
+   - W przypadku braku sieci odtwarzanie kontynuowane jest w 100% z pamięci podręcznej.
+   - W przypadku braku plików lub błędu krytycznego odtwarzacz przechodzi w tryb `FALLBACK` i ponawia zapytania synchronizacyjne co zadany czas.

@@ -1,0 +1,8 @@
+{
+  "name": "Digital Signage CMS & Player",
+  "description": "Kompleksowy system zarządzania treścią i odtwarzaczem ekranowym Digital Signage z buforowaniem offline IndexedDB",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

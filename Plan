@@ -1,104 +1,130 @@
-📺 FLOW PROGRAMU (realny runtime)
-🟢 START (uruchomienie ekranu)
+# 📺 FLOW SYSTEMU I ARCHITEKTURA RUNTIME
 
-Ekran odpala player.
+Dokument opisuje rzeczywisty cykl życia odtwarzacza (`player`), mechanizmy buforowania IndexedDB, synchronizację manifestu z serwerem (`backend`) oraz obsługę trybu awaryjnego i telemetrii.
 
-1. INIT
-sprawdza, czy ma lokalny cache
-sprawdza, czy ma fallback asset
+---
 
-👉 wybiera:
+## 🟢 1. START & INICJALIZACJA (Player Startup)
 
-cache → jeśli istnieje
-fallback → jeśli nie ma nic
-2. PLAY (odtwarzanie)
+1. **Odczyt konfiguracji**:
+   - Player pobiera `screenId` z parametrów adresu URL (`?screenId=<ID>`).
+   - W przypadku braku `screenId` odtwarzacz przechodzi w stan błędu informując o braku identyfikatora ekranu.
+2. **Inicjalizacja bazy lokalnej (IndexedDB)**:
+   - Otwierana jest baza danych `digital-signage-player`.
+   - Tworzone / weryfikowane są magazyny obiektów:
+     - `files` (magazyn plików Blob, klucz: `id`)
+     - `manifest` (magazyn aktywnego manifestu, klucz: `key = "active"`)
+3. **Początkowy wybór źródła odtwarzania**:
+   - Sprawdzenie, czy w IndexedDB znajduje się zbuforowany manifest (`getCachedManifest()`).
+   - Jeśli istnieje zbuforowany manifest: natychmiastowe rozpoczęcie odtwarzania z cache (`PLAY (cache)`).
+   - Jeśli brak zbuforowanego manifestu: próba pobrania manifestu z serwera (`loadManifest()`), a w razie braku połączenia przejście do trybu awaryjnego (`FALLBACK`).
 
-Ekran:
+---
 
-bierze listę plików (cache albo z sync)
-zaczyna odtwarzać po kolei
+## 🎬 2. PLAY (Pętla Odtwarzania)
 
-Czyli:
+1. **Sekwencyjne odtwarzanie pozycji**:
+   - Odtwarzacz iteruje po elementach aktywnej playlisty: `file1 → file2 → file3 → ...`
+   - Dla każdego elementu:
+     - Pobierany jest lokalny Blob URL z bazy IndexedDB (`getCachedFileUrl(id)`).
+     - W przypadku brakującego pliku w cache następuje próba odtworzenia bezpośredniego URL z serwera (`/files/:id/content`).
+     - **Obrazy**: Wyświetlane przez zdefiniowany czas `duration` (w sekundach).
+     - **Wideo**: Odtwarzane z uwzględnieniem liczby powtórzeń `videoLoops`.
+2. **Aktualizacja stanu na serwerze**:
+   - Po każdej zmianie elementu Player wysyła do serwera informację o aktualnej pozycji:
+     `POST /sync/:screenId/state` z polami `{ currentPlaylistId, currentIndex, visible: !document.hidden }`.
 
-file1 → file2 → file3 → ...
-3. END OF PLAYLIST
+---
 
-Gdy dochodzi do końca:
+## 🔄 3. CYKL SYNCHRONIZACJI (Sync & Revision Check)
 
-👉 przechodzi do SYNC
+Synchronizacja jest wykonywana w tle w interwałach czasowych oraz przy starcie:
 
-4. SYNC (pytanie do serwera)
+1. **Zapytanie o manifest**:
+   - Player wysyła żądanie `GET /sync/manifest` z nagłówkiem `X-Screen-ID: <screenId>` oraz opcjonalnym parametrem `?sinceRevision=<localRevision>`.
+2. **Odpowiedź serwera**:
+   - **`status: "NOT_CHANGED"`**: Manifest nie uległ zmianie. Player kontynuuje odtwarzanie bez modyfikowania magazynu.
+   - **`status: "OK"`**: Przesłano nową wersję manifestu.
+     - Player porównuje pliki w nowym manifeście z lokalnym magazynem IndexedDB (`compareManifestWithCache`).
+     - Sprawdza dostępną przestrzeń dyskową (`canFitMissingFiles`).
+     - Pobiera nowe pliki binarne jako `Blob` i zapisuje w magazynie `files`.
+     - Usuwa z bazy IndexedDB pliki, które nie są już używane w żadnej przypisanej playliście ani jako fallback.
+     - Zapisuje nowy manifest pod kluczem `active`.
+     - Przełącza odtwarzacz na zaktualizowaną playlistę.
 
-Ekran mówi:
+---
 
-„czy coś się zmieniło?”
+## 💓 4. HEARTBEAT & MONITORING ONLINE
 
-GET /screen/12/sync
-🟢 Jeśli serwer odpowiada
-OK (nowa lista)
-ekran dostaje nową playlistę
-zapisuje ją do cache
-wraca do PLAY
-NO CHANGE
-ekran kontynuuje starą playlistę
-wraca do PLAY
-🔴 Jeśli serwer NIE odpowiada
+1. **Cykliczny heartbeat**:
+   - Co określony interwał (np. 15–30s) Player wysyła:
+     `POST /sync/:screenId/heartbeat` przekazując `{ playerUrl, visible: !document.hidden }`.
+2. **Detekcja Online / Offline po stronie Serwera**:
+   - Serwer aktualizuje kolumnę `last_seen` ekranu oraz pole `player_url`.
+   - Ekran uznawany jest w panelu CMS za **Online**, jeżeli `last_seen` mieści się w określonym oknie czasowym (np. < 2 minuty).
 
-(np. timeout / brak internetu)
+---
 
-→ przechodzi do FALLBACK
+## ⚠️ 5. FALLBACK & OBSŁUGA BŁĘDÓW (Tryb Awaryjny)
 
-5. FALLBACK (tryb awaryjny)
+Gdy wystąpi jedna z poniższych sytuacji:
+- Brak połączenia sieciowego i brak zapisanego manifestu w IndexedDB,
+- Błąd dekodowania/odtworzenia wideo lub brak przypisanych aktywnych playlist,
 
-Ekran:
+Player przełącza się w **Tryb Fallback**:
+1. Sprawdza, czy w manifeście lub w cache znajduje się zdefiniowany zasób `fallback` (logo uczelni/firmy, plansza awaryjna).
+2. Odtwarza zasób fallback w pętli.
+3. Jeśli fallback nie jest dostępny, wyświetla estetyczną planszę informacyjną z komunikatem o braku treści.
+4. **Retry Loop**: W tle regularnie ponawia próby synchronizacji z serwerem. Po powrocie łączności automatycznie wraca do normalnego trybu `PLAY`.
 
-gra lokalny loop (logo / video / komunikat)
-university_loop.mp4
+---
 
-i próbuje sync ponownie co jakiś czas
+## 📝 6. TELEMETRIA I LOGOWANIE (Logs & Telemetry)
 
-6. RETRY LOOP
+1. **Wysyłanie zdarzeń**:
+   - Player rejestruje kluczowe zdarzenia za pomocą `POST /sync/:screenId/logs`:
+     - `INFO`: Rozpoczęcie odtwarzania, sukces synchronizacji, zmiana playlisty.
+     - `WARN`: Brakujące pliki w cache, ostrzeżenia o przestrzeni.
+     - `ERROR`: Błędy odtwarzania, awarie sieci, brak manifestu.
+     - `PLAYBACK`: Szczegółowe metryki emisji treści.
+2. **Podgląd w CMS**:
+   - Wszystkie logi są agregowane w bazie danych i widoczne na żywo w panelu CMS w zakładce **Logi**.
+3. **Automatyczne czyszczenie**:
+   - Serwerowy `LogCleanupService` usuwa wpisy starsze niż 30 dni oraz ogranicza całkowitą liczbę logów do 100 000.
 
-Co X sekund:
+---
 
-próba SYNC ponownie
+## 🧠 DIAGRAM PRZEPŁYWU (Flowchart)
 
-Jeśli się uda → wraca do PLAY
-
-🧠 CAŁY SYSTEM W JEDNYM DIAGRAMIE
-START
-  ↓
-INIT
-  ↓
-PLAY (cache)
-  ↓
-END OF PLAYLIST
-  ↓
-SYNC ────────────────┐
-  ↓                  │
-OK → update cache    │
-  ↓                  │
-PLAY                 │
-                     │
-NO INTERNET          │
-  ↓                  │
-FALLBACK             │
-  ↓                  │
-RETRY ───────────────┘
-🧩 Co jest najważniejsze (i najprostsze)
-Ekran ma tylko 3 tryby:
-🎬 PLAY (normalnie działa)
-🔄 SYNC (pytanie „co dalej?”)
-⚠️ FALLBACK (brak danych → gra lokalnie)
-⚡ Co Twoja baza robi w tym flow
-
-Baza NIE steruje ekranem.
-
-Ona tylko:
-
-mówi co ma być w PLAY
-mówi co się zmieniło w SYNC
-🔥 Najważniejsze zrozumienie
-
-system nie „zarządza ekranem na żywo”
-system tylko daje mu kolejną listę do odtwarzania
+```
+       [START / Uruchomienie Odtwarzacza]
+                       │
+               (Odczyt screenId)
+                       │
+          (Otwarcie bazy IndexedDB)
+                       │
+            Czy istnieje lokalny cache?
+             /                   \
+          TAK                     NIE
+          /                         \
+    [PLAY (z cache)]         [Pobierz z serwera]
+          │                     /         \
+          │                  Sukces      Błąd sieci
+          │                   /             \
+          │          [Zapisz w IndexedDB]  [FALLBACK]
+          │                   │                 │
+          └─────────► [Pętla Odtwarzania] ◄─────┘ (Retry loop)
+                            │
+               ┌────────────┴────────────┐
+               ▼                         ▼
+   [Zmiana elementu]           [Timer w tle / Heartbeat]
+          │                              │
+(POST /sync/:id/state)         (POST /sync/:id/heartbeat)
+                               (GET /sync/manifest)
+                                         │
+                                Nowa rewizja?
+                                  /       \
+                               TAK        NIE
+                               /            \
+                     (Aktualizacja Blob)  (Kontynuuj PLAY)
+```

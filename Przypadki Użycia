@@ -1,23 +1,96 @@
-Pliki--
-Dodaj plik
-Usuń plik
-Pobierz listę plików
-Sprawdź czy plik jest używany
+# 📋 PRZYPADKI UŻYCIA (USE CASES)
 
-Playlisty--
-Utwórz playlistę
-Usuń playlistę
-Dodaj plik do playlisty
-Usuń plik z playlisty
-Zmień kolejność plików
+Kompleksowy wykaz przypadków użycia zaimplementowanych w systemie Digital Signage CMS & Player.
 
-Ekrany--
-Dodaj ekran
-Usuń ekran
-Przypisz playlistę do ekranu
-Zmień playlistę ekranu
+---
 
-Synchronizacja--
-Ekran pobiera konfigurację
-Ekran zgłasza aktualną wersję
-Serwer zwraca różnice
+## 📁 1. Zarządzanie Mediami i Plikami (Files Module)
+
+- **UC-F1: Wgrywanie pliku multimedialnego (Upload)**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Administrator wybiera plik (obraz JPG/PNG/WebP lub wideo MP4/WebM) metodą `multipart/form-data`. Serwer zapisuje plik w bezpiecznym katalogu storage, oblicza sumę kontrolną (checksum), rozmiar, typ MIME oraz zapisuje metadane w tabeli `files`.
+- **UC-F2: Przeglądanie i filtrowanie repozytorium mediów**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Pobranie pełnej listy plików z możliwością filtrowania dedykowanymi widokami: Wszystkie, Tylko wideo (`GET /files/videos`), Tylko obrazy (`GET /files/images`).
+- **UC-F3: Bezpieczne usuwanie pliku**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Przed usunięciem pliku system weryfikuje powiązania w tabeli `playlist_items` (`GET /files/:id/used`). W przypadku wykorzystania pliku w aktywnej playliście system uniemożliwia jego usunięcie, chroniąc integralność odtwarzania.
+- **UC-F4: Podgląd i streaming zawartości binarnej**
+  - *Aktor*: Panel CMS / Odtwarzacz
+  - *Opis*: Endpoint `GET /files/:id/content` strumieniuje rzeczywisty plik z dysku serwera do przeglądarki lub playera z odpowiednim nagłówkiem MIME.
+
+---
+
+## 📋 2. Zarządzanie Playlistami (Playlists Module)
+
+- **UC-P1: Tworzenie nowej playlisty**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Utworzenie grupy logicznej o unikalnej nazwie i opcjonalnym opisie. Początkowa rewizja (`revision`) ustawiana jest na 1.
+- **UC-P2: Dodawanie mediów do playlisty**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Dołączenie wybranego pliku do playlisty z określeniem pozycji (`position`), czasu wyświetlania obrazu (`duration` w sekundach) oraz liczby powtórzeń wideo (`videoLoops`).
+- **UC-P3: Reorganizacja kolejności elementów (Reorder)**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Zmiana kolejności odtwarzania pozycji w playliście (`PUT /playlists/:id/reorder`). System automatycznie przelicza i aktualizuje numery pozycji oraz inkrementuje numer rewizji (`revision`) playlisty.
+- **UC-P4: Usuwanie pozycji z playlisty**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Usunięcie wybranego elementu z playlisty i aktualizacja rewizji.
+- **UC-P5: Ostrzeganie o niezapisanych zmianach (UI Dirty State)**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Interfejs panelu edycji playlisty wykrywa modyfikacje i zabezpiecza użytkownika przed przypadkowym opuszczeniem widoku bez zapisu zmian.
+
+---
+
+## 🖥️ 3. Zarządzanie Ekranami (Screens Module)
+
+- **UC-S1: Rejestracja nowego ekranu**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Dodanie ekranu z podaniem nazwy i lokalizacji (np. "Hol Główny - Budynek A"). System automatycznie generuje unikalny klucz autoryzacyjny `apiKey` (UUID/Hash).
+- **UC-S2: Harmonogramowanie i przypisywanie playlist**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Przypisanie playlisty do ekranu w tabeli `screen_playlists` z priorytetem (`priority`) oraz opcjonalnym oknem czasowym ważności (`activeFrom`, `activeTo`).
+- **UC-S3: Konfiguracja zasobu awaryjnego (Fallback Asset)**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Wybór pliku multimedialnego (np. logo instytucji), który będzie odtwarzany w przypadku utraty połączenia lub braku aktywnych playlist.
+- **UC-S4: Monitorowanie statusu Online/Offline**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Panel CMS odświeża listę ekranów co 5 sekund, weryfikując pole `lastSeen` oraz flagę `isOnline`.
+- **UC-S5: Generowanie nowego klucza API**
+  - *Aktor*: Administrator CMS
+  - *Opis*: Możliwość bezpiecznej rotacji klucza API urządzenia (`POST /screens/:id/api-key`).
+
+---
+
+## 🔄 4. Synchronizacja i Tryb Offline (Sync Engine & Player)
+
+- **UC-SY1: Pobieranie manifestu i weryfikacja rewizji**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: Player wysyła zapytanie `GET /sync/manifest` z nagłówkiem `X-Screen-ID: <id>` i parametrem `sinceRevision`. Serwer sprawdza gotowy cache manifestu:
+    - Jeśli wersje są równe → zwraca status `NOT_CHANGED`.
+    - Jeśli zaszły zmiany → zwraca status `OK` wraz z nowym manifestem i najwyższym numerem rewizji.
+- **UC-SY2: Lokalne buforowanie plików (IndexedDB Cache)**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: Player pobiera brakujące pliki w postaci obiektów `Blob`, zapisuje je w magazynie `files` bazy IndexedDB oraz usuwa pliki zbędne (garbage collection).
+- **UC-SY3: Odtwarzanie w trybie Offline**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: W przypadku braku dostępu do internetu odtwarzacz kontynuuje pętlę emisyjną korzystając z lokalnego manifestu i zbuforowanych plików Blob w IndexedDB.
+- **UC-SY4: Automatyczne przełączenie na Fallback**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: W sytuacji braku zbuforowanych plików lub krytycznego błędu odtwarzacz wyświetla skonfigurowany zasób awaryjny (logo/wideo zapętlone).
+- **UC-SY5: Wysyłanie Heartbeat i pozycji odtwarzania**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: Player okresowo wysyła `POST /sync/:screenId/heartbeat` (z informacją o widoczności i adresie playera) oraz `POST /sync/:screenId/state` (aktualny indeks i identyfikator playlisty).
+
+---
+
+## 📊 5. Telemetria, Diagnostyka i Logi (Logs Module)
+
+- **UC-L1: Rejestracja zdarzeń przez Player**
+  - *Aktor*: Odtwarzacz ekranowy (Player)
+  - *Opis*: Wysyłanie logów wykonawczych (`INFO`, `WARN`, `ERROR`, `PLAYBACK`) do serwera (`POST /sync/:screenId/logs`).
+- **UC-L2: Podgląd logów na żywo w Panelu CMS**
+  - *Aktor*: Administrator CMS / Serwisant
+  - *Opis*: Wybór ekranu na stronie `LogsPage` i automatyczny podgląd ostatnich zdarzeń odświeżany co 5 sekund z kolorystycznym wyróżnieniem błędów i ostrzeżeń.
+- **UC-L3: Automatyczna archiwizacja i retencja logów**
+  - *Aktor*: Zadanie systemowe (Cron)
+  - *Opis*: Codzienny proces `LogCleanupService` o 12:00 automatycznie usuwa logi starsze niż 30 dni oraz ogranicza całkowitą wielkość tabeli `screen_logs` do 100 000 wpisów.
