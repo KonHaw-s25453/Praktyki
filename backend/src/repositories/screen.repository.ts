@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { ScreenEntity } from '../entities';
 
+const SCREEN_ONLINE_TIMEOUT = 90_000; // 90 sekund
 @Injectable()
 export class ScreenRepository extends Repository<ScreenEntity> {
   constructor(private dataSource: DataSource) {
@@ -51,20 +52,32 @@ export class ScreenRepository extends Repository<ScreenEntity> {
     });
   }
 
- async findAllWithState(): Promise<ScreenEntity[]> {
-    return this.find({
-      relations: {
-        state: true,
-        fallbackFile: true,
-        screenPlaylists: {
-    playlist: {
-        items: {
+async findAllWithState(): Promise<ScreenEntity[]> {
+  const screens = await this.find({
+    relations: {
+      state: true,
+      fallbackFile: true,
+      screenPlaylists: {
+        playlist: {
+          items: {
             file: true,
+          },
         },
-    },
-},
       },
-    });
+    },
+  });
+
+  const now = Date.now();
+
+  return screens.map((screen) => {
+    const isOnline =
+      screen.lastSeen !== null &&
+      now - screen.lastSeen.getTime() < SCREEN_ONLINE_TIMEOUT;
+
+    screen.isOnline = isOnline;
+
+    return screen;
+  });
 }
 
 async updateLastSeen(

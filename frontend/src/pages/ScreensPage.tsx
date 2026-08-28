@@ -191,7 +191,7 @@ export default function ScreensPage({
 
                         {screen.playerUrl ? (
                             <iframe
-                                src={`${screen.playerUrl}/?screenId=${screen.id}`}
+                                src={`${screen.playerUrl}/?screenId=${screen.id}&preview=true`}
                                 title={`Podgląd ekranu ${screen.name}`}
                                 style={{
                                     width: "100%",

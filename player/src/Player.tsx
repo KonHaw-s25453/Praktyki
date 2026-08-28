@@ -12,6 +12,7 @@ import {
 interface PlaylistFile {
   id: number;
   filename: string;
+  originalName: string;
   path: string;
   mimeType: string;
   size: number;
@@ -48,6 +49,7 @@ export default function Player() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const params = new URLSearchParams(window.location.search);
   const screenId = params.get("screenId");
+  const isPreview = params.get("preview") === "true";
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
   const [fallbackReason, setFallbackReason] = useState<
   "NORMAL" | "ERROR" | null
@@ -241,6 +243,10 @@ loadManifest();
 }, [screenId, logEvent]);
 
   useEffect(() => {
+   if (!screenId || isPreview) {
+    return;
+  }
+
   if (!screenId) {
     return;
   }
@@ -305,7 +311,7 @@ console.log(
       handleVisibilityChange,
     );
   };
-}, [screenId]);
+}, [screenId, isPreview]);
 
  useEffect(() => {
   if (!screenId || !manifest) {
@@ -386,6 +392,7 @@ useEffect(() => {
 
   const loadCachedFile = async () => {
     try {
+      setCurrentFileUrl(null);
       const playlist = manifest.manifest.playlists[0];
 
       // ==========================================
@@ -400,7 +407,7 @@ useEffect(() => {
         }
 
         await logEvent(
-          `FALLBACK_STARTED file=${fallback.filename}`,
+          `FALLBACK_STARTED file=${fallback.originalName}`,
         );
 
         objectUrl = await getCachedFileUrl(fallback.id);
@@ -429,7 +436,7 @@ useEffect(() => {
       }
 
       await logEvent(
-        `ITEM_STARTED file=${item.file.filename}`,
+        `ITEM_STARTED file=${item.file.originalName}`,
       );
 
       objectUrl = await getCachedFileUrl(item.file.id);
@@ -458,7 +465,7 @@ useEffect(() => {
         if (fallback) {
           await logEvent(
             `CACHE_MISS_USING_FALLBACK file=${
-              item?.file.filename ?? "unknown"
+              item?.file.originalName} ?? "unknown"
             }`,
             "WARN",
           );
@@ -575,36 +582,38 @@ if (manifest.manifest.playlists.length === 0) {
     prev + 1 >= playlist.items.length ? 0 : prev + 1
     );
   };
+if (!currentFileUrl) {
+  return <div className="player">Loading...</div>;
+}
 return (
   <div className="player">
     {file.mimeType.startsWith("video/") ? (
       <video
-        src={currentFileUrl ?? undefined}
+        src={currentFileUrl}
         autoPlay
         muted
         playsInline
-      // controls
         onEnded={next}
         onError={() => {
           logEvent(
-            `VIDEO_PLAYBACK_ERROR file=${file.filename}`,
+            `VIDEO_PLAYBACK_ERROR file=${file.originalName}`,
             "ERROR",
-    );
-  }}
+          );
+        }}
       />
     ) : (
       <img
-        src={currentFileUrl ?? undefined}
+        src={currentFileUrl}
         alt=""
         onLoad={() => {
-          setTimeout(next, item.duration * 1000);  
+          setTimeout(next, item.duration * 1000);
         }}
         onError={() => {
           logEvent(
-            `IMAGE_PLAYBACK_ERROR file=${file.filename}`,
+            `IMAGE_PLAYBACK_ERROR file=${file.originalName}`,
             "ERROR",
-    );
-  }}
+          );
+        }}
       />
     )}
   </div>

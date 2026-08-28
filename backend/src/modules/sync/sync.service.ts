@@ -62,8 +62,6 @@ export class SyncService {
     };
   }
 
-  await this.screenRepository.updateLastSeen(screenId);
-
   return {
     revision: cachedManifest.revision,
     manifest: cachedManifest.manifest,
@@ -218,6 +216,7 @@ if (wasOffline) {
     return {
       id: screen.fallbackFile.id,
       filename: screen.fallbackFile.filename,
+      originalName: screen.fallbackFile.originalName,
       path: screen.fallbackFile.path,
       mimeType: screen.fallbackFile.mimeType,
       duration: screen.fallbackFile.duration,
@@ -243,6 +242,7 @@ if (wasOffline) {
     file: {
       id: item.file.id,
       filename: item.file.filename,
+      originalName: item.file.originalName,
       path: item.file.path,
       mimeType: item.file.mimeType,
       size: item.file.size,
@@ -254,6 +254,7 @@ if (wasOffline) {
       playlists.push({
          id: assignment.playlist.id,
     name: assignment.playlist.name,
+    originalName: assignment.playlist.originalName,
     revision: assignment.playlist.revision,
     repeatMode: assignment.playlist.repeatMode,
     priority: assignment.priority,
@@ -271,6 +272,7 @@ if (wasOffline) {
       {
   id: screen.fallbackFile.id,
   filename: screen.fallbackFile.filename,
+  originalName: screen.fallbackFile.originalName,
   path: screen.fallbackFile.path,
   mimeType: screen.fallbackFile.mimeType,
   size: screen.fallbackFile.size,
