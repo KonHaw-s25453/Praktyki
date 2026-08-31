@@ -120,157 +120,205 @@ export default function ScreensPage({
     }
 
 
-    return (
-        <div>
+return (
+    <main className="page screens-page">
 
-            <h1>
-                Ekrany
-            </h1>
-
-
-            {screens.length === 0 && (
-                <p>
-                    Brak ekranów.
+        <header className="page-header">
+            <div>
+                <h1>Ekrany</h1>
+                <p className="page-description">
+                    Zarządzaj ekranami informacyjnymi i przypisanymi playlistami.
                 </p>
-            )}
-
-
-            {screens.map(screen => (
-                <div
-                    key={screen.id}
-                    style={{
-                        marginBottom: "30px",
-                        padding: "15px",
-                        border: "1px solid #ddd",
-                        borderRadius: "8px"
-                    }}
-                >
-
-                    <h3>
-                        {screen.name}
-                    </h3>
-
-                    <p>
-                        <strong>ID ekranu:</strong>{" "}
-                        {screen.id}
-                    </p>
-
-                    <p>
-                        Lokalizacja: {screen.location}
-                    </p>
-
-                    <p>
-                        Widoczność:{" "}
-                        {screen.state?.visible
-                            ? "🟢 Widoczny"
-                            : "⚫ Niewidoczny"
-                        }
-                    </p>
-
-                    <p>
-                        Status:{" "}
-                        {screen.isOnline
-                            ? "🟢 Online"
-                            : "🔴 Offline"
-                        }
-                    </p>
-
-                    <p>
-                    Last seen: {screen.lastSeen
-                        ? new Date(screen.lastSeen).toLocaleString()
-                        : "Nigdy"}
-                    </p>
-
-
-                    <div
-                        style={{
-                            width: "640px",
-                            marginBottom: "20px"
-                        }}
-                    >
-
-                        {screen.playerUrl ? (
-                            <iframe
-                                src={`${screen.playerUrl}/?screenId=${screen.id}&preview=true`}
-                                title={`Podgląd ekranu ${screen.name}`}
-                                style={{
-                                    width: "100%",
-                                    aspectRatio: "16 / 9",
-                                    border: "1px solid #ccc",
-                                    borderRadius: "8px"
-                                }}
-                            />
-                        ) : (
-                            <p>
-                                Player tego ekranu nie zgłosił
-                                jeszcze swojego adresu.
-                            </p>
-                        )}
-
-                    </div>
-
-
-                    {screen.screenPlaylists.length > 0 && (
-                        <div>
-                            <h4>
-                                Playlisty:
-                            </h4>
-
-                            {screen.screenPlaylists.map(item => (
-                                <p key={item.id}>
-                                    Playlist ID: {item.playlistId}
-                                    <br />
-                                    Priorytet: {item.priority}
-                                </p>
-                            ))}
-                        </div>
-                    )}
-
-
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "10px",
-                            marginTop: "15px"
-                        }}
-                    >
-
-                        <button
-                            onClick={() =>
-                                onEdit(screen.id)
-                            }
-                        >
-                            Edytuj
-                        </button>
-
-                        <button
-                            onClick={() =>
-                                deleteScreen(screen.id)
-                            }
-                            style={{
-                                color: "white",
-                                backgroundColor: "crimson",
-                                border: "none",
-                                padding: "6px 12px",
-                                borderRadius: "4px",
-                                cursor: "pointer"
-                            }}
-                        >
-                            Usuń
-                        </button>
-
-                    </div>
-
-                </div>
-            ))}
-
+            </div>
 
             <button
+                className="primary-button"
                 onClick={() => onEdit(null)}
             >
                 + Dodaj ekran
             </button>
+        </header>
 
-        </div>
-    );
+
+        {screens.length === 0 ? (
+            <section className="page-section">
+                <div className="empty-state">
+                    Brak ekranów.
+                </div>
+            </section>
+        ) : (
+
+            <section className="screens-list">
+
+                {screens.map(screen => (
+
+                    <article
+                        key={screen.id}
+                        className="screen-card"
+                    >
+
+                        <header className="screen-card-header">
+
+                            <div>
+                                <h2 className="screen-name">
+                                    {screen.name}
+                                </h2>
+
+                                <p className="screen-location">
+                                    {screen.location}
+                                </p>
+                            </div>
+
+                            <span
+                                className={
+                                    screen.isOnline
+                                        ? "status-badge status-online"
+                                        : "status-badge status-offline"
+                                }
+                            >
+                                {screen.isOnline
+                                    ? "Online"
+                                    : "Offline"}
+                            </span>
+
+                        </header>
+
+
+                        <div className="screen-info">
+
+                            <div className="screen-info-item">
+                                <span className="screen-info-label">
+                                    ID ekranu
+                                </span>
+
+                                <span>
+                                    {screen.id}
+                                </span>
+                            </div>
+
+
+                            <div className="screen-info-item">
+                                <span className="screen-info-label">
+                                    Widoczność
+                                </span>
+
+                                <span
+                                    className={
+                                        screen.state?.visible
+                                            ? "status-visible"
+                                            : "status-hidden"
+                                    }
+                                >
+                                    {screen.state?.visible
+                                        ? "🟢 Widoczny"
+                                        : "⚫ Niewidoczny"}
+                                </span>
+                            </div>
+
+
+                            <div className="screen-info-item">
+                                <span className="screen-info-label">
+                                    Ostatni kontakt
+                                </span>
+
+                                <span>
+                                    {screen.lastSeen
+                                        ? new Date(
+                                            screen.lastSeen
+                                        ).toLocaleString()
+                                        : "Nigdy"}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div className="screen-preview">
+
+                            {screen.playerUrl ? (
+                                <iframe
+                                    src={`${screen.playerUrl}/?screenId=${screen.id}&preview=true`}
+                                    title={`Podgląd ekranu ${screen.name}`}
+                                />
+                            ) : (
+                                <div className="screen-preview-empty">
+                                    Player tego ekranu nie zgłosił
+                                    jeszcze swojego adresu.
+                                </div>
+                            )}
+
+                        </div>
+
+
+                        {screen.screenPlaylists.length > 0 && (
+
+                            <section className="screen-playlists">
+
+                                <h3>
+                                    Playlisty
+                                </h3>
+
+                                <div className="screen-playlist-list">
+
+                                    {screen.screenPlaylists.map(item => (
+
+                                        <div
+                                            key={item.id}
+                                            className="screen-playlist-item"
+                                        >
+                                            <span>
+                                                Playlist ID:{" "}
+                                                <strong>
+                                                    {item.playlistId}
+                                                </strong>
+                                            </span>
+
+                                            <span>
+                                                Priorytet:{" "}
+                                                <strong>
+                                                    {item.priority}
+                                                </strong>
+                                            </span>
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+                            </section>
+
+                        )}
+
+
+                        <footer className="screen-card-actions">
+
+                            <button
+                                className="secondary-button"
+                                onClick={() =>
+                                    onEdit(screen.id)
+                                }
+                            >
+                                Edytuj
+                            </button>
+
+                            <button
+                                className="danger-button"
+                                onClick={() =>
+                                    deleteScreen(screen.id)
+                                }
+                            >
+                                Usuń
+                            </button>
+
+                        </footer>
+
+                    </article>
+
+                ))}
+
+            </section>
+        )}
+
+    </main>
+);
 }

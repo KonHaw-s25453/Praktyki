@@ -84,23 +84,30 @@ useEffect(() => {
 
 
 
-    return (
-        <div>
+    
+     return (
+    <main className="page">
+        <div className="page-header">
+            <div>
+                <h1>Biblioteka plików</h1>
+                <p className="page-description">
+                    Zarządzaj plikami wykorzystywanymi przez system.
+                </p>
+            </div>
+        </div>
 
-            <h1>
-                Biblioteka plików
-            </h1>
-
+        <section className="page-section">
             <FileUpload
-            onUploadSuccess={loadFiles}
+                onUploadSuccess={loadFiles}
             />
+        </section>
 
+        <section className="page-section">
             <FileList
                 files={files}
                 onDelete={deleteFile}
-
             />
-
-        </div>
-    );
+        </section>
+    </main>
+);
 }   

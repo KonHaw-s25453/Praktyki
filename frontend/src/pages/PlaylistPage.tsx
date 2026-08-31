@@ -111,18 +111,33 @@ export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
 
 
     return (
-        <div>
+    <main className="page">
+        <header className="page-header playlist-page-header">
+            <div>
+                <h1>Playlisty</h1>
 
-            <h1>
-                Biblioteka List Odtwarzania
-            </h1>
+                <p className="page-description">
+                    Zarządzanie playlistami wyświetlanymi na ekranach.
+                </p>
+            </div>
 
-            <button onClick={createPlaylist}>
+            <button
+                className="primary-button"
+                onClick={createPlaylist}
+            >
                 + Nowa playlista
             </button>
+        </header>
 
+        <section className="page-section">
             {playlists.length === 0 ? (
-                <p>Nie utworzono jeszcze żadnej playlisty.</p>
+                <div className="empty-state">
+                    <h2>Brak playlist</h2>
+
+                    <p>
+                        Nie utworzono jeszcze żadnej playlisty.
+                    </p>
+                </div>
             ) : (
                 <PlaylistList
                     playlists={playlists}
@@ -130,9 +145,9 @@ export default function PlaylistsPage({ onEdit }: PlaylistsPageProps) {
                     onEdit={onEdit}
                 />
             )}
-
-        </div>
-    );
+        </section>
+    </main>
+);
 
 
 }   

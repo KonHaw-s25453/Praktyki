@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./LogsPage.css";
+
 interface ScreenLog {
   id: number;
   message: string | null;
@@ -109,59 +109,85 @@ const getLogClass = (log: ScreenLog) => {
 };
 
   return (
-    <div>
-      <h1>Logi ekranów</h1>
+    <div className="page logs-page">
 
-      <label>
-        Ekran:{" "}
+        <header className="page-header">
+            <div>
+                <h1>Logi ekranów</h1>
+                <p className="page-description">
+                    Historia zdarzeń zgłaszanych przez ekrany.
+                </p>
+            </div>
+        </header>
 
-        <select
-          value={selectedScreenId ?? ""}
-          onChange={(event) =>
-            setSelectedScreenId(Number(event.target.value))
-          }
-        >
-          {screens.map((screen) => (
-            <option key={screen.id} value={screen.id}>
-              {screen.name}
-            </option>
-          ))}
-        </select>
-      </label>
+        <section className="page-section logs-controls">
+            <label>
+                Ekran:{" "}
+                <select
+                    value={selectedScreenId ?? ""}
+                    onChange={(event) =>
+                        setSelectedScreenId(Number(event.target.value))
+                    }
+                >
+                    {screens.map((screen) => (
+                        <option key={screen.id} value={screen.id}>
+                            {screen.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        </section>
 
-      {loading && <p>Ładowanie logów...</p>}
+        {loading && <p>Ładowanie logów...</p>}
 
-      {error && <p>{error}</p>}
+        {error && (
+            <p className="logs-error">
+                {error}
+            </p>
+        )}
 
- {!loading && !error && (
-  logs.length === 0 ? (
-    <p>Brak logów dla tego ekranu.</p>
-  ) : (
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Poziom</th>
-          <th>Zdarzenie</th>
-        </tr>
-      </thead>
+        {!loading && !error && (
+            logs.length === 0 ? (
+                <p>Brak logów dla tego ekranu.</p>
+            ) : (
+                <section className="page-section logs-table-section">
+                    <div className="logs-table-wrapper">
+                        <table className="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Poziom</th>
+                                    <th>Zdarzenie</th>
+                                </tr>
+                            </thead>
 
-      <tbody>
-        {logs.map((log) => (
-          <tr key={log.id} className={getLogClass(log)}>
-            <td>
-              {new Date(log.createdAt).toLocaleString()}
-            </td>
+                            <tbody>
+                                {logs.map((log) => (
+                                    <tr
+                                        key={log.id}
+                                        className={getLogClass(log)}
+                                    >
+                                        <td>
+                                            {new Date(
+                                                log.createdAt
+                                            ).toLocaleString()}
+                                        </td>
 
-            <td>{log.level}</td>
+                                        <td>
+                                            {log.level}
+                                        </td>
 
-            <td>{log.message}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-)}
+                                        <td>
+                                            {log.message}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            )
+        )}
     </div>
-  );
+);
 }

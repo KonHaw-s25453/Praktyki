@@ -263,204 +263,277 @@ const saveScreen = () => {
 };
 
 
+
 return (
+    <main className="page screen-edit-page">
 
-    
-    <div>
+        <header className="page-header">
+            <div>
+                <h1>
+                    {screenId === null
+                        ? "Dodaj ekran"
+                        : "Edycja ekranu"}
+                </h1>
 
-        <h1>
-            Edycja ekranu
-        </h1>
-        <h2>
-    Nazwa
-</h2>
-
-<input
-    type="text"
-    value={name}
-    onChange={(e) => {
-        setName(e.target.value);
-        setIsDirty(true);
-        onDirtyChange(true);
-    }}
-/>
-
-<h2>
-    Lokalizacja
-</h2>
-
-<input
-    type="text"
-    value={location}
-    onChange={(e) => {
-        setLocation(e.target.value);
-        setIsDirty(true);
-        onDirtyChange(true);
-    }}
-/>
-
-        {assignment ? (
-            <>
-                <h2>
-                    Przypisana playlista
-                </h2>
-
-                <p>
-                    Aktualna playlist ID:
-                    {" "}
-                    {assignment.playlistId}
+                <p className="page-description">
+                    Skonfiguruj ekran i przypisz do niego playlistę.
                 </p>
-            </>
-        ) : (
-            <p>
-                Brak przypisanej playlisty.
-            </p>
+            </div>
+
+            <button
+                className="secondary-button"
+                onClick={requestLeave}
+            >
+                ← Powrót do ekranów
+            </button>
+        </header>
+
+
+        <section className="screen-edit-section page-section">
+
+            <div className="section-header">
+                <h2>Dane ekranu</h2>
+            </div>
+
+            <div className="screen-form">
+
+                <label className="form-field">
+                    <span>Nazwa</span>
+
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => {
+                            setName(e.target.value);
+                            setIsDirty(true);
+                            onDirtyChange(true);
+                        }}
+                    />
+                </label>
+
+
+                <label className="form-field">
+                    <span>Lokalizacja</span>
+
+                    <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => {
+                            setLocation(e.target.value);
+                            setIsDirty(true);
+                            onDirtyChange(true);
+                        }}
+                    />
+                </label>
+
+            </div>
+
+            <div className="form-actions">
+
+                <button
+                    className="primary-button"
+                    onClick={saveScreen}
+                >
+                    Zapisz dane ekranu
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section className="screen-edit-section page-section">
+
+            <div className="section-header">
+                <h2>Przypisanie playlisty</h2>
+            </div>
+
+
+            {assignment ? (
+                <div className="assignment-info">
+                    <span className="form-field-label">
+                        Aktualnie przypisana playlista
+                    </span>
+
+                    <strong>
+                        Playlist ID: {assignment.playlistId}
+                    </strong>
+                </div>
+            ) : (
+                <p className="empty-state">
+                    Brak przypisanej playlisty.
+                </p>
+            )}
+
+
+            <div className="screen-form">
+
+                <label className="form-field">
+                    <span>Playlista</span>
+
+                    <select
+                        value={selectedPlaylistId ?? ""}
+                        onChange={(e) => {
+                            setSelectedPlaylistId(
+                                e.target.value === ""
+                                    ? null
+                                    : Number(e.target.value)
+                            );
+
+                            setIsDirty(true);
+                            onDirtyChange(true);
+                        }}
+                    >
+                        <option value="">
+                            -- wybierz playlistę --
+                        </option>
+
+                        {playlists.map(playlist => (
+                            <option
+                                key={playlist.id}
+                                value={playlist.id}
+                            >
+                                {playlist.name}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+
+
+                <label className="form-field">
+                    <span>Priorytet</span>
+
+                    <input
+                        type="number"
+                        value={priority}
+                        onChange={(e) => {
+                            setPriority(Number(e.target.value));
+                            setIsDirty(true);
+                            onDirtyChange(true);
+                        }}
+                    />
+                </label>
+
+
+                <div className="form-row">
+
+                    <label className="form-field">
+                        <span>Aktywne od</span>
+
+                        <input
+                            type="date"
+                            value={activeFrom}
+                            onChange={(e) => {
+                                setActiveFrom(e.target.value);
+                                setIsDirty(true);
+                                onDirtyChange(true);
+                            }}
+                        />
+                    </label>
+
+
+                    <label className="form-field">
+                        <span>Aktywne do</span>
+
+                        <input
+                            type="date"
+                            value={activeTo}
+                            onChange={(e) => {
+                                setActiveTo(e.target.value);
+                                setIsDirty(true);
+                                onDirtyChange(true);
+                            }}
+                        />
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div className="form-actions">
+
+                <button
+                    className="primary-button"
+                    disabled={screenId === null}
+                    onClick={() => {
+                        if (selectedPlaylistId === null) {
+                            console.error(
+                                "Nie wybrano playlisty"
+                            );
+                            return;
+                        }
+
+                        assignPlaylist(selectedPlaylistId);
+                    }}
+                >
+                    Zapisz przypisanie
+                </button>
+
+            </div>
+
+        </section>
+
+
+        {showSaveDialog && (
+            <div className="save-dialog-overlay">
+
+                <div className="save-dialog">
+
+                    <h2>
+                        Niezapisane zmiany
+                    </h2>
+
+                    <p>
+                        Masz niezapisane zmiany.
+                        Czy chcesz je zapisać przed wyjściem?
+                    </p>
+
+                    <div className="save-dialog-actions">
+
+                        <button
+                            className="primary-button"
+                            onClick={() => {
+                                if (selectedPlaylistId !== null) {
+                                    assignPlaylist(selectedPlaylistId);
+                                }
+
+                                setShowSaveDialog(false);
+                            }}
+                        >
+                            Zapisz
+                        </button>
+
+
+                        <button
+                            className="danger-button"
+                            onClick={() => {
+                                setIsDirty(false);
+                                onDirtyChange(false);
+                                setShowSaveDialog(false);
+                                onBack();
+                            }}
+                        >
+                            Odrzuć
+                        </button>
+
+
+                        <button
+                            className="secondary-button"
+                            onClick={() => {
+                                setShowSaveDialog(false);
+                            }}
+                        >
+                            Anuluj
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
         )}
 
-<button
-    onClick={() => {
-        saveScreen();
-    }}
->
-    Zapisz dane ekranu
-</button>
-
-        <label>
-            Playlista:
-
-            <select
-                value={selectedPlaylistId ?? ""}
-                onChange={(e) => {
-                    setSelectedPlaylistId(
-                        e.target.value === ""
-                            ? null
-                            : Number(e.target.value)
-                    );
-                    setIsDirty(true);
-                    onDirtyChange(true);
-                }}
-            >
-                <option value="">
-                    -- wybierz playlistę --
-                </option>
-
-                {playlists.map(playlist => (
-                    <option
-                        key={playlist.id}
-                        value={playlist.id}
-                    >
-                        {playlist.name}
-                    </option>
-                ))}
-            </select>
-
-        </label>
-
-<h2>
-    Priorytet
-</h2>
-
-<input
-    type="number"
-    value={priority}
-    onChange={(e) =>{
-        setPriority(
-            Number(e.target.value)
-        );
-        setIsDirty(true);
-        onDirtyChange(true);
-    }}
-/>
-
-
-<h2>
-    Aktywne od
-</h2>
-
-<input
-    type="date"
-    value={activeFrom}
-    onChange={(e) =>{
-        setActiveFrom(e.target.value);
-        setIsDirty(true);
-        onDirtyChange(true);
-    }}
-/>
-
-
-<h2>
-    Aktywne do
-</h2>
-
-<input
-    type="date"
-    value={activeTo}
-    onChange={(e) =>{
-        setActiveTo(e.target.value)
-        setIsDirty(true);
-        onDirtyChange(true);
-    }}
-/>
-
-<button
-disabled={screenId === null}
-    onClick={() => {
-        if (selectedPlaylistId === null) {
-            console.error("Nie wybrano playlisty");
-            return;
-        }
-
-        assignPlaylist(selectedPlaylistId);
-    }}
->
-    Zapisz przypisanie
-</button>
-
-{showSaveDialog && (
-    <div>
-        <div>
-            Masz niezapisane zmiany.
-        </div>
-
-        <button
-            onClick={() => {
-                if (selectedPlaylistId !== null) {
-            assignPlaylist(selectedPlaylistId);
-        }
-                setShowSaveDialog(false);
-            }}
-        >
-            Zapisz
-        </button>
-
-
-        <button
-            onClick={() => {
-                setIsDirty(false);
-                onDirtyChange(false);
-                setShowSaveDialog(false);
-                onBack();
-            }}
-        >
-            Odrzuć
-        </button>
-
-
-        <button
-            onClick={() => {
-                setShowSaveDialog(false);
-            }}
-        >
-            Anuluj
-        </button>
-
-    </div>
-)}
-
-<button onClick={requestLeave}>
-    ← Powrót
-</button>
-
-    </div>
+    </main>
 );
 };

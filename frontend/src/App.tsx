@@ -4,55 +4,79 @@ import PlaylistEditPage from "./pages/PlaylistEditPage";
 import ScreensPage from "./pages/ScreensPage";
 import ScreenEditPage from "./pages/ScreenEditPage";
 import LogsPage from "./pages/LogsPage";
+import HomePage from "./pages/HomePage";
 import { useState } from "react";
 
 export default function App() {
 
-    const [page, setPage] = useState<"files" | "playlists" | "playlistEdit"| "screens" |
-    "screenEdit"|"logs">("files");
+type Page =
+    | "home"
+    | "files"
+    | "playlists"
+    | "playlistEdit"
+    | "screens"
+    | "screenEdit"
+    | "logs";
+
+
+    const [page, setPage] = useState<Page>("home");
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
     const [selectedScreenId, setSelectedScreenId] = useState<number | null>(null);
     const [isDirty, setIsDirty] = useState(false);
 
-    const navigate = (targetPage: "files" | "playlists" | "playlistEdit" | "screens" |
-    "screenEdit"|"logs") => {
-        if (isDirty) {
-            const confirmLeave = window.confirm(
-                "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
-            );
-            if (!confirmLeave) {
-                return;
-            }
+    const navigate = (targetPage: Page) => {
+    if (isDirty) {
+        const confirmLeave = window.confirm(
+            "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?"
+        );
+
+        if (!confirmLeave) {
+            return;
         }
-        setPage(targetPage);
-        setIsDirty(false);
     }
+
+    setPage(targetPage);
+    setIsDirty(false);
+};
 
     return (
         <>
-            <nav>
-                <button onClick={() => navigate("files")}>
-                    Pliki
-                </button>
+            <header className="app-header">
+    <div className="app-header-inner">
+        <button
+            className="app-title"
+            onClick={() => navigate("home")}
+        >
+            Digital Signage CMS
+        </button>
 
-                <button onClick={() => navigate("playlists")}>
-                    Playlisty
-                </button>
+        <nav className="main-nav">
+            <button onClick={() => navigate("home")}>
+                Start
+            </button>
 
-                <button onClick={() => navigate("playlistEdit")}>
-                    Edycja playlisty
-                </button>
+            <button onClick={() => navigate("files")}>
+                Pliki
+            </button>
 
-                <button onClick={() => navigate("screens")}>
-                    Ekrany
-                </button>
+            <button onClick={() => navigate("playlists")}>
+                Playlisty
+            </button>
 
-                <button onClick={() => navigate("logs")}>
-                    Logi
-                </button>
+            <button onClick={() => navigate("screens")}>
+                Ekrany
+            </button>
 
-</nav>
+            <button onClick={() => navigate("logs")}>
+                Logi
+            </button>
+        </nav>
+    </div>
+</header>
 
+        {page === "home" && (
+            <HomePage onNavigate={navigate} />
+        )}
 
       {page === "files" && (
             <FilesPage />

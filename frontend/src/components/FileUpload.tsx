@@ -50,29 +50,30 @@ export default function FileUpload({
     }
 
 
-    return (
-        <div>
+return (
+    <div className="file-upload">
+        <h2>Upload pliku</h2>
 
-            <h2>
-                Upload pliku
-            </h2>
-
-
+        <div className="file-upload-controls">
             <input
+                className="file-upload-input"
                 type="file"
                 onChange={handleFileChange}
             />
 
-
-            <button onClick={handleUpload}>
+            <button
+                className="file-upload-button"
+                onClick={handleUpload}
+            >
                 Wyślij
             </button>
+        </div>
 
-
-            <p>
+        {message && (
+            <p className="file-upload-message">
                 {message}
             </p>
-
-        </div>
-    );
+        )}
+    </div>
+);
 }
