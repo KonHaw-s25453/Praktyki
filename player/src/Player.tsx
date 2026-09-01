@@ -66,24 +66,32 @@ const logEvent = useCallback(
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL
-        await fetch(
-        `${API_URL}/sync/${screenId}/logs`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message,
-            level,
-          }),
-        },
-      );
-   
-    } catch (err) {
-      console.error("Failed to send player log:", err);
-    }
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  console.log("LOG POST URL:", `${API_URL}/sync/${screenId}/logs`);
+  console.log("API_URL:", API_URL);
+  console.log("screenId:", screenId);
+
+  const response = await fetch(
+    `${API_URL}/sync/${screenId}/logs`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        level,
+      }),
+    },
+  );
+
+  console.log("POST STATUS:", response.status);
+  console.log("POST OK:", response.ok);
+  console.log("POST TYPE:", response.type);
+} catch (err) {
+  console.error("Failed to send player log:", err);
+}
   },
   [screenId],
 );

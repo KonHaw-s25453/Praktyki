@@ -13,6 +13,7 @@ import {
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { ResponseFileDto } from './dto/response-file.dto';
 import { FileEntity } from '../../entities';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiBody,ApiResponse } from '@nestjs/swagger';
@@ -59,12 +60,12 @@ uploadFile(
 
 @Get()
 @ApiResponse({
-  status: 200,
-  description: 'Lista wszystkich plików',
-  type: [FileEntity],
+    status: 200,
+    description: 'Lista wszystkich plików',
+    type: [ResponseFileDto],
 })
-findAll(): Promise<FileEntity[]> {
-  return this.filesService.findAll();
+findAll(): Promise<ResponseFileDto[]> {
+    return this.filesService.findAll();
 }
 
 @Get('videos')
@@ -139,8 +140,4 @@ checkIfUsed(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
   delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.filesService.delete(id);
   }
-
-
-
-
 }

@@ -148,7 +148,7 @@ No authorization required
 
 ## filesControllerFindAll
 
-> [FileEntity] filesControllerFindAll()
+> [ResponseFileDto] filesControllerFindAll()
 
 
 
@@ -173,7 +173,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**[FileEntity]**](FileEntity.md)
+[**[ResponseFileDto]**](ResponseFileDto.md)
 
 ### Authorization
 

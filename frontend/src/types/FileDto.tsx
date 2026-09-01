@@ -4,4 +4,5 @@ export interface FileDto {
     originalName: string;
     mimeType: string;
     size: number;
+    exists: boolean;
 }

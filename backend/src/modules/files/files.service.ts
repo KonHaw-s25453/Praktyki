@@ -4,7 +4,9 @@ import { ScreenRepository } from '../../repositories';
 import { FileEntity } from '../../entities';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { ResponseFileDto } from './dto/response-file.dto';
 import { unlink } from 'fs/promises';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 @Injectable()
@@ -16,11 +18,16 @@ export class FilesService {
     return this.fileRepository.save(file);
   }
 
-  async findAll(): Promise<FileEntity[]> {
-    return this.fileRepository.find({
-      order: { createdAt: 'DESC' },
+async findAll(): Promise<ResponseFileDto[]> {
+    const files = await this.fileRepository.find({
+        order: { createdAt: 'DESC' },
     });
-  }
+
+    return files.map(file => ({
+        ...file,
+        exists: existsSync(join(process.cwd(), file.path)),
+    }));
+}
 
   async findById(id: number): Promise<FileEntity> {
     const file = await this.fileRepository
@@ -124,7 +131,4 @@ export class FilesService {
 
   return this.fileRepository.save(fileEntity);
 }
-
-
-
 }

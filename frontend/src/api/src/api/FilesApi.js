@@ -15,6 +15,7 @@
 import ApiClient from "../ApiClient";
 import CreateFileDto from '../model/CreateFileDto';
 import FileEntity from '../model/FileEntity';
+import ResponseFileDto from '../model/ResponseFileDto';
 import UpdateFileDto from '../model/UpdateFileDto';
 
 /**
@@ -160,13 +161,13 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerFindAll operation.
      * @callback module:api/FilesApi~filesControllerFindAllCallback
      * @param {String} error Error message, if any.
-     * @param {Array.<module:model/FileEntity>} data The data returned by the service call.
+     * @param {Array.<module:model/ResponseFileDto>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/FilesApi~filesControllerFindAllCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/FileEntity>}
+     * data is of type: {@link Array.<module:model/ResponseFileDto>}
      */
     filesControllerFindAll(callback) {
       let postBody = null;
@@ -183,7 +184,7 @@ export default class FilesApi {
       let authNames = [];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [FileEntity];
+      let returnType = [ResponseFileDto];
       return this.apiClient.callApi(
         '/files', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,

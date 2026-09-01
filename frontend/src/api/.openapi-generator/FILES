@@ -15,6 +15,7 @@ docs/PlaylistItemEntity.md
 docs/PlaylistsApi.md
 docs/RecordLogDto.md
 docs/ReorderPlaylistItemsDto.md
+docs/ResponseFileDto.md
 docs/ScreenEntity.md
 docs/ScreenPlaylistEntity.md
 docs/ScreensApi.md
@@ -44,6 +45,7 @@ src/model/PlaylistEntity.js
 src/model/PlaylistItemEntity.js
 src/model/RecordLogDto.js
 src/model/ReorderPlaylistItemsDto.js
+src/model/ResponseFileDto.js
 src/model/ScreenEntity.js
 src/model/ScreenPlaylistEntity.js
 src/model/UpdateFileDto.js
@@ -51,3 +53,4 @@ src/model/UpdatePlaylistDto.js
 src/model/UpdatePlaylistItemDto.js
 src/model/UpdateScreenDto.js
 src/model/UpdateScreenPlaylistDto.js
+test/model/ResponseFileDto.spec.js

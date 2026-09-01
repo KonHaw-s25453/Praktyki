@@ -46,14 +46,17 @@ useEffect(() => {
 
 
 
-    const deleteFile = (id: number) => {
+    const deleteFile = (file: FileDto) => {
            
-        if (!confirm("Czy jesteś pewien że chcesz trwale usunąć ten plik?")) {
+       if (
+        file.exists &&
+        !confirm("Czy jesteś pewien że chcesz trwale usunąć ten plik?")
+    ) {
         return;
     }
 
         filesApi.filesControllerDelete(
-            id,
+            file.id,
             (error) => {
 
                 if (error) {
@@ -67,7 +70,7 @@ useEffect(() => {
 
                 setFiles(current =>
                     current.filter(
-                        file => file.id !== id
+                        f => f.id !== file.id
                     )
                 );
 

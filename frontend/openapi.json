@@ -49,7 +49,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FileEntity"
+                    "$ref": "#/components/schemas/ResponseFileDto"
                   }
                 }
               }
@@ -1169,6 +1169,61 @@
           "createdAt",
           "updatedAt",
           "playlistItems"
+        ]
+      },
+      "ResponseFileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "object",
+            "nullable": true
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "exists": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "duration",
+          "size",
+          "checksum",
+          "createdAt",
+          "updatedAt",
+          "exists"
         ]
       },
       "UpdateFileDto": {

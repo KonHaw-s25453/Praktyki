@@ -119,6 +119,17 @@ export default function ScreensPage({
         return <p>Ładowanie ekranów...</p>;
     }
 
+console.log(
+    "SCREEN PLAYLIST FULL:",
+    screens.map(screen => ({
+        screenId: screen.id,
+        playlists: screen.screenPlaylists.map(item => ({
+            playlistId: item.playlistId,
+            playlist: item.playlist,
+            playlistName: item.playlist?.name,
+        })),
+    }))
+);
 
 return (
     <main className="page screens-page">
@@ -260,28 +271,31 @@ return (
 
                                 <div className="screen-playlist-list">
 
-                                    {screen.screenPlaylists.map(item => (
+                                   {screen.screenPlaylists.map(item => {
 
-                                        <div
-                                            key={item.id}
-                                            className="screen-playlist-item"
-                                        >
-                                            <span>
-                                                Playlist ID:{" "}
-                                                <strong>
-                                                    {item.playlistId}
-                                                </strong>
-                                            </span>
+    console.log("SCREEN PLAYLIST ITEM:", item);
 
-                                            <span>
-                                                Priorytet:{" "}
-                                                <strong>
-                                                    {item.priority}
-                                                </strong>
-                                            </span>
-                                        </div>
+    return (
+        <div
+            key={item.id}
+            className="screen-playlist-item"
+        >
+            <span>
+                Playlista :{" "}
+                <strong>
+                    {item.playlist?.name}
+                </strong>
+            </span>
 
-                                    ))}
+            <span>
+                Priorytet:{" "}
+                <strong>
+                    {item.priority}
+                </strong>
+            </span>
+        </div>
+    );
+})}
 
                                 </div>
 

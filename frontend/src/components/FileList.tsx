@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 interface FileListProps {
     files: FileDto[];
-    onDelete: (id: number) => void;
+    onDelete: (file: FileDto) => void;
 }
 
 function VideoThumbnail({ file }: { file: FileDto }) {
@@ -65,21 +65,25 @@ export default function FileList({
                     className="file-card"
                     key={file.id}
                 >
-                    <div className="file-preview">
-                        {file.mimeType.startsWith("image/") ? (
-                            <img
-                                className="file-thumbnail"
-                                src={`${API_URL}/files/${file.id}/content`}
-                                alt={file.originalName}
-                            />
-                        ) : file.mimeType.startsWith("video/") ? (
-                            <VideoThumbnail file={file} />
-                        ) : (
-                            <div className="file-icon">
-                                📄
-                            </div>
-                        )}
+                        <div className="file-preview">
+                    {!file.exists ? (
+                     <div className="file-missing">
+                         Plik nie znaleziony
                     </div>
+                ) : file.mimeType.startsWith("image/") ? (
+                     <img
+                         className="file-thumbnail"
+                         src={`${API_URL}/files/${file.id}/content`}
+                        alt={file.originalName}
+                        />
+                ) : file.mimeType.startsWith("video/") ? (
+            <VideoThumbnail file={file} />
+            ) : (
+            <div className="file-icon">
+                📄
+            </div>
+                )}
+        </div>
 
                     <div className="file-name">
                         {file.originalName}
@@ -87,7 +91,7 @@ export default function FileList({
 
                     <button
                         className="file-delete"
-                        onClick={() => onDelete(file.id)}
+                        onClick={() => onDelete(file)}
                     >
                         Usuń
                     </button>

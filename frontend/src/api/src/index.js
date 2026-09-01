@@ -23,6 +23,7 @@ import PlaylistEntity from './model/PlaylistEntity';
 import PlaylistItemEntity from './model/PlaylistItemEntity';
 import RecordLogDto from './model/RecordLogDto';
 import ReorderPlaylistItemsDto from './model/ReorderPlaylistItemsDto';
+import ResponseFileDto from './model/ResponseFileDto';
 import ScreenEntity from './model/ScreenEntity';
 import ScreenPlaylistEntity from './model/ScreenPlaylistEntity';
 import UpdateFileDto from './model/UpdateFileDto';
@@ -134,6 +135,12 @@ export {
      * @property {module:model/ReorderPlaylistItemsDto}
      */
     ReorderPlaylistItemsDto,
+
+    /**
+     * The ResponseFileDto model constructor.
+     * @property {module:model/ResponseFileDto}
+     */
+    ResponseFileDto,
 
     /**
      * The ScreenEntity model constructor.
