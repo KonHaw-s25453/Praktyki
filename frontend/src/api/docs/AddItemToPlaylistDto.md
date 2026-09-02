@@ -7,6 +7,6 @@ Name | Type | Description | Notes
 **fileId** | **Number** |  | 
 **position** | **Number** |  | 
 **duration** | **Number** |  | 
-**videoLoops** | **Number** |  | [default to 1]
+**videoLoops** | **Number** |  | [optional] [default to 1]
 
 

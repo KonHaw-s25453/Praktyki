@@ -6,15 +6,16 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Number** |  | 
 **name** | **String** |  | 
-**location** | **Object** |  | 
-**apiKey** | **Object** |  | 
+**location** | **String** |  | 
+**apiKey** | **String** |  | 
 **fallbackFileId** | **Number** | ID pliku fallback | 
-**playerUrl** | **Object** |  | 
-**lastSeen** | **Object** |  | 
+**playerUrl** | **String** |  | 
+**lastSeen** | **Date** |  | 
 **isOnline** | **Boolean** |  | 
 **createdAt** | **Date** |  | 
 **screenPlaylists** | [**[ScreenPlaylistEntity]**](ScreenPlaylistEntity.md) |  | 
-**screenLogs** | **[Object]** |  | 
-**state** | **Object** |  | 
+**screenLogs** | [**[ScreenLogEntity]**](ScreenLogEntity.md) |  | 
+**state** | [**ScreenStateEntity**](ScreenStateEntity.md) |  | 
+**fallbackFile** | [**FileEntity**](FileEntity.md) |  | 
 
 

@@ -82,13 +82,14 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerCreate operation.
      * @callback module:api/FilesApi~filesControllerCreateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/FileEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:model/CreateFileDto} createFileDto 
      * @param {module:api/FilesApi~filesControllerCreateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/FileEntity}
      */
     filesControllerCreate(createFileDto, callback) {
       let postBody = createFileDto;
@@ -108,8 +109,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = FileEntity;
       return this.apiClient.callApi(
         '/files', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -348,7 +349,7 @@ export default class FilesApi {
      * Callback function to receive the result of the filesControllerUpdate operation.
      * @callback module:api/FilesApi~filesControllerUpdateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/FileEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -356,6 +357,7 @@ export default class FilesApi {
      * @param {Number} id 
      * @param {module:model/UpdateFileDto} updateFileDto 
      * @param {module:api/FilesApi~filesControllerUpdateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/FileEntity}
      */
     filesControllerUpdate(id, updateFileDto, callback) {
       let postBody = updateFileDto;
@@ -380,8 +382,8 @@ export default class FilesApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = FileEntity;
       return this.apiClient.callApi(
         '/files/{id}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,

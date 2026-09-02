@@ -24,7 +24,7 @@ export default function ScreenEditPage({
 {
 const [assignment, setAssignment] = useState<any>(null);
 const [playlists, setPlaylists] = useState<PlaylistEntity[]>([]);
-const [priority, setPriority] = useState(10);
+
 const [activeFrom, setActiveFrom] = useState("");
 const [activeTo, setActiveTo] = useState("");
 const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
@@ -41,7 +41,7 @@ useEffect(() => {
     setLocation("");
     setAssignment(null);
     setSelectedPlaylistId(null);
-    setPriority(10);
+
     setActiveFrom("");
     setActiveTo("");
     setIsDirty(false);
@@ -77,7 +77,6 @@ useEffect(() => {
 
     setSelectedPlaylistId(assignment.playlistId);
 
-    setPriority(assignment.priority ?? 10);
 
     setActiveFrom(
         assignment.activeFrom
@@ -136,7 +135,7 @@ const assignPlaylist = (playlistId:number) => {
 
     const dto = new UpdateScreenPlaylistDto();
 
-    dto.priority = priority;
+
     dto.activeFrom = activeFrom || undefined;
     dto.activeTo = activeTo || undefined;
 
@@ -175,10 +174,8 @@ const assignPlaylist = (playlistId:number) => {
             playlistId
         );
 
-        assignDto.priority = priority;
         assignDto.activeFrom = activeFrom || undefined;
         assignDto.activeTo = activeTo || undefined;
-
 
         screensApi.screensControllerAssignPlaylist(
             screenId,
@@ -398,22 +395,6 @@ return (
                         ))}
                     </select>
                 </label>
-
-
-                <label className="form-field">
-                    <span>Priorytet</span>
-
-                    <input
-                        type="number"
-                        value={priority}
-                        onChange={(e) => {
-                            setPriority(Number(e.target.value));
-                            setIsDirty(true);
-                            onDirtyChange(true);
-                        }}
-                    />
-                </label>
-
 
                 <div className="form-row">
 

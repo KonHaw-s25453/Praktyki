@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**filename** | **String** |  | 
-**originalName** | **String** |  | 
-**path** | **String** |  | 
-**mimeType** | **String** |  | 
-**size** | **Number** |  | 
-**checksum** | **String** |  | 
-**duration** | **Number** |  | 
+**filename** | **String** |  | [optional] 
+**originalName** | **String** |  | [optional] 
+**path** | **String** |  | [optional] 
+**mimeType** | **String** |  | [optional] 
+**size** | **Number** |  | [optional] 
+**checksum** | **String** |  | [optional] 
+**duration** | **Number** |  | [optional] 
 
 

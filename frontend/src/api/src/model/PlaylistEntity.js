@@ -14,6 +14,7 @@
 import ApiClient from '../ApiClient';
 import PlaylistItemEntity from './PlaylistItemEntity';
 import ScreenPlaylistEntity from './ScreenPlaylistEntity';
+import ScreenStateEntity from './ScreenStateEntity';
 
 /**
  * The PlaylistEntity model module.
@@ -26,14 +27,14 @@ class PlaylistEntity {
      * @alias module:model/PlaylistEntity
      * @param id {Number} 
      * @param name {String} 
-     * @param description {Object} 
+     * @param description {String} 
      * @param revision {Number} 
      * @param repeatMode {module:model/PlaylistEntity.RepeatModeEnum} Action after playlist ends
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param items {Array.<module:model/PlaylistItemEntity>} 
      * @param screenPlaylists {Array.<module:model/ScreenPlaylistEntity>} 
-     * @param screenStates {Array.<Object>} 
+     * @param screenStates {Array.<module:model/ScreenStateEntity>} 
      */
     constructor(id, name, description, revision, repeatMode, createdAt, updatedAt, items, screenPlaylists, screenStates) { 
         
@@ -76,7 +77,7 @@ class PlaylistEntity {
                 obj['name'] = ApiClient.convertToType(data['name'], 'String');
             }
             if (data.hasOwnProperty('description')) {
-                obj['description'] = ApiClient.convertToType(data['description'], Object);
+                obj['description'] = ApiClient.convertToType(data['description'], 'String');
             }
             if (data.hasOwnProperty('revision')) {
                 obj['revision'] = ApiClient.convertToType(data['revision'], 'Number');
@@ -97,7 +98,7 @@ class PlaylistEntity {
                 obj['screenPlaylists'] = ApiClient.convertToType(data['screenPlaylists'], [ScreenPlaylistEntity]);
             }
             if (data.hasOwnProperty('screenStates')) {
-                obj['screenStates'] = ApiClient.convertToType(data['screenStates'], [Object]);
+                obj['screenStates'] = ApiClient.convertToType(data['screenStates'], [ScreenStateEntity]);
             }
         }
         return obj;
@@ -118,6 +119,10 @@ class PlaylistEntity {
         // ensure the json data is a string
         if (data['name'] && !(typeof data['name'] === 'string' || data['name'] instanceof String)) {
             throw new Error("Expected the field `name` to be a primitive type in the JSON string but got " + data['name']);
+        }
+        // ensure the json data is a string
+        if (data['description'] && !(typeof data['description'] === 'string' || data['description'] instanceof String)) {
+            throw new Error("Expected the field `description` to be a primitive type in the JSON string but got " + data['description']);
         }
         // ensure the json data is a string
         if (data['repeatMode'] && !(typeof data['repeatMode'] === 'string' || data['repeatMode'] instanceof String)) {
@@ -143,9 +148,15 @@ class PlaylistEntity {
                 ScreenPlaylistEntity.validateJSON(item);
             };
         }
-        // ensure the json data is an array
-        if (!Array.isArray(data['screenStates'])) {
-            throw new Error("Expected the field `screenStates` to be an array in the JSON data but got " + data['screenStates']);
+        if (data['screenStates']) { // data not null
+            // ensure the json data is an array
+            if (!Array.isArray(data['screenStates'])) {
+                throw new Error("Expected the field `screenStates` to be an array in the JSON data but got " + data['screenStates']);
+            }
+            // validate the optional field `screenStates` (array)
+            for (const item of data['screenStates']) {
+                ScreenStateEntity.validateJSON(item);
+            };
         }
 
         return true;
@@ -167,7 +178,7 @@ PlaylistEntity.prototype['id'] = undefined;
 PlaylistEntity.prototype['name'] = undefined;
 
 /**
- * @member {Object} description
+ * @member {String} description
  */
 PlaylistEntity.prototype['description'] = undefined;
 
@@ -203,7 +214,7 @@ PlaylistEntity.prototype['items'] = undefined;
 PlaylistEntity.prototype['screenPlaylists'] = undefined;
 
 /**
- * @member {Array.<Object>} screenStates
+ * @member {Array.<module:model/ScreenStateEntity>} screenStates
  */
 PlaylistEntity.prototype['screenStates'] = undefined;
 

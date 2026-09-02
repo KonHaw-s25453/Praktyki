@@ -23,12 +23,10 @@ class CreatePlaylistDto {
      * Constructs a new <code>CreatePlaylistDto</code>.
      * @alias module:model/CreatePlaylistDto
      * @param name {String} 
-     * @param description {String} 
-     * @param repeatMode {module:model/CreatePlaylistDto.RepeatModeEnum} 
      */
-    constructor(name, description, repeatMode) { 
+    constructor(name) { 
         
-        CreatePlaylistDto.initialize(this, name, description, repeatMode);
+        CreatePlaylistDto.initialize(this, name);
     }
 
     /**
@@ -36,10 +34,9 @@ class CreatePlaylistDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, description, repeatMode) { 
+    static initialize(obj, name) { 
         obj['name'] = name;
-        obj['description'] = description;
-        obj['repeatMode'] = repeatMode || 'LOOP';
+        obj['repeatMode'] = 'LOOP';
     }
 
     /**
@@ -97,7 +94,7 @@ class CreatePlaylistDto {
 
 }
 
-CreatePlaylistDto.RequiredProperties = ["name", "description", "repeatMode"];
+CreatePlaylistDto.RequiredProperties = ["name"];
 
 /**
  * @member {String} name

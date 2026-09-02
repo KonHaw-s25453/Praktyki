@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **path** | **String** |  | 
 **mimeType** | **String** |  | 
 **size** | **Number** |  | 
-**checksum** | **String** |  | 
-**duration** | **Number** |  | 
+**checksum** | **String** |  | [optional] 
+**duration** | **Number** |  | [optional] 
 
 

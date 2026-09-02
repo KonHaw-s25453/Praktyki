@@ -14,6 +14,8 @@
 
 import ApiClient from "../ApiClient";
 import RecordLogDto from '../model/RecordLogDto';
+import UpdateScreenHeartbeatDto from '../model/UpdateScreenHeartbeatDto';
+import UpdateScreenStateDto from '../model/UpdateScreenStateDto';
 
 /**
 * Sync service.
@@ -38,7 +40,7 @@ export default class SyncApi {
      * Callback function to receive the result of the syncControllerCheckManifestChanged operation.
      * @callback module:api/SyncApi~syncControllerCheckManifestChangedCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Object} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -46,6 +48,7 @@ export default class SyncApi {
      * @param {Number} screenId 
      * @param {Number} currentRevision 
      * @param {module:api/SyncApi~syncControllerCheckManifestChangedCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
      */
     syncControllerCheckManifestChanged(screenId, currentRevision, callback) {
       let postBody = null;
@@ -71,8 +74,8 @@ export default class SyncApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = Object;
       return this.apiClient.callApi(
         '/sync/{screenId}/check', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -84,13 +87,14 @@ export default class SyncApi {
      * Callback function to receive the result of the syncControllerGetFallback operation.
      * @callback module:api/SyncApi~syncControllerGetFallbackCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Object} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} screenId 
      * @param {module:api/SyncApi~syncControllerGetFallbackCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
      */
     syncControllerGetFallback(screenId, callback) {
       let postBody = null;
@@ -111,8 +115,8 @@ export default class SyncApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = Object;
       return this.apiClient.callApi(
         '/sync/{screenId}/fallback', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -124,13 +128,14 @@ export default class SyncApi {
      * Callback function to receive the result of the syncControllerGetLogs operation.
      * @callback module:api/SyncApi~syncControllerGetLogsCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<Object>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} screenId 
      * @param {module:api/SyncApi~syncControllerGetLogsCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<Object>}
      */
     syncControllerGetLogs(screenId, callback) {
       let postBody = null;
@@ -151,8 +156,8 @@ export default class SyncApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [Object];
       return this.apiClient.callApi(
         '/sync/{screenId}/logs', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -164,15 +169,19 @@ export default class SyncApi {
      * Callback function to receive the result of the syncControllerGetManifest operation.
      * @callback module:api/SyncApi~syncControllerGetManifestCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Object} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {String} xScreenID Screen identifier
+     * @param {Object} opts Optional parameters
+     * @param {Number} [sinceRevision] 
      * @param {module:api/SyncApi~syncControllerGetManifestCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
      */
-    syncControllerGetManifest(xScreenID, callback) {
+    syncControllerGetManifest(xScreenID, opts, callback) {
+      opts = opts || {};
       let postBody = null;
       // verify the required parameter 'xScreenID' is set
       if (xScreenID === undefined || xScreenID === null) {
@@ -182,6 +191,7 @@ export default class SyncApi {
       let pathParams = {
       };
       let queryParams = {
+        'sinceRevision': opts['sinceRevision']
       };
       let headerParams = {
         'X-Screen-ID': xScreenID
@@ -191,8 +201,8 @@ export default class SyncApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = Object;
       return this.apiClient.callApi(
         '/sync/manifest', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -210,18 +220,18 @@ export default class SyncApi {
 
     /**
      * @param {Number} screenId 
-     * @param {Object.<String, Object>} body 
+     * @param {module:model/UpdateScreenHeartbeatDto} updateScreenHeartbeatDto 
      * @param {module:api/SyncApi~syncControllerHeartbeatCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    syncControllerHeartbeat(screenId, body, callback) {
-      let postBody = body;
+    syncControllerHeartbeat(screenId, updateScreenHeartbeatDto, callback) {
+      let postBody = updateScreenHeartbeatDto;
       // verify the required parameter 'screenId' is set
       if (screenId === undefined || screenId === null) {
         throw new Error("Missing the required parameter 'screenId' when calling syncControllerHeartbeat");
       }
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling syncControllerHeartbeat");
+      // verify the required parameter 'updateScreenHeartbeatDto' is set
+      if (updateScreenHeartbeatDto === undefined || updateScreenHeartbeatDto === null) {
+        throw new Error("Missing the required parameter 'updateScreenHeartbeatDto' when calling syncControllerHeartbeat");
       }
 
       let pathParams = {
@@ -294,24 +304,25 @@ export default class SyncApi {
      * Callback function to receive the result of the syncControllerUpdateScreenState operation.
      * @callback module:api/SyncApi~syncControllerUpdateScreenStateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Object} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} screenId 
-     * @param {Object.<String, Object>} body 
+     * @param {module:model/UpdateScreenStateDto} updateScreenStateDto 
      * @param {module:api/SyncApi~syncControllerUpdateScreenStateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
      */
-    syncControllerUpdateScreenState(screenId, body, callback) {
-      let postBody = body;
+    syncControllerUpdateScreenState(screenId, updateScreenStateDto, callback) {
+      let postBody = updateScreenStateDto;
       // verify the required parameter 'screenId' is set
       if (screenId === undefined || screenId === null) {
         throw new Error("Missing the required parameter 'screenId' when calling syncControllerUpdateScreenState");
       }
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling syncControllerUpdateScreenState");
+      // verify the required parameter 'updateScreenStateDto' is set
+      if (updateScreenStateDto === undefined || updateScreenStateDto === null) {
+        throw new Error("Missing the required parameter 'updateScreenStateDto' when calling syncControllerUpdateScreenState");
       }
 
       let pathParams = {
@@ -326,8 +337,8 @@ export default class SyncApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = Object;
       return this.apiClient.callApi(
         '/sync/{screenId}/state', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,

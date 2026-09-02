@@ -9,11 +9,11 @@ Name | Type | Description | Notes
 **originalName** | **String** |  | 
 **path** | **String** |  | 
 **mimeType** | **String** |  | 
-**duration** | **Object** |  | 
+**duration** | **Number** |  | 
 **size** | **Number** |  | 
-**checksum** | **Object** |  | 
+**checksum** | **String** |  | 
 **createdAt** | **Date** |  | 
 **updatedAt** | **Date** |  | 
-**playlistItems** | **[String]** |  | 
+**playlistItems** | [**[PlaylistItemEntity]**](PlaylistItemEntity.md) |  | 
 
 

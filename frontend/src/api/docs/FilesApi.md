@@ -62,7 +62,7 @@ No authorization required
 
 ## filesControllerCreate
 
-> filesControllerCreate(createFileDto)
+> FileEntity filesControllerCreate(createFileDto)
 
 
 
@@ -77,7 +77,7 @@ apiInstance.filesControllerCreate(createFileDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -91,7 +91,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**FileEntity**](FileEntity.md)
 
 ### Authorization
 
@@ -100,7 +100,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerDelete
@@ -351,7 +351,7 @@ No authorization required
 
 ## filesControllerUpdate
 
-> filesControllerUpdate(id, updateFileDto)
+> FileEntity filesControllerUpdate(id, updateFileDto)
 
 
 
@@ -367,7 +367,7 @@ apiInstance.filesControllerUpdate(id, updateFileDto, (error, data, response) => 
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -382,7 +382,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**FileEntity**](FileEntity.md)
 
 ### Authorization
 
@@ -391,7 +391,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## filesControllerUploadFile

@@ -27,12 +27,10 @@ class CreateFileDto {
      * @param path {String} 
      * @param mimeType {String} 
      * @param size {Number} 
-     * @param checksum {String} 
-     * @param duration {Number} 
      */
-    constructor(filename, originalName, path, mimeType, size, checksum, duration) { 
+    constructor(filename, originalName, path, mimeType, size) { 
         
-        CreateFileDto.initialize(this, filename, originalName, path, mimeType, size, checksum, duration);
+        CreateFileDto.initialize(this, filename, originalName, path, mimeType, size);
     }
 
     /**
@@ -40,14 +38,12 @@ class CreateFileDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, filename, originalName, path, mimeType, size, checksum, duration) { 
+    static initialize(obj, filename, originalName, path, mimeType, size) { 
         obj['filename'] = filename;
         obj['originalName'] = originalName;
         obj['path'] = path;
         obj['mimeType'] = mimeType;
         obj['size'] = size;
-        obj['checksum'] = checksum;
-        obj['duration'] = duration;
     }
 
     /**
@@ -125,7 +121,7 @@ class CreateFileDto {
 
 }
 
-CreateFileDto.RequiredProperties = ["filename", "originalName", "path", "mimeType", "size", "checksum", "duration"];
+CreateFileDto.RequiredProperties = ["filename", "originalName", "path", "mimeType", "size"];
 
 /**
  * @member {String} filename

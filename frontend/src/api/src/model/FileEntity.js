@@ -12,6 +12,7 @@
  */
 
 import ApiClient from '../ApiClient';
+import PlaylistItemEntity from './PlaylistItemEntity';
 
 /**
  * The FileEntity model module.
@@ -27,12 +28,12 @@ class FileEntity {
      * @param originalName {String} 
      * @param path {String} 
      * @param mimeType {String} 
-     * @param duration {Object} 
+     * @param duration {Number} 
      * @param size {Number} 
-     * @param checksum {Object} 
+     * @param checksum {String} 
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
-     * @param playlistItems {Array.<String>} 
+     * @param playlistItems {Array.<module:model/PlaylistItemEntity>} 
      */
     constructor(id, filename, originalName, path, mimeType, duration, size, checksum, createdAt, updatedAt, playlistItems) { 
         
@@ -85,13 +86,13 @@ class FileEntity {
                 obj['mimeType'] = ApiClient.convertToType(data['mimeType'], 'String');
             }
             if (data.hasOwnProperty('duration')) {
-                obj['duration'] = ApiClient.convertToType(data['duration'], Object);
+                obj['duration'] = ApiClient.convertToType(data['duration'], 'Number');
             }
             if (data.hasOwnProperty('size')) {
                 obj['size'] = ApiClient.convertToType(data['size'], 'Number');
             }
             if (data.hasOwnProperty('checksum')) {
-                obj['checksum'] = ApiClient.convertToType(data['checksum'], Object);
+                obj['checksum'] = ApiClient.convertToType(data['checksum'], 'String');
             }
             if (data.hasOwnProperty('createdAt')) {
                 obj['createdAt'] = ApiClient.convertToType(data['createdAt'], 'Date');
@@ -100,7 +101,7 @@ class FileEntity {
                 obj['updatedAt'] = ApiClient.convertToType(data['updatedAt'], 'Date');
             }
             if (data.hasOwnProperty('playlistItems')) {
-                obj['playlistItems'] = ApiClient.convertToType(data['playlistItems'], ['String']);
+                obj['playlistItems'] = ApiClient.convertToType(data['playlistItems'], [PlaylistItemEntity]);
             }
         }
         return obj;
@@ -134,9 +135,19 @@ class FileEntity {
         if (data['mimeType'] && !(typeof data['mimeType'] === 'string' || data['mimeType'] instanceof String)) {
             throw new Error("Expected the field `mimeType` to be a primitive type in the JSON string but got " + data['mimeType']);
         }
-        // ensure the json data is an array
-        if (!Array.isArray(data['playlistItems'])) {
-            throw new Error("Expected the field `playlistItems` to be an array in the JSON data but got " + data['playlistItems']);
+        // ensure the json data is a string
+        if (data['checksum'] && !(typeof data['checksum'] === 'string' || data['checksum'] instanceof String)) {
+            throw new Error("Expected the field `checksum` to be a primitive type in the JSON string but got " + data['checksum']);
+        }
+        if (data['playlistItems']) { // data not null
+            // ensure the json data is an array
+            if (!Array.isArray(data['playlistItems'])) {
+                throw new Error("Expected the field `playlistItems` to be an array in the JSON data but got " + data['playlistItems']);
+            }
+            // validate the optional field `playlistItems` (array)
+            for (const item of data['playlistItems']) {
+                PlaylistItemEntity.validateJSON(item);
+            };
         }
 
         return true;
@@ -173,7 +184,7 @@ FileEntity.prototype['path'] = undefined;
 FileEntity.prototype['mimeType'] = undefined;
 
 /**
- * @member {Object} duration
+ * @member {Number} duration
  */
 FileEntity.prototype['duration'] = undefined;
 
@@ -183,7 +194,7 @@ FileEntity.prototype['duration'] = undefined;
 FileEntity.prototype['size'] = undefined;
 
 /**
- * @member {Object} checksum
+ * @member {String} checksum
  */
 FileEntity.prototype['checksum'] = undefined;
 
@@ -198,7 +209,7 @@ FileEntity.prototype['createdAt'] = undefined;
 FileEntity.prototype['updatedAt'] = undefined;
 
 /**
- * @member {Array.<String>} playlistItems
+ * @member {Array.<module:model/PlaylistItemEntity>} playlistItems
  */
 FileEntity.prototype['playlistItems'] = undefined;
 

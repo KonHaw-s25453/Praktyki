@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 ## syncControllerCheckManifestChanged
 
-> syncControllerCheckManifestChanged(screenId, currentRevision)
+> Object syncControllerCheckManifestChanged(screenId, currentRevision)
 
 
 
@@ -32,7 +32,7 @@ apiInstance.syncControllerCheckManifestChanged(screenId, currentRevision, (error
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -47,7 +47,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -56,12 +56,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## syncControllerGetFallback
 
-> syncControllerGetFallback(screenId)
+> Object syncControllerGetFallback(screenId)
 
 
 
@@ -76,7 +76,7 @@ apiInstance.syncControllerGetFallback(screenId, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -90,7 +90,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -99,12 +99,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## syncControllerGetLogs
 
-> syncControllerGetLogs(screenId)
+> [Object] syncControllerGetLogs(screenId)
 
 
 
@@ -119,7 +119,7 @@ apiInstance.syncControllerGetLogs(screenId, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -133,7 +133,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**[Object]**
 
 ### Authorization
 
@@ -142,12 +142,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## syncControllerGetManifest
 
-> syncControllerGetManifest(xScreenID)
+> Object syncControllerGetManifest(xScreenID, opts)
 
 
 
@@ -158,11 +158,14 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
 let xScreenID = "xScreenID_example"; // String | Screen identifier
-apiInstance.syncControllerGetManifest(xScreenID, (error, data, response) => {
+let opts = {
+  'sinceRevision': 3.4 // Number | 
+};
+apiInstance.syncControllerGetManifest(xScreenID, opts, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -173,10 +176,11 @@ apiInstance.syncControllerGetManifest(xScreenID, (error, data, response) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **xScreenID** | **String**| Screen identifier | 
+ **sinceRevision** | **Number**|  | [optional] 
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -185,12 +189,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## syncControllerHeartbeat
 
-> syncControllerHeartbeat(screenId, body)
+> syncControllerHeartbeat(screenId, updateScreenHeartbeatDto)
 
 
 
@@ -201,8 +205,8 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
 let screenId = 3.4; // Number | 
-let body = {key: null}; // Object | 
-apiInstance.syncControllerHeartbeat(screenId, body, (error, data, response) => {
+let updateScreenHeartbeatDto = new CmsApi.UpdateScreenHeartbeatDto(); // UpdateScreenHeartbeatDto | 
+apiInstance.syncControllerHeartbeat(screenId, updateScreenHeartbeatDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -217,7 +221,7 @@ apiInstance.syncControllerHeartbeat(screenId, body, (error, data, response) => {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **screenId** | **Number**|  | 
- **body** | **Object**|  | 
+ **updateScreenHeartbeatDto** | [**UpdateScreenHeartbeatDto**](UpdateScreenHeartbeatDto.md)|  | 
 
 ### Return type
 
@@ -280,7 +284,7 @@ No authorization required
 
 ## syncControllerUpdateScreenState
 
-> syncControllerUpdateScreenState(screenId, body)
+> Object syncControllerUpdateScreenState(screenId, updateScreenStateDto)
 
 
 
@@ -291,12 +295,12 @@ import CmsApi from 'cms_api';
 
 let apiInstance = new CmsApi.SyncApi();
 let screenId = 3.4; // Number | 
-let body = {key: null}; // Object | 
-apiInstance.syncControllerUpdateScreenState(screenId, body, (error, data, response) => {
+let updateScreenStateDto = new CmsApi.UpdateScreenStateDto(); // UpdateScreenStateDto | 
+apiInstance.syncControllerUpdateScreenState(screenId, updateScreenStateDto, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -307,11 +311,11 @@ apiInstance.syncControllerUpdateScreenState(screenId, body, (error, data, respon
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **screenId** | **Number**|  | 
- **body** | **Object**|  | 
+ **updateScreenStateDto** | [**UpdateScreenStateDto**](UpdateScreenStateDto.md)|  | 
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -320,5 +324,5 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 

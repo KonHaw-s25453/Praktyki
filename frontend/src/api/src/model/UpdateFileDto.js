@@ -22,17 +22,10 @@ class UpdateFileDto {
     /**
      * Constructs a new <code>UpdateFileDto</code>.
      * @alias module:model/UpdateFileDto
-     * @param filename {String} 
-     * @param originalName {String} 
-     * @param path {String} 
-     * @param mimeType {String} 
-     * @param size {Number} 
-     * @param checksum {String} 
-     * @param duration {Number} 
      */
-    constructor(filename, originalName, path, mimeType, size, checksum, duration) { 
+    constructor() { 
         
-        UpdateFileDto.initialize(this, filename, originalName, path, mimeType, size, checksum, duration);
+        UpdateFileDto.initialize(this);
     }
 
     /**
@@ -40,14 +33,7 @@ class UpdateFileDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, filename, originalName, path, mimeType, size, checksum, duration) { 
-        obj['filename'] = filename;
-        obj['originalName'] = originalName;
-        obj['path'] = path;
-        obj['mimeType'] = mimeType;
-        obj['size'] = size;
-        obj['checksum'] = checksum;
-        obj['duration'] = duration;
+    static initialize(obj) { 
     }
 
     /**
@@ -92,12 +78,6 @@ class UpdateFileDto {
      * @return {boolean} to indicate whether the JSON data is valid with respect to <code>UpdateFileDto</code>.
      */
     static validateJSON(data) {
-        // check to make sure all required properties are present in the JSON string
-        for (const property of UpdateFileDto.RequiredProperties) {
-            if (!data.hasOwnProperty(property)) {
-                throw new Error("The required field `" + property + "` is not found in the JSON data: " + JSON.stringify(data));
-            }
-        }
         // ensure the json data is a string
         if (data['filename'] && !(typeof data['filename'] === 'string' || data['filename'] instanceof String)) {
             throw new Error("Expected the field `filename` to be a primitive type in the JSON string but got " + data['filename']);
@@ -125,7 +105,7 @@ class UpdateFileDto {
 
 }
 
-UpdateFileDto.RequiredProperties = ["filename", "originalName", "path", "mimeType", "size", "checksum", "duration"];
+
 
 /**
  * @member {String} filename

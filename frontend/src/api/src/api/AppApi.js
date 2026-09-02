@@ -37,12 +37,13 @@ export default class AppApi {
      * Callback function to receive the result of the appControllerGetHello operation.
      * @callback module:api/AppApi~appControllerGetHelloCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {String} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:api/AppApi~appControllerGetHelloCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link String}
      */
     appControllerGetHello(callback) {
       let postBody = null;
@@ -58,8 +59,8 @@ export default class AppApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = 'String';
       return this.apiClient.callApi(
         '/', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,

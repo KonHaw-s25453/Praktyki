@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | 
-**description** | **String** |  | 
-**repeatMode** | **String** |  | [default to &#39;LOOP&#39;]
+**description** | **String** |  | [optional] 
+**repeatMode** | **String** |  | [optional] [default to &#39;LOOP&#39;]
 
 
 

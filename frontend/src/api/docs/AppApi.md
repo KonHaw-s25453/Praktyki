@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## appControllerGetHello
 
-> appControllerGetHello()
+> String appControllerGetHello()
 
 
 
@@ -24,7 +24,7 @@ apiInstance.appControllerGetHello((error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -35,7 +35,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-null (empty response body)
+**String**
 
 ### Authorization
 
@@ -44,5 +44,5 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 

@@ -107,7 +107,7 @@ var callback = function(error, data, response) {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 };
 api.appControllerGetHello(callback);
@@ -174,12 +174,16 @@ Class | Method | HTTP request | Description
  - [CmsApi.ReorderPlaylistItemsDto](docs/ReorderPlaylistItemsDto.md)
  - [CmsApi.ResponseFileDto](docs/ResponseFileDto.md)
  - [CmsApi.ScreenEntity](docs/ScreenEntity.md)
+ - [CmsApi.ScreenLogEntity](docs/ScreenLogEntity.md)
  - [CmsApi.ScreenPlaylistEntity](docs/ScreenPlaylistEntity.md)
+ - [CmsApi.ScreenStateEntity](docs/ScreenStateEntity.md)
  - [CmsApi.UpdateFileDto](docs/UpdateFileDto.md)
  - [CmsApi.UpdatePlaylistDto](docs/UpdatePlaylistDto.md)
  - [CmsApi.UpdatePlaylistItemDto](docs/UpdatePlaylistItemDto.md)
  - [CmsApi.UpdateScreenDto](docs/UpdateScreenDto.md)
+ - [CmsApi.UpdateScreenHeartbeatDto](docs/UpdateScreenHeartbeatDto.md)
  - [CmsApi.UpdateScreenPlaylistDto](docs/UpdateScreenPlaylistDto.md)
+ - [CmsApi.UpdateScreenStateDto](docs/UpdateScreenStateDto.md)
 
 
 ## Documentation for Authorization

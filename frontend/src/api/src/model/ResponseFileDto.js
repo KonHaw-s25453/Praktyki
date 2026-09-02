@@ -27,9 +27,9 @@ class ResponseFileDto {
      * @param originalName {String} 
      * @param path {String} 
      * @param mimeType {String} 
-     * @param duration {Object} 
+     * @param duration {Number} 
      * @param size {Number} 
-     * @param checksum {Object} 
+     * @param checksum {String} 
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
      * @param exists {Boolean} 
@@ -85,13 +85,13 @@ class ResponseFileDto {
                 obj['mimeType'] = ApiClient.convertToType(data['mimeType'], 'String');
             }
             if (data.hasOwnProperty('duration')) {
-                obj['duration'] = ApiClient.convertToType(data['duration'], Object);
+                obj['duration'] = ApiClient.convertToType(data['duration'], 'Number');
             }
             if (data.hasOwnProperty('size')) {
                 obj['size'] = ApiClient.convertToType(data['size'], 'Number');
             }
             if (data.hasOwnProperty('checksum')) {
-                obj['checksum'] = ApiClient.convertToType(data['checksum'], Object);
+                obj['checksum'] = ApiClient.convertToType(data['checksum'], 'String');
             }
             if (data.hasOwnProperty('createdAt')) {
                 obj['createdAt'] = ApiClient.convertToType(data['createdAt'], 'Date');
@@ -134,6 +134,10 @@ class ResponseFileDto {
         if (data['mimeType'] && !(typeof data['mimeType'] === 'string' || data['mimeType'] instanceof String)) {
             throw new Error("Expected the field `mimeType` to be a primitive type in the JSON string but got " + data['mimeType']);
         }
+        // ensure the json data is a string
+        if (data['checksum'] && !(typeof data['checksum'] === 'string' || data['checksum'] instanceof String)) {
+            throw new Error("Expected the field `checksum` to be a primitive type in the JSON string but got " + data['checksum']);
+        }
 
         return true;
     }
@@ -169,7 +173,7 @@ ResponseFileDto.prototype['path'] = undefined;
 ResponseFileDto.prototype['mimeType'] = undefined;
 
 /**
- * @member {Object} duration
+ * @member {Number} duration
  */
 ResponseFileDto.prototype['duration'] = undefined;
 
@@ -179,7 +183,7 @@ ResponseFileDto.prototype['duration'] = undefined;
 ResponseFileDto.prototype['size'] = undefined;
 
 /**
- * @member {Object} checksum
+ * @member {String} checksum
  */
 ResponseFileDto.prototype['checksum'] = undefined;
 

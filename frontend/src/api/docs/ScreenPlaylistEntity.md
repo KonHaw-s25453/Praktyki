@@ -8,10 +8,12 @@ Name | Type | Description | Notes
 **screenId** | **Number** | Identifier for the associated screen | 
 **playlistId** | **Number** | Identifier for the associated playlist | 
 **priority** | **Number** | Priority of the screen-playlist association | 
-**activeFrom** | **Object** | Start date and time when the playlist becomes active on the screen | 
-**activeTo** | **Object** | End date and time when the playlist is no longer active on the screen | 
+**activeFrom** | **Date** | Start date and time when the playlist becomes active on the screen | 
+**activeTo** | **Date** | End date and time when the playlist is no longer active on the screen | 
 **revision** | **Number** | Revision number for the screen-playlist association | 
 **createdAt** | **Date** |  | 
 **updatedAt** | **Date** |  | 
+**screen** | [**PlaylistEntity**](PlaylistEntity.md) |  | 
+**playlist** | [**PlaylistEntity**](PlaylistEntity.md) |  | 
 
 

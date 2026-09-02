@@ -39,6 +39,18 @@ export default function ScreensPage({
         const loadScreens = () => {
             screensApi.screensControllerFindAll(
                 (error, data) => {
+
+
+                    console.log(
+        "RAW FIRST SCREEN:",
+        JSON.stringify(data?.[0], null, 2)
+    );
+
+    console.log(
+        "RAW SCREEN PLAYLIST:",
+        JSON.stringify(data?.[0]?.screenPlaylists?.[0], null, 2)
+    );
+
                     console.log("SCREENS ERROR:", error);
                     console.log("SCREENS DATA:", data);
                     console.log( "SCREENS DETAILS:",
@@ -274,6 +286,7 @@ return (
                                    {screen.screenPlaylists.map(item => {
 
     console.log("SCREEN PLAYLIST ITEM:", item);
+    console.log("PLAYLIST NAME:", item.playlist?.name);
 
     return (
         <div
@@ -284,13 +297,6 @@ return (
                 Playlista :{" "}
                 <strong>
                     {item.playlist?.name}
-                </strong>
-            </span>
-
-            <span>
-                Priorytet:{" "}
-                <strong>
-                    {item.priority}
                 </strong>
             </span>
         </div>

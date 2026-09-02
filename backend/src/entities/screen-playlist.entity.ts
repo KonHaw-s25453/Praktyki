@@ -57,14 +57,14 @@ playlistId: number;
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ApiHideProperty()
+  @ApiProperty({ type: () => PlaylistEntity })
   @ManyToOne(() => ScreenEntity, screen => screen.screenPlaylists, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'screen_id' })
   screen: ScreenEntity;
 
-  @ApiHideProperty()
+
   @ManyToOne(() => PlaylistEntity, playlist => playlist.screenPlaylists, {
     onDelete: 'CASCADE',
   })

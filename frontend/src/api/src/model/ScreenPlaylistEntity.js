@@ -12,6 +12,7 @@
  */
 
 import ApiClient from '../ApiClient';
+import PlaylistEntity from './PlaylistEntity';
 
 /**
  * The ScreenPlaylistEntity model module.
@@ -26,15 +27,17 @@ class ScreenPlaylistEntity {
      * @param screenId {Number} Identifier for the associated screen
      * @param playlistId {Number} Identifier for the associated playlist
      * @param priority {Number} Priority of the screen-playlist association
-     * @param activeFrom {Object} Start date and time when the playlist becomes active on the screen
-     * @param activeTo {Object} End date and time when the playlist is no longer active on the screen
+     * @param activeFrom {Date} Start date and time when the playlist becomes active on the screen
+     * @param activeTo {Date} End date and time when the playlist is no longer active on the screen
      * @param revision {Number} Revision number for the screen-playlist association
      * @param createdAt {Date} 
      * @param updatedAt {Date} 
+     * @param screen {module:model/PlaylistEntity} 
+     * @param playlist {module:model/PlaylistEntity} 
      */
-    constructor(id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt) { 
+    constructor(id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt, screen, playlist) { 
         
-        ScreenPlaylistEntity.initialize(this, id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt);
+        ScreenPlaylistEntity.initialize(this, id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt, screen, playlist);
     }
 
     /**
@@ -42,7 +45,7 @@ class ScreenPlaylistEntity {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt) { 
+    static initialize(obj, id, screenId, playlistId, priority, activeFrom, activeTo, revision, createdAt, updatedAt, screen, playlist) { 
         obj['id'] = id;
         obj['screenId'] = screenId;
         obj['playlistId'] = playlistId;
@@ -52,6 +55,8 @@ class ScreenPlaylistEntity {
         obj['revision'] = revision;
         obj['createdAt'] = createdAt;
         obj['updatedAt'] = updatedAt;
+        obj['screen'] = screen;
+        obj['playlist'] = playlist;
     }
 
     /**
@@ -78,10 +83,10 @@ class ScreenPlaylistEntity {
                 obj['priority'] = ApiClient.convertToType(data['priority'], 'Number');
             }
             if (data.hasOwnProperty('activeFrom')) {
-                obj['activeFrom'] = ApiClient.convertToType(data['activeFrom'], Object);
+                obj['activeFrom'] = ApiClient.convertToType(data['activeFrom'], 'Date');
             }
             if (data.hasOwnProperty('activeTo')) {
-                obj['activeTo'] = ApiClient.convertToType(data['activeTo'], Object);
+                obj['activeTo'] = ApiClient.convertToType(data['activeTo'], 'Date');
             }
             if (data.hasOwnProperty('revision')) {
                 obj['revision'] = ApiClient.convertToType(data['revision'], 'Number');
@@ -91,6 +96,12 @@ class ScreenPlaylistEntity {
             }
             if (data.hasOwnProperty('updatedAt')) {
                 obj['updatedAt'] = ApiClient.convertToType(data['updatedAt'], 'Date');
+            }
+            if (data.hasOwnProperty('screen')) {
+                obj['screen'] = PlaylistEntity.constructFromObject(data['screen']);
+            }
+            if (data.hasOwnProperty('playlist')) {
+                obj['playlist'] = PlaylistEntity.constructFromObject(data['playlist']);
             }
         }
         return obj;
@@ -108,6 +119,14 @@ class ScreenPlaylistEntity {
                 throw new Error("The required field `" + property + "` is not found in the JSON data: " + JSON.stringify(data));
             }
         }
+        // validate the optional field `screen`
+        if (data['screen']) { // data not null
+          PlaylistEntity.validateJSON(data['screen']);
+        }
+        // validate the optional field `playlist`
+        if (data['playlist']) { // data not null
+          PlaylistEntity.validateJSON(data['playlist']);
+        }
 
         return true;
     }
@@ -115,7 +134,7 @@ class ScreenPlaylistEntity {
 
 }
 
-ScreenPlaylistEntity.RequiredProperties = ["id", "screenId", "playlistId", "priority", "activeFrom", "activeTo", "revision", "createdAt", "updatedAt"];
+ScreenPlaylistEntity.RequiredProperties = ["id", "screenId", "playlistId", "priority", "activeFrom", "activeTo", "revision", "createdAt", "updatedAt", "screen", "playlist"];
 
 /**
  * Unique identifier for the screen-playlist association
@@ -143,13 +162,13 @@ ScreenPlaylistEntity.prototype['priority'] = undefined;
 
 /**
  * Start date and time when the playlist becomes active on the screen
- * @member {Object} activeFrom
+ * @member {Date} activeFrom
  */
 ScreenPlaylistEntity.prototype['activeFrom'] = undefined;
 
 /**
  * End date and time when the playlist is no longer active on the screen
- * @member {Object} activeTo
+ * @member {Date} activeTo
  */
 ScreenPlaylistEntity.prototype['activeTo'] = undefined;
 
@@ -168,6 +187,16 @@ ScreenPlaylistEntity.prototype['createdAt'] = undefined;
  * @member {Date} updatedAt
  */
 ScreenPlaylistEntity.prototype['updatedAt'] = undefined;
+
+/**
+ * @member {module:model/PlaylistEntity} screen
+ */
+ScreenPlaylistEntity.prototype['screen'] = undefined;
+
+/**
+ * @member {module:model/PlaylistEntity} playlist
+ */
+ScreenPlaylistEntity.prototype['playlist'] = undefined;
 
 
 

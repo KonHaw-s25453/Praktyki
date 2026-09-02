@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -31,7 +38,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -230,7 +244,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -581,7 +602,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -685,7 +713,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -718,7 +753,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenPlaylistEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -788,7 +830,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreenPlaylistEntity"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -811,7 +860,14 @@
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -857,7 +913,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScreenEntity"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -870,6 +936,15 @@
         "operationId": "SyncController_getManifest",
         "parameters": [
           {
+            "name": "sinceRevision",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
             "name": "X-Screen-ID",
             "in": "header",
             "description": "Screen identifier",
@@ -881,7 +956,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -914,7 +996,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -968,7 +1057,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1032,7 +1131,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1055,7 +1161,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1096,13 +1209,15 @@
             "type": "string"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
           },
           "checksum": {
             "type": "string"
           },
           "duration": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
           }
         },
         "required": [
@@ -1110,179 +1225,7 @@
           "originalName",
           "path",
           "mimeType",
-          "size",
-          "checksum",
-          "duration"
-        ]
-      },
-      "FileEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number"
-          },
-          "filename": {
-            "type": "string"
-          },
-          "originalName": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "duration": {
-            "type": "object"
-          },
-          "size": {
-            "type": "number"
-          },
-          "checksum": {
-            "type": "object"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "playlistItems": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "filename",
-          "originalName",
-          "path",
-          "mimeType",
-          "duration",
-          "size",
-          "checksum",
-          "createdAt",
-          "updatedAt",
-          "playlistItems"
-        ]
-      },
-      "ResponseFileDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number"
-          },
-          "filename": {
-            "type": "string"
-          },
-          "originalName": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "duration": {
-            "type": "object",
-            "nullable": true
-          },
-          "size": {
-            "type": "number"
-          },
-          "checksum": {
-            "type": "object",
-            "nullable": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "exists": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "filename",
-          "originalName",
-          "path",
-          "mimeType",
-          "duration",
-          "size",
-          "checksum",
-          "createdAt",
-          "updatedAt",
-          "exists"
-        ]
-      },
-      "UpdateFileDto": {
-        "type": "object",
-        "properties": {
-          "filename": {
-            "type": "string"
-          },
-          "originalName": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "size": {
-            "type": "number"
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "duration": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "filename",
-          "originalName",
-          "path",
-          "mimeType",
-          "size",
-          "checksum",
-          "duration"
-        ]
-      },
-      "CreatePlaylistDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "repeatMode": {
-            "type": "string",
-            "enum": [
-              "LOOP",
-              "FALLBACK"
-            ],
-            "default": "LOOP"
-          }
-        },
-        "required": [
-          "name",
-          "description",
-          "repeatMode"
+          "size"
         ]
       },
       "ScreenPlaylistEntity": {
@@ -1305,12 +1248,14 @@
             "description": "Priority of the screen-playlist association"
           },
           "activeFrom": {
-            "type": "object",
+            "format": "date-time",
+            "type": "string",
             "nullable": true,
             "description": "Start date and time when the playlist becomes active on the screen"
           },
           "activeTo": {
-            "type": "object",
+            "format": "date-time",
+            "type": "string",
             "nullable": true,
             "description": "End date and time when the playlist is no longer active on the screen"
           },
@@ -1325,6 +1270,12 @@
           "updatedAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "screen": {
+            "$ref": "#/components/schemas/PlaylistEntity"
+          },
+          "playlist": {
+            "$ref": "#/components/schemas/PlaylistEntity"
           }
         },
         "required": [
@@ -1336,14 +1287,231 @@
           "activeTo",
           "revision",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "screen",
+          "playlist"
+        ]
+      },
+      "ScreenLogEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "screenId": {
+            "type": "number",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "screenId",
+          "message",
+          "level",
+          "createdAt"
+        ]
+      },
+      "FileEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playlistItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaylistItemEntity"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "duration",
+          "size",
+          "checksum",
+          "createdAt",
+          "updatedAt",
+          "playlistItems"
+        ]
+      },
+      "ScreenEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "apiKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "fallbackFileId": {
+            "type": "number",
+            "description": "ID pliku fallback"
+          },
+          "playerUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "screenPlaylists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenPlaylistEntity"
+            }
+          },
+          "screenLogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScreenLogEntity"
+            }
+          },
+          "state": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScreenStateEntity"
+              }
+            ]
+          },
+          "fallbackFile": {
+            "$ref": "#/components/schemas/FileEntity"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "location",
+          "apiKey",
+          "fallbackFileId",
+          "playerUrl",
+          "lastSeen",
+          "isOnline",
+          "createdAt",
+          "screenPlaylists",
+          "screenLogs",
+          "state",
+          "fallbackFile"
         ]
       },
       "ScreenStateEntity": {
         "type": "object",
         "properties": {
-
-        }
+          "screenId": {
+            "type": "number"
+          },
+          "lastSync": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "lastPlaylistHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentIndex": {
+            "type": "number"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "screen": {
+            "$ref": "#/components/schemas/ScreenEntity"
+          },
+          "currentPlaylist": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PlaylistEntity"
+              }
+            ]
+          },
+          "currentPlaylistId": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "screenId",
+          "lastSync",
+          "lastPlaylistHash",
+          "currentIndex",
+          "visible",
+          "updatedAt",
+          "screen",
+          "currentPlaylist",
+          "currentPlaylistId"
+        ]
       },
       "PlaylistEntity": {
         "type": "object",
@@ -1355,7 +1523,7 @@
             "type": "string"
           },
           "description": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "revision": {
@@ -1450,6 +1618,111 @@
           "file"
         ]
       },
+      "ResponseFileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "size": {
+            "type": "number"
+          },
+          "checksum": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "exists": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "filename",
+          "originalName",
+          "path",
+          "mimeType",
+          "duration",
+          "size",
+          "checksum",
+          "createdAt",
+          "updatedAt",
+          "exists"
+        ]
+      },
+      "UpdateFileDto": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 1
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 1
+          }
+        }
+      },
+      "CreatePlaylistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "repeatMode": {
+            "enum": [
+              "LOOP",
+              "FALLBACK"
+            ],
+            "type": "string",
+            "default": "LOOP"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "UpdatePlaylistItemDto": {
         "type": "object",
         "properties": {
@@ -1482,11 +1755,11 @@
             "type": "string"
           },
           "repeatMode": {
-            "type": "string",
             "enum": [
               "LOOP",
               "FALLBACK"
-            ]
+            ],
+            "type": "string"
           },
           "items": {
             "type": "array",
@@ -1500,24 +1773,27 @@
         "type": "object",
         "properties": {
           "fileId": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
           },
           "position": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
           },
           "duration": {
-            "type": "number"
+            "type": "number",
+            "minimum": 1
           },
           "videoLoops": {
             "type": "number",
+            "minimum": 1,
             "default": 1
           }
         },
         "required": [
           "fileId",
           "position",
-          "duration",
-          "videoLoops"
+          "duration"
         ]
       },
       "ReorderPlaylistItemsDto": {
@@ -1554,95 +1830,18 @@
           "name"
         ]
       },
-      "ScreenLogEntity": {
-        "type": "object",
-        "properties": {
-
-        }
-      },
-      "ScreenEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number"
-          },
-          "name": {
-            "type": "string"
-          },
-          "location": {
-            "type": "object",
-            "nullable": true
-          },
-          "apiKey": {
-            "type": "object",
-            "nullable": true
-          },
-          "fallbackFileId": {
-            "type": "number",
-            "description": "ID pliku fallback"
-          },
-          "playerUrl": {
-            "type": "object",
-            "nullable": true
-          },
-          "lastSeen": {
-            "type": "object",
-            "nullable": true
-          },
-          "isOnline": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "screenPlaylists": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScreenPlaylistEntity"
-            }
-          },
-          "screenLogs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScreenLogEntity"
-            }
-          },
-          "state": {
-            "nullable": true,
-            "type": "object",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ScreenStateEntity"
-              }
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "location",
-          "apiKey",
-          "fallbackFileId",
-          "playerUrl",
-          "lastSeen",
-          "isOnline",
-          "createdAt",
-          "screenPlaylists",
-          "screenLogs",
-          "state"
-        ]
-      },
       "AssignPlaylistDto": {
         "type": "object",
         "properties": {
           "playlistId": {
             "type": "number",
+            "minimum": 1,
             "example": 1,
             "description": "ID playlisty przypisywanej do ekranu"
           },
           "priority": {
             "type": "number",
+            "minimum": 1,
             "example": 10,
             "description": "Priorytet przypisania"
           },
@@ -1690,6 +1889,7 @@
           },
           "fallbackFileId": {
             "type": "number",
+            "minimum": 1,
             "example": 15,
             "description": "ID pliku używanego jako fallback"
           },
@@ -1703,8 +1903,23 @@
       "UpdateScreenStateDto": {
         "type": "object",
         "properties": {
-
-        }
+          "currentPlaylistId": {
+            "type": "number",
+            "minimum": 1
+          },
+          "currentIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "visible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "currentPlaylistId",
+          "currentIndex",
+          "visible"
+        ]
       },
       "RecordLogDto": {
         "type": "object",
@@ -1715,12 +1930,12 @@
             "description": "Treść komunikatu logu"
           },
           "level": {
-            "type": "string",
             "enum": [
               "INFO",
               "ERROR",
               "PLAYBACK"
             ],
+            "type": "string",
             "example": "INFO",
             "description": "Poziom logu"
           }
@@ -1732,8 +1947,18 @@
       "UpdateScreenHeartbeatDto": {
         "type": "object",
         "properties": {
-
-        }
+          "playerUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "visible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "playerUrl",
+          "visible"
+        ]
       }
     }
   }

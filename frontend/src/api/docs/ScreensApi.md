@@ -20,7 +20,7 @@ Method | HTTP request | Description
 
 ## screensControllerAssignPlaylist
 
-> screensControllerAssignPlaylist(id, assignPlaylistDto)
+> ScreenPlaylistEntity screensControllerAssignPlaylist(id, assignPlaylistDto)
 
 
 
@@ -36,7 +36,7 @@ apiInstance.screensControllerAssignPlaylist(id, assignPlaylistDto, (error, data,
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -51,7 +51,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScreenPlaylistEntity**](ScreenPlaylistEntity.md)
 
 ### Authorization
 
@@ -60,12 +60,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerCreate
 
-> screensControllerCreate(createScreenDto)
+> ScreenEntity screensControllerCreate(createScreenDto)
 
 
 
@@ -80,7 +80,7 @@ apiInstance.screensControllerCreate(createScreenDto, (error, data, response) => 
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -94,7 +94,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScreenEntity**](ScreenEntity.md)
 
 ### Authorization
 
@@ -103,7 +103,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerDelete
@@ -233,7 +233,7 @@ No authorization required
 
 ## screensControllerGenerateNewApiKey
 
-> screensControllerGenerateNewApiKey(id)
+> String screensControllerGenerateNewApiKey(id)
 
 
 
@@ -248,7 +248,7 @@ apiInstance.screensControllerGenerateNewApiKey(id, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -262,7 +262,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+**String**
 
 ### Authorization
 
@@ -271,12 +271,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerGetByLocation
 
-> screensControllerGetByLocation(location)
+> [ScreenEntity] screensControllerGetByLocation(location)
 
 
 
@@ -291,7 +291,7 @@ apiInstance.screensControllerGetByLocation(location, (error, data, response) => 
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -305,7 +305,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**[ScreenEntity]**](ScreenEntity.md)
 
 ### Authorization
 
@@ -314,7 +314,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerHeartbeat
@@ -407,7 +407,7 @@ No authorization required
 
 ## screensControllerUpdate
 
-> screensControllerUpdate(id, updateScreenDto)
+> ScreenEntity screensControllerUpdate(id, updateScreenDto)
 
 
 
@@ -423,7 +423,7 @@ apiInstance.screensControllerUpdate(id, updateScreenDto, (error, data, response)
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -438,7 +438,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScreenEntity**](ScreenEntity.md)
 
 ### Authorization
 
@@ -447,12 +447,12 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 
 ## screensControllerUpdateAssignment
 
-> screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto)
+> ScreenPlaylistEntity screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto)
 
 
 
@@ -469,7 +469,7 @@ apiInstance.screensControllerUpdateAssignment(id, playlistId, updateScreenPlayli
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully.');
+    console.log('API called successfully. Returned data: ' + data);
   }
 });
 ```
@@ -485,7 +485,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-null (empty response body)
+[**ScreenPlaylistEntity**](ScreenPlaylistEntity.md)
 
 ### Authorization
 
@@ -494,5 +494,5 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 

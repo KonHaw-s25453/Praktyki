@@ -25,12 +25,16 @@ import RecordLogDto from './model/RecordLogDto';
 import ReorderPlaylistItemsDto from './model/ReorderPlaylistItemsDto';
 import ResponseFileDto from './model/ResponseFileDto';
 import ScreenEntity from './model/ScreenEntity';
+import ScreenLogEntity from './model/ScreenLogEntity';
 import ScreenPlaylistEntity from './model/ScreenPlaylistEntity';
+import ScreenStateEntity from './model/ScreenStateEntity';
 import UpdateFileDto from './model/UpdateFileDto';
 import UpdatePlaylistDto from './model/UpdatePlaylistDto';
 import UpdatePlaylistItemDto from './model/UpdatePlaylistItemDto';
 import UpdateScreenDto from './model/UpdateScreenDto';
+import UpdateScreenHeartbeatDto from './model/UpdateScreenHeartbeatDto';
 import UpdateScreenPlaylistDto from './model/UpdateScreenPlaylistDto';
+import UpdateScreenStateDto from './model/UpdateScreenStateDto';
 import AppApi from './api/AppApi';
 import FilesApi from './api/FilesApi';
 import PlaylistsApi from './api/PlaylistsApi';
@@ -149,10 +153,22 @@ export {
     ScreenEntity,
 
     /**
+     * The ScreenLogEntity model constructor.
+     * @property {module:model/ScreenLogEntity}
+     */
+    ScreenLogEntity,
+
+    /**
      * The ScreenPlaylistEntity model constructor.
      * @property {module:model/ScreenPlaylistEntity}
      */
     ScreenPlaylistEntity,
+
+    /**
+     * The ScreenStateEntity model constructor.
+     * @property {module:model/ScreenStateEntity}
+     */
+    ScreenStateEntity,
 
     /**
      * The UpdateFileDto model constructor.
@@ -179,10 +195,22 @@ export {
     UpdateScreenDto,
 
     /**
+     * The UpdateScreenHeartbeatDto model constructor.
+     * @property {module:model/UpdateScreenHeartbeatDto}
+     */
+    UpdateScreenHeartbeatDto,
+
+    /**
      * The UpdateScreenPlaylistDto model constructor.
      * @property {module:model/UpdateScreenPlaylistDto}
      */
     UpdateScreenPlaylistDto,
+
+    /**
+     * The UpdateScreenStateDto model constructor.
+     * @property {module:model/UpdateScreenStateDto}
+     */
+    UpdateScreenStateDto,
 
     /**
     * The AppApi service constructor.

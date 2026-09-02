@@ -69,6 +69,23 @@ async findAllWithState(): Promise<ScreenEntity[]> {
 
   const now = Date.now();
 
+console.log(
+  "[SCREEN PLAYLIST DEBUG]",
+  JSON.stringify(
+    screens.map(screen => ({
+      screenId: screen.id,
+      playlists: screen.screenPlaylists?.map(sp => ({
+        id: sp.id,
+        playlistId: sp.playlistId,
+        playlist: sp.playlist,
+        playlistName: sp.playlist?.name,
+      })),
+    })),
+    null,
+    2
+  )
+);
+
   return screens.map((screen) => {
     const isOnline =
       screen.lastSeen !== null &&

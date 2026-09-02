@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PlaylistRepository, PlaylistItemRepository, FileRepository } from '../../repositories';
+import { PlaylistRepository, PlaylistItemRepository, FileRepository, ScreenPlaylistRepository, CacheManifestRepository, } from '../../repositories';
 import { PlaylistEntity, PlaylistItemEntity } from '../../entities';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
@@ -11,6 +11,8 @@ export class PlaylistsService {
   constructor(
     private playlistRepository: PlaylistRepository,
     private playlistItemRepository: PlaylistItemRepository,
+    private screenPlaylistRepository: ScreenPlaylistRepository,
+    private cacheManifestRepository: CacheManifestRepository,
     private fileRepository: FileRepository,
   ) {}
 
@@ -64,6 +66,7 @@ if (updatePlaylistDto.items) {
   }
 }
 
+await this.bumpRevision(id);
 return this.findById(id);
 }
 
@@ -106,7 +109,11 @@ return this.findById(id);
       videoLoops: addItemDto.videoLoops ?? 1,
     });
 
-    return this.playlistItemRepository.save(item);
+    const result = await this.playlistItemRepository.save(item);
+
+    await this.bumpRevision(playlistId);
+
+    return result;
   }
 
   async removeItemFromPlaylist(playlistId: number, itemId: number): Promise<void> {
@@ -125,6 +132,7 @@ return this.findById(id);
     }
 
     await this.playlistItemRepository.delete(itemId);
+    await this.bumpRevision(playlistId);
   }
 
   async reorderItems(playlistId: number, reorderDto: ReorderPlaylistItemsDto): Promise<void> {
@@ -147,6 +155,17 @@ return this.findById(id);
 
       await this.playlistItemRepository.update(itemId, { position: position + 1 });
     }
+    await this.bumpRevision(playlistId);
+  }
+  
+  private async bumpRevision(playlistId: number): Promise<void> {
+  await this.playlistRepository.increment(
+    { id: playlistId },
+    'revision',
+    1,
+  );
+
+  await this.invalidatePlaylistCaches(playlistId);
   }
 
   async getPlaylistRevision(id: number): Promise<number> {
@@ -158,4 +177,16 @@ return this.findById(id);
 
     return playlist.revision ?? 0;
   }
+
+  private async invalidatePlaylistCaches(playlistId: number): Promise<void> {
+  const assignments =
+    await this.screenPlaylistRepository.findByPlaylistId(playlistId);
+
+  for (const assignment of assignments) {
+    await this.cacheManifestRepository.deleteByScreenId(
+      assignment.screenId,
+    );
+  }
+}
+
 }

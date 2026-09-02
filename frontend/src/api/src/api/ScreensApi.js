@@ -16,6 +16,7 @@ import ApiClient from "../ApiClient";
 import AssignPlaylistDto from '../model/AssignPlaylistDto';
 import CreateScreenDto from '../model/CreateScreenDto';
 import ScreenEntity from '../model/ScreenEntity';
+import ScreenPlaylistEntity from '../model/ScreenPlaylistEntity';
 import UpdateScreenDto from '../model/UpdateScreenDto';
 import UpdateScreenPlaylistDto from '../model/UpdateScreenPlaylistDto';
 
@@ -42,7 +43,7 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerAssignPlaylist operation.
      * @callback module:api/ScreensApi~screensControllerAssignPlaylistCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/ScreenPlaylistEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -50,6 +51,7 @@ export default class ScreensApi {
      * @param {Number} id 
      * @param {module:model/AssignPlaylistDto} assignPlaylistDto 
      * @param {module:api/ScreensApi~screensControllerAssignPlaylistCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ScreenPlaylistEntity}
      */
     screensControllerAssignPlaylist(id, assignPlaylistDto, callback) {
       let postBody = assignPlaylistDto;
@@ -74,8 +76,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = ScreenPlaylistEntity;
       return this.apiClient.callApi(
         '/screens/{id}/playlists', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -87,13 +89,14 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerCreate operation.
      * @callback module:api/ScreensApi~screensControllerCreateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/ScreenEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {module:model/CreateScreenDto} createScreenDto 
      * @param {module:api/ScreensApi~screensControllerCreateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ScreenEntity}
      */
     screensControllerCreate(createScreenDto, callback) {
       let postBody = createScreenDto;
@@ -113,8 +116,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = ScreenEntity;
       return this.apiClient.callApi(
         '/screens', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -242,13 +245,14 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerGenerateNewApiKey operation.
      * @callback module:api/ScreensApi~screensControllerGenerateNewApiKeyCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {String} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {Number} id 
      * @param {module:api/ScreensApi~screensControllerGenerateNewApiKeyCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link String}
      */
     screensControllerGenerateNewApiKey(id, callback) {
       let postBody = null;
@@ -269,8 +273,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = 'String';
       return this.apiClient.callApi(
         '/screens/{id}/api-key', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -282,13 +286,14 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerGetByLocation operation.
      * @callback module:api/ScreensApi~screensControllerGetByLocationCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {Array.<module:model/ScreenEntity>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * @param {String} location 
      * @param {module:api/ScreensApi~screensControllerGetByLocationCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Array.<module:model/ScreenEntity>}
      */
     screensControllerGetByLocation(location, callback) {
       let postBody = null;
@@ -309,8 +314,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = [ScreenEntity];
       return this.apiClient.callApi(
         '/screens/location/{location}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -408,7 +413,7 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerUpdate operation.
      * @callback module:api/ScreensApi~screensControllerUpdateCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/ScreenEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -416,6 +421,7 @@ export default class ScreensApi {
      * @param {Number} id 
      * @param {module:model/UpdateScreenDto} updateScreenDto 
      * @param {module:api/ScreensApi~screensControllerUpdateCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ScreenEntity}
      */
     screensControllerUpdate(id, updateScreenDto, callback) {
       let postBody = updateScreenDto;
@@ -440,8 +446,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = ScreenEntity;
       return this.apiClient.callApi(
         '/screens/{id}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,
@@ -453,7 +459,7 @@ export default class ScreensApi {
      * Callback function to receive the result of the screensControllerUpdateAssignment operation.
      * @callback module:api/ScreensApi~screensControllerUpdateAssignmentCallback
      * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
+     * @param {module:model/ScreenPlaylistEntity} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -462,6 +468,7 @@ export default class ScreensApi {
      * @param {Number} playlistId 
      * @param {module:model/UpdateScreenPlaylistDto} updateScreenPlaylistDto 
      * @param {module:api/ScreensApi~screensControllerUpdateAssignmentCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ScreenPlaylistEntity}
      */
     screensControllerUpdateAssignment(id, playlistId, updateScreenPlaylistDto, callback) {
       let postBody = updateScreenPlaylistDto;
@@ -491,8 +498,8 @@ export default class ScreensApi {
 
       let authNames = [];
       let contentTypes = ['application/json'];
-      let accepts = [];
-      let returnType = null;
+      let accepts = ['application/json'];
+      let returnType = ScreenPlaylistEntity;
       return this.apiClient.callApi(
         '/screens/{id}/playlists/{playlistId}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,

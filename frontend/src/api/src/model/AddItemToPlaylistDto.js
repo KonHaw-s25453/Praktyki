@@ -25,11 +25,10 @@ class AddItemToPlaylistDto {
      * @param fileId {Number} 
      * @param position {Number} 
      * @param duration {Number} 
-     * @param videoLoops {Number} 
      */
-    constructor(fileId, position, duration, videoLoops) { 
+    constructor(fileId, position, duration) { 
         
-        AddItemToPlaylistDto.initialize(this, fileId, position, duration, videoLoops);
+        AddItemToPlaylistDto.initialize(this, fileId, position, duration);
     }
 
     /**
@@ -37,11 +36,11 @@ class AddItemToPlaylistDto {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, fileId, position, duration, videoLoops) { 
+    static initialize(obj, fileId, position, duration) { 
         obj['fileId'] = fileId;
         obj['position'] = position;
         obj['duration'] = duration;
-        obj['videoLoops'] = videoLoops || 1;
+        obj['videoLoops'] = 1;
     }
 
     /**
@@ -90,7 +89,7 @@ class AddItemToPlaylistDto {
 
 }
 
-AddItemToPlaylistDto.RequiredProperties = ["fileId", "position", "duration", "videoLoops"];
+AddItemToPlaylistDto.RequiredProperties = ["fileId", "position", "duration"];
 
 /**
  * @member {Number} fileId
